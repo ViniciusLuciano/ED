@@ -15,5 +15,6 @@ int main(int argc, char* argv[]) {
     fclose(arquivoEntrada);
 
 
-    liberarArvore(raiz);
+    desalocarArgumentos(dirEntrada, nomeArquivoEntrada, nomeArquivoConsulta, dirSaida);
+    liberarArvore(raiz);    
 }

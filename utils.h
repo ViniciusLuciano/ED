@@ -19,4 +19,6 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 
 char *obterSemExtensao(char *arquivo);
 
+void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, char *dirSaida);
+
 #endif

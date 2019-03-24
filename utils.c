@@ -66,18 +66,23 @@ void lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquiv
 
 char* tratarDiretorio(char *diretorio, char *nomeArquivo) {
 
+    if(diretorio == NULL) {
+        int num = strlen(nomeArquivo) + 1;
+        char *diretorioFinal = malloc(num*sizeof(char)); // Pra dar free na funçao que recebe
+        strcpy(diretorioFinal, nomeArquivo);
+        return diretorioFinal;
+    }
+
     int num = strlen(diretorio)+strlen(nomeArquivo) + 2;
-    char *diretorioFinal;
+    char *diretorioFinal = malloc(num*sizeof(char));
 
 	if(diretorio[strlen(diretorio) - 1] == '/') {
-		diretorioFinal = malloc(num*sizeof(char));
-		sprintf(diretorio, "%s%s", diretorio, nomeArquivo);
+		sprintf(diretorioFinal, "%s%s", diretorio, nomeArquivo);
 	} else {
-		diretorioFinal = malloc(num*sizeof(char));
-		sprintf(diretorio, "%s/%s", diretorio, nomeArquivo);
+		sprintf(diretorioFinal, "%s/%s", diretorio, nomeArquivo);
 	}
 
-	return diretorio;
+	return diretorioFinal;
 }
 
 void escreverSVG(FILE* SVG, char *dado) {
@@ -108,7 +113,6 @@ FILE* abrirSVG(char *dir, char *nomeArquivo) {
 void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, ArvoreBin *raiz) {
 
     char str[150];
-	int i = 0;
     FILE *SVG = abrirSVG(dirSVG, obterSemExtensao(nomeArquivoSVG));
     escreverSVG(SVG, iniciarSVG("100", "200")); // ver como proceder com width e height
 	while(1) {
@@ -138,8 +142,18 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             // AQUI VAI SER O TEXT
 		}
 
-		i++;
 	}
     escreverSVG(SVG, finalizarSVG());
     fclose(SVG);
+}
+
+void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, char *dirSaida) {
+    if(dirEntrada)
+        free(dirEntrada);
+    if(nomeArquivoEntrada)
+        free(nomeArquivoEntrada);
+    if(nomeArquivoConsulta)
+        free(nomeArquivoConsulta);
+    if(dirSaida)
+        free(dirSaida);
 }
