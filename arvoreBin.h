@@ -22,4 +22,6 @@ int adicionarElemento(ArvoreBin *raiz, Forma *forma);
 
 Forma* encontrarForma(ArvoreBin *raiz, int id);
 
+void printarArvore(struct Node* node, char* path);
+
 #endif

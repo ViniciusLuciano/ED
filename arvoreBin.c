@@ -17,6 +17,19 @@ void liberarNode(struct Node* node) {
     node = NULL;
 }
 
+//Pega aqui melvi
+void printarArvore(struct Node* node, char* path){
+    if(node == NULL){
+        return;
+    }else{
+        printf("%s%d\n", path, node->forma->id);
+        char* vsf = calloc(1000, sizeof(char));
+        sprintf(vsf, "%s  ", path);        
+        printarArvore(node->esq, vsf);
+        printarArvore(node->dir, vsf);
+    }
+}
+
 void liberarArvore(ArvoreBin *raiz) {
     if(raiz == NULL)
         return;
