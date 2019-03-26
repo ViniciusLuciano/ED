@@ -89,7 +89,6 @@ void escreverPontoInterno(FILE *SVG, Forma *a, double x, double y, bool interno)
 	double *centro = malloc(2*sizeof(double));
 	centroDeMassa(a, centro);
 
-
 	if(interno) {
 		fprintf(SVG, "<circle cx=\"%lf\" cy=\"%lf\" r=\"1\" stroke=\"green\" fill=\"green\" />\n", x, y);
 		fprintf(SVG, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"green\" />", centro[0], centro[1], x, y);
@@ -97,4 +96,6 @@ void escreverPontoInterno(FILE *SVG, Forma *a, double x, double y, bool interno)
 		fprintf(SVG, "<circle cx=\"%lf\" cy=\"%lf\" r=\"1\" stroke=\"red\" fill=\"red\" />\n", x, y);
 		fprintf(SVG, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"red\" />", centro[0], centro[1], x, y);
 	}
+	
+	free(centro);
 }
