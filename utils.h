@@ -6,7 +6,6 @@
 #include "arvoreBin.h"
 #include "svg.h"
 #include "colisao.h"
-#include <stdio.h>
 
 double clamp(double valor, double a, double b);
 

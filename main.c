@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
     ArvoreBin *raiz = iniciaArvore();
     
     processarArquivoEntrada(arquivoEntrada, dirSaida, nomeArquivoEntrada, raiz); // Arquivo de entrada / Arquivo SVG para escrever / raiz da arvore
-    fclose(arquivoEntrada);
+    fclose(arquivoEntrada); // jogar dentro da funcao
 
     processarArquivoConsulta(nomeArquivoEntrada, dirSaida, dirEntrada, nomeArquivoConsulta, raiz);
     

@@ -4,12 +4,12 @@
 #include "headers.h"
 #include "formas.h"
 
-char* iniciarSVG(char *width, char *height);
+void iniciarSVG(FILE *SVG, char *width, char *height);
 
-char* finalizarSVG();
+void finalizarSVG(FILE *SVG);
 
-char* escreverCirculo(Forma *c);
+void escreverCirculo(FILE *SVG, Forma *c);
 
-char* escreverRetangulo(Forma *r);
+void escreverRetangulo(FILE *SVG, Forma *r);
 
 #endif

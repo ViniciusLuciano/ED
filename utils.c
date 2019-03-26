@@ -64,6 +64,7 @@ void lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquiv
     strcpy(*dirSaida, argv[dirSaidaIndex]);
 }
 
+//Precisa dar free
 char* tratarDiretorio(char *diretorio, char *nomeArquivo) {
 
     if(diretorio == NULL) {
@@ -85,11 +86,8 @@ char* tratarDiretorio(char *diretorio, char *nomeArquivo) {
 	return diretorioFinal;
 }
 
-void escreverSVG(FILE* SVG, char *dado) {
-    fprintf(SVG, dado);
-    free(dado);
-}
 
+// Precisa dar free - TROCAR COMO TA FUNCIONANDO
 char *obterSemExtensao(char *arquivo) {
    	char *final = malloc((strlen(arquivo) - 4)*sizeof(char));
    	strncpy(final, arquivo, strlen(arquivo) - 4);
@@ -114,7 +112,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 
     char str[150];
     FILE *SVG = abrirSVG(dirSVG, obterSemExtensao(nomeArquivoSVG));
-    escreverSVG(SVG, iniciarSVG("100", "200")); // ver como proceder com width e height
+    iniciarSVG(SVG, "100", "200"); // ver como proceder com width e height
 	while(true) {
 		fgets(str, sizeof(str), entrada);
 		if(feof(entrada))
@@ -127,7 +125,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             Circulo *circ = ((Circulo*) forma->tipoForma);
 
 			sscanf(str, "%c %d %lf %lf %lf %s %s", &forma->nome, &forma->id, &circ->raio, &forma->x, &forma->y, forma->corD, forma->corB);
-			escreverSVG(SVG, escreverCirculo(forma));
+            escreverCirculo(SVG, forma);
             adicionarElemento(raiz, forma); // Adicionar elemento na arvore
 		} else if (str[0] == 'r'){
             Forma *forma = (Forma*)malloc(sizeof(Forma));
@@ -136,18 +134,19 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             Retangulo *ret = ((Retangulo*) forma->tipoForma);
 
 			sscanf(str, "%c %d %lf %lf %lf %lf %s %s", &forma->nome, &forma->id, &ret->w, &ret->h, &forma->x, &forma->y, forma->corD, forma->corB);
-            escreverSVG(SVG, escreverRetangulo(forma));
+            escreverRetangulo(SVG, forma);
             adicionarElemento(raiz, forma); // Adicionar elemento na arvore
 		} else {
             // AQUI VAI SER O TEXT
 		}
 
 	}
-    escreverSVG(SVG, finalizarSVG());
+    finalizarSVG(SVG);
     fclose(SVG);
 }
 
 //Recebr sem extensao ja
+//Precisa dar free
 char *concatenarNomes(char *nome1, char *nome2) {
     int num = strlen(nome1) + strlen(nome2) + 2;
     char *final = malloc(num*sizeof(char));
