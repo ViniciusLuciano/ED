@@ -12,4 +12,6 @@ bool colisaoRetanguloRetangulo(Forma *r1, Forma *r2);
 
 bool colisaoCirculoCirculo(Forma *c1, Forma *c2);
 
+bool formasColidem(Forma *a, Forma *b);
+
 #endif

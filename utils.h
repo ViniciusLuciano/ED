@@ -5,6 +5,7 @@
 #include "formas.h"
 #include "arvoreBin.h"
 #include "svg.h"
+#include "colisao.h"
 #include <stdio.h>
 
 double clamp(double valor, double a, double b);
@@ -20,5 +21,11 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 char *obterSemExtensao(char *arquivo);
 
 void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, char *dirSaida);
+
+void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *dirArquivoConsulta, char *nomeArquivoConsulta, ArvoreBin *raiz);
+
+FILE *abrirTXT(char *dirSaida, char *nomeArquivo);
+
+char *concatenarNomes(char *nome1, char *nome2);
 
 #endif

@@ -14,4 +14,6 @@ void centroDeMassa(Forma *f, double *ponto);
 
 double distanciaCentro(Forma *j, Forma *k);
 
+bool pontoInternoForma(double px, double py, Forma *a);
+
 #endif

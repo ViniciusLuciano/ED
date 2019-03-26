@@ -35,3 +35,14 @@ bool colisaoCirculoCirculo(Forma *c1, Forma *c2) {
 
     return distancia(c1->x, c1->y, c2->x, c2->y) < circ1->raio + circ2->raio;
 }
+
+bool formasColidem(Forma *a, Forma *b) {
+    if(a->nome == 'c' && b->nome == 'r')
+        return colisaoCirculoRetangulo(a, b);
+    else if(a->nome == 'r' && b->nome == 'c')
+        return colisaoCirculoRetangulo(b, a);
+    else if(a->nome == 'r' && b->nome == 'r')
+        return colisaoRetanguloRetangulo(a, b);
+    else if(a->nome == 'c' && b->nome == 'c')
+        return colisaoCirculoCirculo(a, b);
+}   

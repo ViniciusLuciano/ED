@@ -14,6 +14,12 @@ int main(int argc, char* argv[]) {
     processarArquivoEntrada(arquivoEntrada, dirSaida, nomeArquivoEntrada, raiz); // Arquivo de entrada / Arquivo SVG para escrever / raiz da arvore
     fclose(arquivoEntrada);
 
+    processarArquivoConsulta(nomeArquivoEntrada, dirSaida, dirEntrada, nomeArquivoConsulta, raiz);
+    
+    // char *path = calloc(1000, sizeof(char));
+    // sprintf(path, "  ");
+    // printarArvore(*raiz, path);
+
 
     desalocarArgumentos(dirEntrada, nomeArquivoEntrada, nomeArquivoConsulta, dirSaida);
     liberarArvore(raiz);    

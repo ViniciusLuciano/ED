@@ -115,7 +115,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
     char str[150];
     FILE *SVG = abrirSVG(dirSVG, obterSemExtensao(nomeArquivoSVG));
     escreverSVG(SVG, iniciarSVG("100", "200")); // ver como proceder com width e height
-	while(1) {
+	while(true) {
 		fgets(str, sizeof(str), entrada);
 		if(feof(entrada))
 			break;
@@ -145,6 +145,92 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 	}
     escreverSVG(SVG, finalizarSVG());
     fclose(SVG);
+}
+
+//Recebr sem extensao ja
+char *concatenarNomes(char *nome1, char *nome2) {
+    int num = strlen(nome1) + strlen(nome2) + 2;
+    char *final = malloc(num*sizeof(char));
+    sprintf(final, "%s-%s", nome1, nome2);
+    free(nome1);
+    free(nome2);
+    return final;
+}
+
+FILE *abrirTXT(char *dirSaida, char *nomeArquivo) {
+    int num = strlen(dirSaida) + strlen(nomeArquivo) + 5; //.txt
+    char *caminho = malloc(num*sizeof(char));
+
+    if(dirSaida[strlen(dirSaida) - 1] == '/')
+        sprintf(caminho, "%s%s.txt", dirSaida, nomeArquivo);
+    else
+        sprintf(caminho, "%s/%s.txt", dirSaida, nomeArquivo);
+
+    FILE *arqTXT = fopen(caminho, "w"); // Ta dando seg fault
+    if(arqTXT == NULL) {
+        perror("Falha na abertura do arquivo TXT");
+        exit(1);
+    }
+
+    free(nomeArquivo);
+    return arqTXT;
+}
+
+void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *dirArquivoConsulta, char *nomeArquivoConsulta, ArvoreBin *raiz) {
+    if(nomeArquivoConsulta == NULL)
+        return;
+    
+    FILE *consulta = abrirArquivo( tratarDiretorio(dirArquivoConsulta, nomeArquivoConsulta) );
+    FILE *arquivoTXT = abrirTXT(dirSaida, concatenarNomes(obterSemExtensao(nomeArquivoEntrada), obterSemExtensao(nomeArquivoConsulta)));
+    // abrirSVG()
+
+    char str[150];
+    while(true) {
+        fgets(str, sizeof(str), consulta);
+
+		if(feof(consulta))
+			break;
+
+        if(str[0] == 'o') {
+            fprintf(arquivoTXT, str);
+            int j, k;
+            sscanf(str, "%*s %d %d", &j, &k);
+
+            Forma *forma1 = encontrarForma(raiz, j);
+            Forma *forma2 = encontrarForma(raiz, k);
+            if(formasColidem(forma1, forma2))
+                fprintf(arquivoTXT, "SIM\n\n");
+            else
+                fprintf(arquivoTXT, "NAO\n\n");
+
+        } else if(str[0] == 'i') {
+            fprintf(arquivoTXT, str);
+            int j;
+            double x, y;
+            sscanf(str, "%*s %d %lf %lf", &j, &x, &y);
+
+            Forma *forma = encontrarForma(raiz, j);
+            if(pontoInternoForma(x, y, forma))
+                fprintf(arquivoTXT, "SIM\n\n");
+            else
+                fprintf(arquivoTXT, "NAO\n\n");
+
+        } else if (str[0] == 'd') {
+            fprintf(arquivoTXT, str);
+            int j, k;
+            sscanf(str, "%*s %d %d", &j, &k);
+            
+            Forma *forma1 = encontrarForma(raiz, j);
+            Forma *forma2 = encontrarForma(raiz, k);
+            fprintf(arquivoTXT, "%lf\n\n", distanciaCentro(forma1, forma2));
+            
+        } else if(str[0] == 'b') {
+            // Fazer dps
+        }
+    }
+
+    fclose(consulta);
+    fclose(arquivoTXT);
 }
 
 void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, char *dirSaida) {
