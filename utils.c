@@ -112,6 +112,7 @@ FILE* abrirSVG(char *dir, char *nomeArquivo) {
 void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, ArvoreBin *raiz) {
 
     char str[150];
+    int idText = -1; // Adicionar os textos na arvore
     FILE *SVG = abrirSVG(dirSVG, obterSemExtensao(nomeArquivoSVG));
     iniciarSVG(SVG, "1000", "1000"); // ver como proceder com width e height
 	while(true) {
@@ -128,7 +129,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 			sscanf(str, "%c %d %lf %lf %lf %s %s", &forma->nome, &forma->id, &circ->raio, &forma->x, &forma->y, forma->corD, forma->corB);
             escreverCirculo(SVG, forma);
             adicionarElemento(raiz, forma); // Adicionar elemento na arvore
-		} else if (str[0] == 'r'){
+		} else if(str[0] == 'r'){
             Forma *forma = (Forma*)malloc(sizeof(Forma));
 
             forma->tipoForma = (Retangulo*)malloc(sizeof(Retangulo));
@@ -137,8 +138,17 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 			sscanf(str, "%c %d %lf %lf %lf %lf %s %s", &forma->nome, &forma->id, &ret->w, &ret->h, &forma->x, &forma->y, forma->corD, forma->corB);
             escreverRetangulo(SVG, forma);
             adicionarElemento(raiz, forma); // Adicionar elemento na arvore
-		} else {
-            // AQUI VAI SER O TEXT
+		} else if(str[0] == 't') {
+            Forma *forma = (Forma*)malloc(sizeof(Forma));
+
+            forma->tipoForma = (Texto*)malloc(sizeof(Texto));
+            Texto *text = ((Texto*) forma->tipoForma);
+
+            forma->id = idText;
+            idText--;
+            sscanf(str, "%c %lf %lf %s", &forma->nome, &forma->x, &forma->y, text->texto); // Arrumar para mais de uma palavra
+            escreverTexto(SVG, forma);
+            adicionarElemento(raiz, forma);
 		}
 
 	}
@@ -208,7 +218,6 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
                 retanguloDelimitador(arquivoSVG, forma1, forma2, false);
             }
             
-
         } else if(str[0] == 'i') {
             fprintf(arquivoTXT, str);
             int j;
@@ -231,8 +240,11 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             
             Forma *forma1 = encontrarForma(raiz, j);
             Forma *forma2 = encontrarForma(raiz, k);
-            fprintf(arquivoTXT, "%lf\n\n", distanciaCentro(forma1, forma2));
+
+            double dist = distanciaCentro(forma1, forma2);
+            fprintf(arquivoTXT, "%lf\n\n", dist);
             retaCentrosMassa(arquivoSVG, forma1, forma2);
+            distanciaCentrosMassa(arquivoSVG, forma1, forma2, dist);
             
         } else if(str[0] == 'b') {
             // Fazer dps

@@ -21,6 +21,11 @@ void escreverRetangulo(FILE *SVG, Forma *r) {
 	fprintf(SVG, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"%s\" fill=\"%s\" />\n", r->x, r->y, ret->w, ret->h, r->corB, r->corD);
 }
 
+void escreverTexto(FILE *SVG, Forma *t) {
+	Texto *text = ((Texto*) t->tipoForma);
+	fprintf(SVG, "<text x=\"%lf\" y=\"%lf\">%s</text>", t->x, t->y, text->texto);
+}
+
 void escreverArvoreSVG(struct Node* node, FILE *SVG) {
 	if(node == NULL){
         return;
@@ -29,6 +34,8 @@ void escreverArvoreSVG(struct Node* node, FILE *SVG) {
 			escreverCirculo(SVG, node->forma);
 		else if(node->forma->nome == 'r')
 			escreverRetangulo(SVG, node->forma);
+		else if(node->forma->nome == 't')
+			escreverTexto(SVG, node->forma);
         escreverArvoreSVG(node->esq, SVG);
         escreverArvoreSVG(node->dir, SVG);
     }
@@ -106,6 +113,20 @@ void retaCentrosMassa(FILE *SVG, Forma *a, Forma *b) {
 	centroDeMassa(a, centro1);
 	centroDeMassa(b, centro2);
 	fprintf(SVG, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"black\" />", centro1[0], centro1[1], centro2[0], centro2[1]);
+
+	free(centro1);
+	free(centro2);
+}
+
+void distanciaCentrosMassa(FILE *SVG, Forma *a, Forma *b, double distancia) {
+	double *centro1 = malloc(2*sizeof(double));
+	double *centro2 = malloc(2*sizeof(double));
+	centroDeMassa(a, centro1);
+	centroDeMassa(b, centro2);
+
+	double posX = (centro1[0] + centro2[0])/2;
+	double posY = (centro1[1] + centro2[1])/2;
+	fprintf(SVG, "<text x=\"%lf\" y=\"%lf\">%lf</text>", posX, posY, distancia);
 
 	free(centro1);
 	free(centro2);

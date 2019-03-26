@@ -12,16 +12,15 @@ typedef struct Retangulo {
 } Retangulo;
 
 typedef struct Texto {
-    double x, y;
-    char *texto;
+    char texto[20]; // Deixar?
 } Texto;
 
 typedef struct Forma {
     char nome;
     int id;
     double x, y;
-    char corB[50];
-    char corD[50];
+    char corB[20];
+    char corD[20];
     void *tipoForma;
 } Forma;
 
