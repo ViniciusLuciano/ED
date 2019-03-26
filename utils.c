@@ -2,7 +2,7 @@
 
 double clamp(double valor, double a, double b) {
     double xd = valor < a ? a : valor;
-    xd = valor > b ? b : valor;
+    xd = valor > b ? b : xd;
     return xd;
 }
 
@@ -89,8 +89,9 @@ char* tratarDiretorio(char *diretorio, char *nomeArquivo) {
 
 // Precisa dar free - TROCAR COMO TA FUNCIONANDO
 char *obterSemExtensao(char *arquivo) {
-   	char *final = malloc((strlen(arquivo) - 4)*sizeof(char));
+   	char *final = malloc((strlen(arquivo) - 3)*sizeof(char));
    	strncpy(final, arquivo, strlen(arquivo) - 4);
+    final[strlen(arquivo) - 4] = '\0';
     return final;
 }
 
@@ -112,7 +113,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 
     char str[150];
     FILE *SVG = abrirSVG(dirSVG, obterSemExtensao(nomeArquivoSVG));
-    iniciarSVG(SVG, "100", "200"); // ver como proceder com width e height
+    iniciarSVG(SVG, "1000", "1000"); // ver como proceder com width e height
 	while(true) {
 		fgets(str, sizeof(str), entrada);
 		if(feof(entrada))
@@ -148,7 +149,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 //Recebr sem extensao ja
 //Precisa dar free
 char *concatenarNomes(char *nome1, char *nome2) {
-    int num = strlen(nome1) + strlen(nome2) + 2;
+    int num = strlen(nome1) + strlen(nome2) + 5;
     char *final = malloc(num*sizeof(char));
     sprintf(final, "%s-%s", nome1, nome2);
     free(nome1);
@@ -181,7 +182,9 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
     
     FILE *consulta = abrirArquivo( tratarDiretorio(dirArquivoConsulta, nomeArquivoConsulta) );
     FILE *arquivoTXT = abrirTXT(dirSaida, concatenarNomes(obterSemExtensao(nomeArquivoEntrada), obterSemExtensao(nomeArquivoConsulta)));
-    // abrirSVG()
+    FILE *arquivoSVG = abrirSVG(dirSaida, concatenarNomes(obterSemExtensao(nomeArquivoEntrada), obterSemExtensao(nomeArquivoConsulta)));
+    iniciarSVG(arquivoSVG, "200", "200");
+    escreverArvoreSVG(*raiz, arquivoSVG);
 
     char str[150];
     while(true) {
@@ -197,10 +200,14 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
 
             Forma *forma1 = encontrarForma(raiz, j);
             Forma *forma2 = encontrarForma(raiz, k);
-            if(formasColidem(forma1, forma2))
+            if(formasColidem(forma1, forma2)) {
                 fprintf(arquivoTXT, "SIM\n\n");
-            else
+                retanguloDelimitador(arquivoSVG, forma1, forma2, true);
+            } else {
                 fprintf(arquivoTXT, "NAO\n\n");
+                retanguloDelimitador(arquivoSVG, forma1, forma2, false);
+            }
+            
 
         } else if(str[0] == 'i') {
             fprintf(arquivoTXT, str);
@@ -209,10 +216,13 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             sscanf(str, "%*s %d %lf %lf", &j, &x, &y);
 
             Forma *forma = encontrarForma(raiz, j);
-            if(pontoInternoForma(x, y, forma))
+            if(pontoInternoForma(x, y, forma)) {
                 fprintf(arquivoTXT, "SIM\n\n");
-            else
+                escreverPontoInterno(arquivoSVG, forma, x, y, true);
+            } else {
                 fprintf(arquivoTXT, "NAO\n\n");
+                escreverPontoInterno(arquivoSVG, forma, x, y, false);
+            }
 
         } else if (str[0] == 'd') {
             fprintf(arquivoTXT, str);
@@ -227,9 +237,11 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             // Fazer dps
         }
     }
-
+    
+    finalizarSVG(arquivoSVG);
     fclose(consulta);
     fclose(arquivoTXT);
+    fclose(arquivoSVG);
 }
 
 void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, char *dirSaida) {

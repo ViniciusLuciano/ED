@@ -29,10 +29,9 @@ void centroDeMassa(Forma *f, double *ponto) {
 		ponto[0] = f->x;
 		ponto[1] = f->y;
 	} else if(f->nome == 'r') {
-		f->tipoForma = (Retangulo*)malloc(sizeof(Retangulo));
 		Retangulo *ret = ((Retangulo*) f->tipoForma);
-		ponto[0] = (f->x + ret->w)/2;
-		ponto[1] = (f->y + ret->h)/2;
+		ponto[0] = f->x + ret->w/2;
+		ponto[1] = f->y + ret->h/2;
 	}
 }
 
