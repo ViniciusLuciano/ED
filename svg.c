@@ -79,9 +79,9 @@ void retanguloDelimitador(FILE *SVG2, Forma *a, Forma *b, bool colidem) {
 	}
 
 	if(colidem)
-		fprintf(SVG2, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"blue\" fill-opacity=\"0\" stroke-dasharray=\"5\" />\n", xMin, yMin, largura, altura);
-	else
 		fprintf(SVG2, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"blue\" fill-opacity=\"0\" />\n", xMin, yMin, largura, altura);
+	else
+		fprintf(SVG2, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"blue\" fill-opacity=\"0\" stroke-dasharray=\"5\" />\n", xMin, yMin, largura, altura);
 	
 }
 
@@ -98,4 +98,15 @@ void escreverPontoInterno(FILE *SVG, Forma *a, double x, double y, bool interno)
 	}
 	
 	free(centro);
+}
+
+void retaCentrosMassa(FILE *SVG, Forma *a, Forma *b) {
+	double *centro1 = malloc(2*sizeof(double));
+	double *centro2 = malloc(2*sizeof(double));
+	centroDeMassa(a, centro1);
+	centroDeMassa(b, centro2);
+	fprintf(SVG, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"black\" />", centro1[0], centro1[1], centro2[0], centro2[1]);
+
+	free(centro1);
+	free(centro2);
 }

@@ -4,10 +4,8 @@ bool colisaoCirculoRetangulo(Forma *c, Forma *r) {
     Circulo *circ = ((Circulo*) c->tipoForma);
     Retangulo *ret = ((Retangulo*) r->tipoForma);
 
-    printf("%lf %lf %lf \n", c->x, r->x, r->x+ret->w);
     double xMaisProx = clamp(c->x, r->x, r->x + ret->w);
     double yMaisProx = clamp(c->y, r->y, r->y + ret->h);
-    printf("%lf %lf\n", xMaisProx, yMaisProx);
 
     if( distancia(c->x, c->y, xMaisProx, yMaisProx) < circ->raio )
         return true;

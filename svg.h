@@ -19,4 +19,6 @@ void escreverArvoreSVG(struct Node* node, FILE *SVG);
 
 void escreverPontoInterno(FILE *SVG, Forma *a, double x, double y, bool interno);
 
+void retaCentrosMassa(FILE *SVG, Forma *a, Forma *b);
+
 #endif

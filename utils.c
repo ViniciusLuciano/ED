@@ -232,6 +232,7 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             Forma *forma1 = encontrarForma(raiz, j);
             Forma *forma2 = encontrarForma(raiz, k);
             fprintf(arquivoTXT, "%lf\n\n", distanciaCentro(forma1, forma2));
+            retaCentrosMassa(arquivoSVG, forma1, forma2);
             
         } else if(str[0] == 'b') {
             // Fazer dps
