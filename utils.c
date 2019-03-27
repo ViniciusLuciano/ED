@@ -247,7 +247,18 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             distanciaCentrosMassa(arquivoSVG, forma1, forma2, dist);
             
         } else if(str[0] == 'b') {
-            // Fazer dps
+            char buffer[20], cor[20];
+            sscanf(str, "%*s %s %s", buffer, cor);
+            char *sufixo = malloc(strlen(buffer)*sizeof(char));
+            strcpy(sufixo, buffer);
+
+            FILE *bbSVG = abrirSVG( dirSaida, concatenarNomes( concatenarNomes( obterSemExtensao(nomeArquivoEntrada), obterSemExtensao(nomeArquivoConsulta) ) , sufixo ));
+            iniciarSVG(bbSVG, "200", "200");
+
+            escreverFormasEnvoltas(bbSVG, *raiz, cor);
+
+            finalizarSVG(bbSVG);
+            fclose(bbSVG);
         }
     }
     

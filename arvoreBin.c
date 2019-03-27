@@ -12,7 +12,8 @@ void liberarNode(struct Node* node) {
     if(node == NULL)
         return;
     liberarNode(node->esq);
-    liberarNode(node->dir);
+    liberarNode(node->dir); 
+    free(node->forma);
     free(node);
     node = NULL;
 }

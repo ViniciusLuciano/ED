@@ -131,3 +131,33 @@ void distanciaCentrosMassa(FILE *SVG, Forma *a, Forma *b, double distancia) {
 	free(centro1);
 	free(centro2);
 }
+
+void escreverFormasEnvoltas(FILE *SVG, struct Node* node, char *cor) {
+	if(node == NULL){
+        return;
+    }else{
+		
+		if(node->forma->nome == 'c') {
+			escreverCirculo(SVG, node->forma);
+
+			// "Bounding box"
+			Circulo *circ = ((Circulo*) node->forma->tipoForma);
+			double posX = node->forma->x - circ->raio;
+			double posY = node->forma->y - circ->raio;
+			double lado = 2*circ->raio;
+			fprintf(SVG, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />\n", posX, posY, lado, lado, cor);
+	
+		} else if(node->forma->nome == 'r') {
+			escreverRetangulo(SVG, node->forma);
+
+			Retangulo *ret = ((Retangulo*) node->forma->tipoForma);
+			double *centro = malloc(2*sizeof(double));
+			centroDeMassa(node->forma, centro);
+
+			fprintf(SVG, "<ellipse cx=\"%lf\" cy=\"%lf\" rx=\"%lf\" ry=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />", centro[0], centro[1], ret->w/2, ret->h/2, cor);
+		}
+
+        escreverFormasEnvoltas(SVG, node->esq, cor);
+        escreverFormasEnvoltas(SVG, node->dir, cor);
+    }
+}

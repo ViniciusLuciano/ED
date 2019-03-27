@@ -4,6 +4,7 @@
 #include "headers.h"
 #include "formas.h"
 #include "arvoreBin.h"
+#include "geometria.h"
 
 void iniciarSVG(FILE *SVG, char *width, char *height);
 
@@ -24,5 +25,7 @@ void escreverPontoInterno(FILE *SVG, Forma *a, double x, double y, bool interno)
 void retaCentrosMassa(FILE *SVG, Forma *a, Forma *b);
 
 void distanciaCentrosMassa(FILE *SVG, Forma *a, Forma *b, double distancia);
+
+void escreverFormasEnvoltas(FILE *SVG, struct Node* node, char *cor);
 
 #endif
