@@ -9,8 +9,10 @@ int main(int argc, char* argv[]) {
     lerArgumentos(argc, argv, &dirEntrada, &nomeArquivoEntrada, &nomeArquivoConsulta, &dirSaida);
 
     FILE *arquivoEntrada = abrirArquivo( tratarDiretorio(dirEntrada, nomeArquivoEntrada) );
+    if(arquivoEntrada == NULL)
+        return 1;
     ArvoreBin *raiz = iniciaArvore();
-    
+
     processarArquivoEntrada(arquivoEntrada, dirSaida, nomeArquivoEntrada, raiz); // Arquivo de entrada / Arquivo SVG para escrever / raiz da arvore
     fclose(arquivoEntrada); // jogar dentro da funcao
 

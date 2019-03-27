@@ -1,9 +1,9 @@
 #include "utils.h"
 
 double clamp(double valor, double a, double b) {
-    double xd = valor < a ? a : valor;
-    xd = valor > b ? b : xd;
-    return xd;
+    double clmp = valor < a ? a : valor;
+    clmp = valor > b ? b : clmp;
+    return clmp;
 }
 
 FILE* abrirArquivo(char *diretorio) {
@@ -108,16 +108,17 @@ FILE* abrirSVG(char *dir, char *nomeArquivo) {
 
 void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, ArvoreBin *raiz) {
 
-    char str[150];
+    char str[150], instrucao[10];
     int idText = -1; // Adicionar os textos na arvore
     FILE *SVG = abrirSVG(dirSVG, obterSemExtensao(nomeArquivoSVG));
     iniciarSVG(SVG);
 	while(true) {
 		fgets(str, sizeof(str), entrada);
+        sscanf(str, "%s", instrucao);
 		if(feof(entrada))
 			break;
 
-		if(str[0] == 'c'){
+		if(strcmp(instrucao, "c") == 0){
             Forma *forma = (Forma*)malloc(sizeof(Forma));
             forma->nomeForma = CIRCULO;
             forma->tipoForma = (Circulo*)malloc(sizeof(Circulo));
@@ -127,7 +128,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             escreverCirculo(SVG, forma);
             adicionarElemento(raiz, forma); // Adicionar elemento na arvore
 
-		} else if(str[0] == 'r'){
+		} else if(strcmp(instrucao, "r") == 0){
             Forma *forma = (Forma*)malloc(sizeof(Forma));
             forma->nomeForma = RETANGULO;
             forma->tipoForma = (Retangulo*)malloc(sizeof(Retangulo));
@@ -136,7 +137,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 			sscanf(str, "%*c %d %lf %lf %lf %lf %s %s", &forma->id, &ret->w, &ret->h, &forma->x, &forma->y, forma->corD, forma->corB);
             escreverRetangulo(SVG, forma);
             adicionarElemento(raiz, forma); // Adicionar elemento na arvore
-		} else if(str[0] == 't') {
+		} else if(strcmp(instrucao, "t") == 0) {
             Forma *forma = (Forma*)malloc(sizeof(Forma));
             forma->nomeForma = TEXTO;
             forma->tipoForma = (Texto*)malloc(sizeof(Texto));
@@ -194,14 +195,14 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
     iniciarSVG(arquivoSVG);
     escreverArvoreSVG(*raiz, arquivoSVG);
 
-    char str[150];
+    char str[150], instrucao[10];
     while(true) {
         fgets(str, sizeof(str), consulta);
-
+        sscanf(str, "%s", instrucao);
 		if(feof(consulta))
 			break;
 
-        if(str[0] == 'o') {
+        if(strcmp(instrucao, "o?") == 0) {
             fprintf(arquivoTXT, str);
             int j, k;
             sscanf(str, "%*s %d %d", &j, &k);
@@ -216,7 +217,7 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
                 retanguloDelimitador(arquivoSVG, forma1, forma2, false);
             }
             
-        } else if(str[0] == 'i') {
+        } else if(strcmp(instrucao, "i?") == 0) {
             fprintf(arquivoTXT, str);
             int j;
             double x, y;
@@ -231,7 +232,7 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
                 escreverPontoInterno(arquivoSVG, forma, x, y, false);
             }
 
-        } else if (str[0] == 'd') {
+        } else if (strcmp(instrucao, "d?") == 0) {
             fprintf(arquivoTXT, str);
             int j, k;
             sscanf(str, "%*s %d %d", &j, &k);
@@ -244,7 +245,7 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             retaCentrosMassa(arquivoSVG, forma1, forma2);
             distanciaCentrosMassa(arquivoSVG, forma1, forma2, dist);
             
-        } else if(str[0] == 'b') {
+        } else if(strcmp(instrucao, "bb") == 0) {
             char buffer[20], cor[20];
             sscanf(str, "%*s %s %s", buffer, cor);
             char *sufixo = malloc(strlen(buffer)*sizeof(char));
