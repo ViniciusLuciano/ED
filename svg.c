@@ -3,8 +3,8 @@
  // TROCAR TD PRA VOID 
 
 
-void iniciarSVG(FILE *SVG, char *width, char *height) {
-	fprintf(SVG, "<svg width=\"%s\" height=\"%s\">\n", width, height);
+void iniciarSVG(FILE *SVG) {
+	fprintf(SVG, "<svg> \n");
 }
 
 void finalizarSVG(FILE *SVG) {
@@ -30,11 +30,11 @@ void escreverArvoreSVG(struct Node* node, FILE *SVG) {
 	if(node == NULL){
         return;
     }else{
-		if(node->forma->nome == 'c')
+		if(node->forma->nomeForma == CIRCULO)
 			escreverCirculo(SVG, node->forma);
-		else if(node->forma->nome == 'r')
+		else if(node->forma->nomeForma == RETANGULO)
 			escreverRetangulo(SVG, node->forma);
-		else if(node->forma->nome == 't')
+		else if(node->forma->nomeForma == TEXTO)
 			escreverTexto(SVG, node->forma);
         escreverArvoreSVG(node->esq, SVG);
         escreverArvoreSVG(node->dir, SVG);
@@ -43,7 +43,7 @@ void escreverArvoreSVG(struct Node* node, FILE *SVG) {
 
 void retanguloDelimitador(FILE *SVG2, Forma *a, Forma *b, bool colidem) {
 	double xMin, xMax, yMin, yMax, largura, altura;
-	if(a->nome == 'c' && b->nome == 'r') {
+	if(a->nomeForma == CIRCULO && b->nomeForma == RETANGULO) {
 		Circulo *circ = ((Circulo*) a->tipoForma);
 		Retangulo *ret = ((Retangulo*) b->tipoForma);
 		xMin = (a->x - circ->raio) < b->x ? (a->x - circ->raio) : b->x;
@@ -54,7 +54,7 @@ void retanguloDelimitador(FILE *SVG2, Forma *a, Forma *b, bool colidem) {
 		largura = xMax-xMin;
 		altura = yMax-yMin;
 
-	} else if(a->nome == 'r' && b->nome == 'c') {
+	} else if(a->nomeForma == RETANGULO && b->nomeForma == CIRCULO) {
 		Circulo *circ = ((Circulo*) b->tipoForma);
 		xMin = (b->x - circ->raio) < a->x ? (b->x - circ->raio) : a->x;
 		xMax = (b->x + circ->raio) > a->x ? (b->x + circ->raio) : a->x;
@@ -64,7 +64,7 @@ void retanguloDelimitador(FILE *SVG2, Forma *a, Forma *b, bool colidem) {
 		largura = xMax-xMin;
 		altura = yMax-yMin;
         
-	} else if(a->nome == 'r' && b->nome == 'r') {
+	} else if(a->nomeForma == RETANGULO && b->nomeForma == RETANGULO) {
         Retangulo *ret1 = ((Retangulo*) a->tipoForma);
 		Retangulo *ret2 = ((Retangulo*) a->tipoForma);
 		xMin = a->x < b->x ? a->x : b->x;
@@ -75,7 +75,7 @@ void retanguloDelimitador(FILE *SVG2, Forma *a, Forma *b, bool colidem) {
 		largura = xMax-xMin;
 		altura = yMax-yMin;
 	
-	} else if(a->nome == 'c' && b->nome == 'c') {
+	} else if(a->nomeForma == CIRCULO && b->nomeForma == CIRCULO) {
         Circulo *circ1 = ((Circulo*) a->tipoForma);
 		Circulo *circ2 = ((Circulo*) b->tipoForma);
 
@@ -83,6 +83,9 @@ void retanguloDelimitador(FILE *SVG2, Forma *a, Forma *b, bool colidem) {
 		xMax = (a->x + circ1->raio) > (b->x + circ2->raio) ? (a->x + circ1->raio) : (b->x + circ2->raio);
 		yMin = (a->y - circ1->raio) < (b->y - circ2->raio) ? (a->y - circ1->raio) : (b->y - circ2->raio);
 		yMax = (a->y + circ1->raio) > (b->y + circ2->raio) ? (a->y + circ1->raio) : (b->y + circ2->raio);
+		
+		largura = xMax-xMin;
+		altura = yMax-yMin;
 	}
 
 	if(colidem)
@@ -137,7 +140,7 @@ void escreverFormasEnvoltas(FILE *SVG, struct Node* node, char *cor) {
         return;
     }else{
 		
-		if(node->forma->nome == 'c') {
+		if(node->forma->nomeForma == CIRCULO) {
 			escreverCirculo(SVG, node->forma);
 
 			// "Bounding box"
@@ -147,7 +150,7 @@ void escreverFormasEnvoltas(FILE *SVG, struct Node* node, char *cor) {
 			double lado = 2*circ->raio;
 			fprintf(SVG, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />\n", posX, posY, lado, lado, cor);
 	
-		} else if(node->forma->nome == 'r') {
+		} else if(node->forma->nomeForma == RETANGULO) {
 			escreverRetangulo(SVG, node->forma);
 
 			Retangulo *ret = ((Retangulo*) node->forma->tipoForma);

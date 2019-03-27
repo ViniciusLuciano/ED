@@ -9,12 +9,9 @@ double clamp(double valor, double a, double b) {
 FILE* abrirArquivo(char *diretorio) {
     FILE* arq = fopen(diretorio, "r");
     free(diretorio);
-    if(arq == NULL) {
+    if(arq == NULL)
         perror("Falha na inicialização do arquivo");
-        exit(1);
-    } else {
-        return arq;
-    }
+    return arq;
 }
 
 void lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], char *nomeArquivoConsulta[], char *dirSaida[]) {
@@ -114,7 +111,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
     char str[150];
     int idText = -1; // Adicionar os textos na arvore
     FILE *SVG = abrirSVG(dirSVG, obterSemExtensao(nomeArquivoSVG));
-    iniciarSVG(SVG, "1000", "1000"); // ver como proceder com width e height
+    iniciarSVG(SVG);
 	while(true) {
 		fgets(str, sizeof(str), entrada);
 		if(feof(entrada))
@@ -122,31 +119,32 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 
 		if(str[0] == 'c'){
             Forma *forma = (Forma*)malloc(sizeof(Forma));
-
+            forma->nomeForma = CIRCULO;
             forma->tipoForma = (Circulo*)malloc(sizeof(Circulo));
             Circulo *circ = ((Circulo*) forma->tipoForma);
 
-			sscanf(str, "%c %d %lf %lf %lf %s %s", &forma->nome, &forma->id, &circ->raio, &forma->x, &forma->y, forma->corD, forma->corB);
+			sscanf(str, "%*c %d %lf %lf %lf %s %s", &forma->id, &circ->raio, &forma->x, &forma->y, forma->corD, forma->corB);
             escreverCirculo(SVG, forma);
             adicionarElemento(raiz, forma); // Adicionar elemento na arvore
+
 		} else if(str[0] == 'r'){
             Forma *forma = (Forma*)malloc(sizeof(Forma));
-
+            forma->nomeForma = RETANGULO;
             forma->tipoForma = (Retangulo*)malloc(sizeof(Retangulo));
             Retangulo *ret = ((Retangulo*) forma->tipoForma);
 
-			sscanf(str, "%c %d %lf %lf %lf %lf %s %s", &forma->nome, &forma->id, &ret->w, &ret->h, &forma->x, &forma->y, forma->corD, forma->corB);
+			sscanf(str, "%*c %d %lf %lf %lf %lf %s %s", &forma->id, &ret->w, &ret->h, &forma->x, &forma->y, forma->corD, forma->corB);
             escreverRetangulo(SVG, forma);
             adicionarElemento(raiz, forma); // Adicionar elemento na arvore
 		} else if(str[0] == 't') {
             Forma *forma = (Forma*)malloc(sizeof(Forma));
-
+            forma->nomeForma = TEXTO;
             forma->tipoForma = (Texto*)malloc(sizeof(Texto));
             Texto *text = ((Texto*) forma->tipoForma);
 
             forma->id = idText;
             idText--;
-            sscanf(str, "%c %lf %lf %50[^\n]", &forma->nome, &forma->x, &forma->y, text->texto);
+            sscanf(str, "%*c %lf %lf %50[^\n]", &forma->x, &forma->y, text->texto);
             escreverTexto(SVG, forma);
             adicionarElemento(raiz, forma);
 		}
@@ -193,7 +191,7 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
     FILE *consulta = abrirArquivo( tratarDiretorio(dirArquivoConsulta, nomeArquivoConsulta) );
     FILE *arquivoTXT = abrirTXT(dirSaida, concatenarNomes(obterSemExtensao(nomeArquivoEntrada), obterSemExtensao(nomeArquivoConsulta)));
     FILE *arquivoSVG = abrirSVG(dirSaida, concatenarNomes(obterSemExtensao(nomeArquivoEntrada), obterSemExtensao(nomeArquivoConsulta)));
-    iniciarSVG(arquivoSVG, "200", "200");
+    iniciarSVG(arquivoSVG);
     escreverArvoreSVG(*raiz, arquivoSVG);
 
     char str[150];
@@ -253,7 +251,7 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             strcpy(sufixo, buffer);
 
             FILE *bbSVG = abrirSVG( dirSaida, concatenarNomes( concatenarNomes( obterSemExtensao(nomeArquivoEntrada), obterSemExtensao(nomeArquivoConsulta) ) , sufixo ));
-            iniciarSVG(bbSVG, "200", "200");
+            iniciarSVG(bbSVG);
 
             escreverFormasEnvoltas(bbSVG, *raiz, cor);
 

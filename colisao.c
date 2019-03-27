@@ -28,12 +28,12 @@ bool colisaoCirculoCirculo(Forma *c1, Forma *c2) {
 }
 
 bool formasColidem(Forma *a, Forma *b) {
-    if(a->nome == 'c' && b->nome == 'r')
+    if(a->nomeForma == CIRCULO && b->nomeForma == RETANGULO)
         return colisaoCirculoRetangulo(a, b);
-    else if(a->nome == 'r' && b->nome == 'c')
+    else if(a->nomeForma == RETANGULO && b->nomeForma == CIRCULO)
         return colisaoCirculoRetangulo(b, a);
-    else if(a->nome == 'r' && b->nome == 'r')
+    else if(a->nomeForma == RETANGULO && b->nomeForma == RETANGULO)
         return colisaoRetanguloRetangulo(a, b);
-    else if(a->nome == 'c' && b->nome == 'c')
+    else if(a->nomeForma == CIRCULO && b->nomeForma == CIRCULO)
         return colisaoCirculoCirculo(a, b);
 }   

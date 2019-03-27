@@ -6,7 +6,7 @@
 #include "arvoreBin.h"
 #include "geometria.h"
 
-void iniciarSVG(FILE *SVG, char *width, char *height);
+void iniciarSVG(FILE *SVG);
 
 void finalizarSVG(FILE *SVG);
 

@@ -17,18 +17,17 @@ bool pontoInternoRetangulo(double px, double py, Forma *r) {
 }
 
 bool pontoInternoForma(double px, double py, Forma *a) {
-	if(a->nome == 'c')
+	if(a->nomeForma == CIRCULO)
 		return pontoInternoCirculo(px, py, a);
-	else if(a->nome == 'r')
+	else if(a->nomeForma == RETANGULO)
 		return pontoInternoRetangulo(px, py, a);
 }
 
-// Acessivel pela function distanciaCentro
 void centroDeMassa(Forma *f, double *ponto) {
-	if(f->nome == 'c') {
+	if(f->nomeForma == CIRCULO) {
 		ponto[0] = f->x;
 		ponto[1] = f->y;
-	} else if(f->nome == 'r') {
+	} else if(f->nomeForma == RETANGULO) {
 		Retangulo *ret = ((Retangulo*) f->tipoForma);
 		ponto[0] = f->x + ret->w/2;
 		ponto[1] = f->y + ret->h/2;

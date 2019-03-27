@@ -3,6 +3,12 @@
 
 #include "headers.h"
 
+typedef enum NomeForma{
+    CIRCULO,
+    RETANGULO,
+    TEXTO
+} NomeForma;
+
 typedef struct Circulo {
     double raio;
 } Circulo;
@@ -16,7 +22,7 @@ typedef struct Texto {
 } Texto;
 
 typedef struct Forma {
-    char nome;
+    enum NomeForma nomeForma;
     int id;
     double x, y;
     char corB[20];
