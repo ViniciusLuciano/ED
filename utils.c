@@ -146,7 +146,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 
             forma->id = idText;
             idText--;
-            sscanf(str, "%c %lf %lf %s", &forma->nome, &forma->x, &forma->y, text->texto); // Arrumar para mais de uma palavra
+            sscanf(str, "%c %lf %lf %50[^\n]", &forma->nome, &forma->x, &forma->y, text->texto);
             escreverTexto(SVG, forma);
             adicionarElemento(raiz, forma);
 		}

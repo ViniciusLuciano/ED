@@ -155,7 +155,7 @@ void escreverFormasEnvoltas(FILE *SVG, struct Node* node, char *cor) {
 			centroDeMassa(node->forma, centro);
 
 			fprintf(SVG, "<ellipse cx=\"%lf\" cy=\"%lf\" rx=\"%lf\" ry=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />", centro[0], centro[1], ret->w/2, ret->h/2, cor);
-		}
+		}	
 
         escreverFormasEnvoltas(SVG, node->esq, cor);
         escreverFormasEnvoltas(SVG, node->dir, cor);
