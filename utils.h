@@ -11,7 +11,7 @@ double clamp(double valor, double a, double b);
 
 FILE *abrirArquivo(char *diretorio);
 
-void lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], char *nomeArquivoConsulta[], char *dirSaida[]);
+bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], char *nomeArquivoConsulta[], char *dirSaida[]);
 
 char *tratarDiretorio(char *diretorio, char *nomeArquivo);
 

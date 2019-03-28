@@ -14,13 +14,13 @@ FILE* abrirArquivo(char *diretorio) {
     return arq;
 }
 
-void lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], char *nomeArquivoConsulta[], char *dirSaida[]) {
+bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], char *nomeArquivoConsulta[], char *dirSaida[]) {
     int dirEntradaIndex, nomeArquivoEntradaIndex, nomeArquivoConsultaIndex, dirSaidaIndex;
     for(int i = 1; i < argc; i++) {
         if(strcmp(argv[i], "-e") == 0) {
             if( i+1 >= argc ) {
                 printf("'-e' requer um argumento\n");
-                exit(1);
+                return false;
             }
 			dirEntradaIndex=i+1;
 
@@ -30,7 +30,7 @@ void lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquiv
         } else if(strcmp(argv[i], "-f") == 0) {
             if( i+1 >= argc ) {
                 printf("'-f' requer um argumento\n");
-                exit(1);
+                return false;
             }
 			nomeArquivoEntradaIndex=i+1;
 
@@ -40,7 +40,7 @@ void lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquiv
         } else if(strcmp(argv[i], "-q") == 0) {
             if( i+1 >= argc ) {
                 printf("'-q' requer um argumento\n");
-                exit(1);
+                return false;
             }
 			nomeArquivoConsultaIndex=i+1;
 
@@ -50,7 +50,7 @@ void lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquiv
         } else if(strcmp(argv[i], "-o") == 0) {
             if( i+1 >= argc ) {
                 printf("'-o' requer um argumento\n");
-                exit(1);
+                return false;
             }
             dirSaidaIndex=i+1;
 
@@ -58,6 +58,12 @@ void lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquiv
             strcpy(*dirSaida, argv[dirSaidaIndex]);
         }
     }
+
+    if(*nomeArquivoEntrada == NULL || *dirSaida == NULL) {
+        printf("Requer arquivo de entrada e/ou diretório de saída.\n");
+        return false;
+    }
+    return true;
 }
 
 //Precisa dar free
