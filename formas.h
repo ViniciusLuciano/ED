@@ -25,8 +25,8 @@ typedef struct Forma {
     enum NomeForma nomeForma;
     int id;
     double x, y;
-    char corB[20];
-    char corD[20];
+    char *corB;
+    char *corD;
     void *tipoForma;
 } Forma;
 

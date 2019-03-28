@@ -15,6 +15,10 @@ void liberarNode(struct Node* node) {
     liberarNode(node->dir);
     if(node->forma->nomeForma == TEXTO)
         free(((Texto*)node->forma->tipoForma)->texto);
+    else if(node->forma->nomeForma == CIRCULO || node->forma->nomeForma == RETANGULO) {
+        free(node->forma->corB);
+        free(node->forma->corD);
+    }
     free(node->forma->tipoForma); // Ponteiro void alocado
     free(node->forma);
     free(node);

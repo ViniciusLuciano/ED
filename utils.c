@@ -123,7 +123,14 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             forma->tipoForma = (Circulo*)malloc(sizeof(Circulo));
             Circulo *circ = ((Circulo*) forma->tipoForma);
 
-			sscanf(str, "%*c %d %lf %lf %lf %s %s", &forma->id, &circ->raio, &forma->x, &forma->y, forma->corD, forma->corB);
+            char bufferCorD[50], bufferCorB[50];
+			sscanf(str, "%*c %d %lf %lf %lf %s %s", &forma->id, &circ->raio, &forma->x, &forma->y, bufferCorD, bufferCorB);
+
+            forma->corB = malloc(strlen(bufferCorB)*sizeof(char));
+            forma->corD = malloc(strlen(bufferCorD)*sizeof(char));
+            strcpy(forma->corB, bufferCorB);
+            strcpy(forma->corD, bufferCorD);
+
             escreverCirculo(SVG, forma);
             adicionarElemento(raiz, forma); // Adicionar elemento na arvore
 
@@ -133,7 +140,14 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             forma->tipoForma = (Retangulo*)malloc(sizeof(Retangulo));
             Retangulo *ret = ((Retangulo*) forma->tipoForma);
 
-			sscanf(str, "%*c %d %lf %lf %lf %lf %s %s", &forma->id, &ret->w, &ret->h, &forma->x, &forma->y, forma->corD, forma->corB);
+            char bufferCorD[50], bufferCorB[50];
+			sscanf(str, "%*c %d %lf %lf %lf %lf %s %s", &forma->id, &ret->w, &ret->h, &forma->x, &forma->y, bufferCorD, bufferCorB);
+            
+            forma->corB = malloc(strlen(bufferCorB)*sizeof(char));
+            forma->corD = malloc(strlen(bufferCorD)*sizeof(char));
+            strcpy(forma->corB, bufferCorB);
+            strcpy(forma->corD, bufferCorD);
+
             escreverRetangulo(SVG, forma);
             adicionarElemento(raiz, forma); // Adicionar elemento na arvore
 		} else if(strcmp(instrucao, "t") == 0) {
@@ -143,13 +157,12 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             Texto *text = ((Texto*) forma->tipoForma);
     
             char bufferTexto[256];
-
-            forma->id = idText;
-            idText--;
             sscanf(str, "%*c %lf %lf %256[^\n]", &forma->x, &forma->y, bufferTexto);
 
             text->texto = malloc(strlen(bufferTexto)*sizeof(char));
             strcpy(text->texto, bufferTexto);
+            forma->id = idText;
+            idText--;
 
             escreverTexto(SVG, forma);
             adicionarElemento(raiz, forma);
