@@ -51,9 +51,6 @@ void retanguloDelimitador(FILE *SVG2, Forma *a, Forma *b, bool colidem) {
 		yMin = (a->y - circ->raio) < b->y ? (a->y - circ->raio) : b->y;
 		yMax = (a->y + circ->raio) > (b->y + ret->h) ? (a->y + circ->raio) : (b->y + ret->h);
 
-		largura = xMax-xMin;
-		altura = yMax-yMin;
-
 	} else if(a->nomeForma == RETANGULO && b->nomeForma == CIRCULO) {
 		Circulo *circ = ((Circulo*) b->tipoForma);
 		xMin = (b->x - circ->raio) < a->x ? (b->x - circ->raio) : a->x;
@@ -61,9 +58,6 @@ void retanguloDelimitador(FILE *SVG2, Forma *a, Forma *b, bool colidem) {
 		yMin = (b->y - circ->raio) < a->y ? (b->y - circ->raio) : a->y;
 		yMax = (b->y + circ->raio) > a->y ? (b->y + circ->raio) : a->y;
 
-		largura = xMax-xMin;
-		altura = yMax-yMin;
-        
 	} else if(a->nomeForma == RETANGULO && b->nomeForma == RETANGULO) {
         Retangulo *ret1 = ((Retangulo*) a->tipoForma);
 		Retangulo *ret2 = ((Retangulo*) a->tipoForma);
@@ -72,9 +66,6 @@ void retanguloDelimitador(FILE *SVG2, Forma *a, Forma *b, bool colidem) {
 		yMin = a->y < b->y ? a->y : b->y;
 		yMax = (a->y + ret1->h) > (b->y + ret2->h) ? (a->y + ret1->h) : (b->y + ret2->h);
 
-		largura = xMax-xMin;
-		altura = yMax-yMin;
-	
 	} else if(a->nomeForma == CIRCULO && b->nomeForma == CIRCULO) {
         Circulo *circ1 = ((Circulo*) a->tipoForma);
 		Circulo *circ2 = ((Circulo*) b->tipoForma);
@@ -83,10 +74,11 @@ void retanguloDelimitador(FILE *SVG2, Forma *a, Forma *b, bool colidem) {
 		xMax = (a->x + circ1->raio) > (b->x + circ2->raio) ? (a->x + circ1->raio) : (b->x + circ2->raio);
 		yMin = (a->y - circ1->raio) < (b->y - circ2->raio) ? (a->y - circ1->raio) : (b->y - circ2->raio);
 		yMax = (a->y + circ1->raio) > (b->y + circ2->raio) ? (a->y + circ1->raio) : (b->y + circ2->raio);
-		
-		largura = xMax-xMin;
-		altura = yMax-yMin;
+
 	}
+	
+	largura = xMax-xMin;
+	altura = yMax-yMin;
 
 	if(colidem)
 		fprintf(SVG2, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"blue\" fill-opacity=\"0\" />\n", xMin, yMin, largura, altura);

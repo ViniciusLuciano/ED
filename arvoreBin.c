@@ -12,7 +12,10 @@ void liberarNode(struct Node* node) {
     if(node == NULL)
         return;
     liberarNode(node->esq);
-    liberarNode(node->dir); 
+    liberarNode(node->dir);
+    if(node->forma->nomeForma == TEXTO)
+        free(((Texto*)node->forma->tipoForma)->texto);
+    free(node->forma->tipoForma); // Ponteiro void alocado
     free(node->forma);
     free(node);
     node = NULL;

@@ -24,12 +24,18 @@ void lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquiv
             }
 			dirEntradaIndex=i+1;
 
+            *dirEntrada = malloc(strlen(argv[dirEntradaIndex])*sizeof(char));   
+            strcpy(*dirEntrada, argv[dirEntradaIndex]);
+
         } else if(strcmp(argv[i], "-f") == 0) {
             if( i+1 >= argc ) {
                 printf("'-f' requer um argumento\n");
                 exit(1);
             }
 			nomeArquivoEntradaIndex=i+1;
+
+            *nomeArquivoEntrada = malloc(strlen(argv[nomeArquivoEntradaIndex])*sizeof(char));
+            strcpy(*nomeArquivoEntrada, argv[nomeArquivoEntradaIndex]);
 
         } else if(strcmp(argv[i], "-q") == 0) {
             if( i+1 >= argc ) {
@@ -38,27 +44,20 @@ void lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquiv
             }
 			nomeArquivoConsultaIndex=i+1;
 
+            *nomeArquivoConsulta = malloc(strlen(argv[nomeArquivoConsultaIndex])*sizeof(char));
+            strcpy(*nomeArquivoConsulta, argv[nomeArquivoConsultaIndex]);
+
         } else if(strcmp(argv[i], "-o") == 0) {
             if( i+1 >= argc ) {
                 printf("'-o' requer um argumento\n");
                 exit(1);
             }
-
             dirSaidaIndex=i+1;
+
+            *dirSaida = malloc(strlen(argv[dirSaidaIndex])*sizeof(char));
+            strcpy(*dirSaida, argv[dirSaidaIndex]);
         }
     }
-
-    *dirEntrada = malloc(strlen(argv[dirEntradaIndex])*sizeof(char));
-    strcpy(*dirEntrada, argv[dirEntradaIndex]);
-
-    *nomeArquivoEntrada = malloc(strlen(argv[nomeArquivoEntradaIndex])*sizeof(char));
-    strcpy(*nomeArquivoEntrada, argv[nomeArquivoEntradaIndex]);
-
-    *nomeArquivoConsulta = malloc(strlen(argv[nomeArquivoConsultaIndex])*sizeof(char));
-    strcpy(*nomeArquivoConsulta, argv[nomeArquivoConsultaIndex]);
-
-    *dirSaida = malloc(strlen(argv[dirSaidaIndex])*sizeof(char));
-    strcpy(*dirSaida, argv[dirSaidaIndex]);
 }
 
 //Precisa dar free
@@ -142,10 +141,16 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             forma->nomeForma = TEXTO;
             forma->tipoForma = (Texto*)malloc(sizeof(Texto));
             Texto *text = ((Texto*) forma->tipoForma);
+    
+            char bufferTexto[256];
 
             forma->id = idText;
             idText--;
-            sscanf(str, "%*c %lf %lf %50[^\n]", &forma->x, &forma->y, text->texto);
+            sscanf(str, "%*c %lf %lf %256[^\n]", &forma->x, &forma->y, bufferTexto);
+
+            text->texto = malloc(strlen(bufferTexto)*sizeof(char));
+            strcpy(text->texto, bufferTexto);
+
             escreverTexto(SVG, forma);
             adicionarElemento(raiz, forma);
 		}
@@ -186,7 +191,7 @@ FILE *abrirTXT(char *dirSaida, char *nomeArquivo) {
 }
 
 void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *dirArquivoConsulta, char *nomeArquivoConsulta, ArvoreBin *raiz) {
-    if(nomeArquivoConsulta == NULL)
+    if(nomeArquivoConsulta == NULL) 
         return;
     
     FILE *consulta = abrirArquivo( tratarDiretorio(dirArquivoConsulta, nomeArquivoConsulta) );

@@ -18,7 +18,7 @@ typedef struct Retangulo {
 } Retangulo;
 
 typedef struct Texto {
-    char texto[50]; // Deixar?
+    char *texto;
 } Texto;
 
 typedef struct Forma {
