@@ -81,9 +81,9 @@ void retanguloDelimitador(FILE *SVG2, Forma *a, Forma *b, bool colidem) {
 	altura = yMax-yMin;
 
 	if(colidem)
-		fprintf(SVG2, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"blue\" fill-opacity=\"0\" />\n", xMin, yMin, largura, altura);
+		fprintf(SVG2, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"red\" fill-opacity=\"0\" />\n", xMin, yMin, largura, altura);
 	else
-		fprintf(SVG2, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"blue\" fill-opacity=\"0\" stroke-dasharray=\"5\" />\n", xMin, yMin, largura, altura);
+		fprintf(SVG2, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"red\" fill-opacity=\"0\" stroke-dasharray=\"5\" />\n", xMin, yMin, largura, altura);
 	
 }
 
@@ -93,10 +93,10 @@ void escreverPontoInterno(FILE *SVG, Forma *a, double x, double y, bool interno)
 
 	if(interno) {
 		fprintf(SVG, "<circle cx=\"%lf\" cy=\"%lf\" r=\"1\" stroke=\"green\" fill=\"green\" />\n", x, y);
-		fprintf(SVG, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"green\" />", centro[0], centro[1], x, y);
+		fprintf(SVG, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"green\" />\n", centro[0], centro[1], x, y);
 	} else {
 		fprintf(SVG, "<circle cx=\"%lf\" cy=\"%lf\" r=\"1\" stroke=\"red\" fill=\"red\" />\n", x, y);
-		fprintf(SVG, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"red\" />", centro[0], centro[1], x, y);
+		fprintf(SVG, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"red\" />\n", centro[0], centro[1], x, y);
 	}
 	
 	free(centro);
@@ -107,7 +107,7 @@ void retaCentrosMassa(FILE *SVG, Forma *a, Forma *b) {
 	double *centro2 = malloc(2*sizeof(double));
 	centroDeMassa(a, centro1);
 	centroDeMassa(b, centro2);
-	fprintf(SVG, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"black\" />", centro1[0], centro1[1], centro2[0], centro2[1]);
+	fprintf(SVG, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"black\" />\n", centro1[0], centro1[1], centro2[0], centro2[1]);
 
 	free(centro1);
 	free(centro2);
@@ -121,7 +121,7 @@ void distanciaCentrosMassa(FILE *SVG, Forma *a, Forma *b, double distancia) {
 
 	double posX = (centro1[0] + centro2[0])/2;
 	double posY = (centro1[1] + centro2[1])/2;
-	fprintf(SVG, "<text x=\"%lf\" y=\"%lf\">%lf</text>", posX, posY, distancia);
+	fprintf(SVG, "<text x=\"%lf\" y=\"%lf\">%lf</text>\n", posX, posY, distancia);
 
 	free(centro1);
 	free(centro2);
@@ -149,7 +149,7 @@ void escreverFormasEnvoltas(FILE *SVG, struct Node* node, char *cor) {
 			double *centro = malloc(2*sizeof(double));
 			centroDeMassa(node->forma, centro);
 
-			fprintf(SVG, "<ellipse cx=\"%lf\" cy=\"%lf\" rx=\"%lf\" ry=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />", centro[0], centro[1], ret->w/2, ret->h/2, cor);
+			fprintf(SVG, "<ellipse cx=\"%lf\" cy=\"%lf\" rx=\"%lf\" ry=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />\n", centro[0], centro[1], ret->w/2, ret->h/2, cor);
 		}	
 
         escreverFormasEnvoltas(SVG, node->esq, cor);

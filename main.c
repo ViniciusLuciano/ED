@@ -11,10 +11,14 @@ int main(int argc, char* argv[]) {
     if(!argumentosCorretos)
         return 1;
 
-    FILE *arquivoEntrada = abrirArquivo( tratarDiretorio(dirEntrada, nomeArquivoEntrada) );
+    
+    char diretorioFinal[128];
+    tratarDiretorio(dirEntrada, nomeArquivoEntrada, diretorioFinal);
+    FILE *arquivoEntrada = abrirArquivo( diretorioFinal );
     if(arquivoEntrada == NULL)
         return 1;
-        
+    
+
     ArvoreBin *raiz = iniciaArvore();
 
     processarArquivoEntrada(arquivoEntrada, dirSaida, nomeArquivoEntrada, raiz); // Arquivo de entrada / Arquivo SVG para escrever / raiz da arvore
@@ -28,5 +32,6 @@ int main(int argc, char* argv[]) {
 
 
     desalocarArgumentos(dirEntrada, nomeArquivoEntrada, nomeArquivoConsulta, dirSaida);
-    liberarArvore(raiz);    
+    liberarArvore(raiz);
+    
 }

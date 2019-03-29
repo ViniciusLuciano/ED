@@ -8,7 +8,6 @@ double clamp(double valor, double a, double b) {
 
 FILE* abrirArquivo(char *diretorio) {
     FILE* arq = fopen(diretorio, "r");
-    free(diretorio);
     if(arq == NULL)
         perror("Falha na inicialização do arquivo");
     return arq;
@@ -63,51 +62,40 @@ bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquiv
         printf("Requer arquivo de entrada e/ou diretório de saída.\n");
         return false;
     }
+
     return true;
 }
 
-//Precisa dar free
-char* tratarDiretorio(char *diretorio, char *nomeArquivo) {
-
+void tratarDiretorio(char *diretorio, char *nomeArquivo, char *diretorioFinal) {
     if(diretorio == NULL) {
-        int num = strlen(nomeArquivo) + 1;
-        char *diretorioFinal = malloc(num*sizeof(char)); // Pra dar free na funçao que recebe
         strcpy(diretorioFinal, nomeArquivo);
-        return diretorioFinal;
-    }
-
-    int num = strlen(diretorio)+strlen(nomeArquivo) + 2;
-    char *diretorioFinal = malloc(num*sizeof(char));
-
-	if(diretorio[strlen(diretorio) - 1] == '/') {
+    } else if(diretorio[strlen(diretorio) - 1] == '/') {
 		sprintf(diretorioFinal, "%s%s", diretorio, nomeArquivo);
 	} else {
 		sprintf(diretorioFinal, "%s/%s", diretorio, nomeArquivo);
 	}
-
-	return diretorioFinal;
 }
 
-
-// Precisa dar free - TROCAR COMO TA FUNCIONANDO
-char *obterSemExtensao(char *arquivo) {
-   	char *final = malloc((strlen(arquivo) - 3)*sizeof(char));
-   	strncpy(final, arquivo, strlen(arquivo) - 4);
-    final[strlen(arquivo) - 4] = '\0';
-    return final;
+void obterSemExtensao(char *arquivo, char *final) {
+    for(int i = strlen(arquivo); i > 0; i--) {
+        if(arquivo[i] == '.') {
+            strncpy(final, arquivo, i);
+            final[i] = '\0';
+        }
+    }
 }
 
 FILE* abrirSVG(char *dir, char *nomeArquivo) {
+
     int num = strlen(dir) + strlen(nomeArquivo) + 4 + 2; //.svg / \0
     char *caminho = malloc(num*sizeof(char));
-    
     if(dir[strlen(dir) - 1] == '/')
         sprintf(caminho, "%s%s.svg", dir, nomeArquivo);
     else
         sprintf(caminho, "%s/%s.svg", dir, nomeArquivo);
 
-    free(nomeArquivo);
     FILE *SVG = fopen(caminho, "w");
+    free(caminho);
     return SVG;
 }
 
@@ -115,7 +103,16 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 
     char str[150], instrucao[10];
     int idText = -1; // Adicionar os textos na arvore
-    FILE *SVG = abrirSVG(dirSVG, obterSemExtensao(nomeArquivoSVG));
+
+    char *nomeArqSemExtensao = malloc(strlen(nomeArquivoSVG)*sizeof(char));
+    obterSemExtensao(nomeArquivoSVG, nomeArqSemExtensao);
+    FILE *SVG = abrirSVG(dirSVG, nomeArqSemExtensao);
+    if(SVG == NULL) {
+        printf("Falha no diretorio de saída\n");
+        exit(1);
+    }
+    free(nomeArqSemExtensao);
+
     iniciarSVG(SVG);
 	while(true) {
 		fgets(str, sizeof(str), entrada);
@@ -130,7 +127,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             Circulo *circ = ((Circulo*) forma->tipoForma);
 
             char bufferCorD[50], bufferCorB[50];
-			sscanf(str, "%*c %d %lf %lf %lf %s %s", &forma->id, &circ->raio, &forma->x, &forma->y, bufferCorD, bufferCorB);
+			sscanf(str, "%*c %d %lf %lf %lf %s %s", &forma->id, &circ->raio, &forma->x, &forma->y, bufferCorB, bufferCorD);
 
             forma->corB = malloc(strlen(bufferCorB)*sizeof(char));
             forma->corD = malloc(strlen(bufferCorD)*sizeof(char));
@@ -147,7 +144,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             Retangulo *ret = ((Retangulo*) forma->tipoForma);
 
             char bufferCorD[50], bufferCorB[50];
-			sscanf(str, "%*c %d %lf %lf %lf %lf %s %s", &forma->id, &ret->w, &ret->h, &forma->x, &forma->y, bufferCorD, bufferCorB);
+			sscanf(str, "%*c %d %lf %lf %lf %lf %s %s", &forma->id, &ret->w, &ret->h, &forma->x, &forma->y, bufferCorB, bufferCorD);
             
             forma->corB = malloc(strlen(bufferCorB)*sizeof(char));
             forma->corD = malloc(strlen(bufferCorD)*sizeof(char));
@@ -175,23 +172,17 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 		}
 
 	}
+    
     finalizarSVG(SVG);
     fclose(SVG);
 }
 
-//Recebr sem extensao ja
-//Precisa dar free
-char *concatenarNomes(char *nome1, char *nome2) {
-    int num = strlen(nome1) + strlen(nome2) + 5;
-    char *final = malloc(num*sizeof(char));
-    sprintf(final, "%s-%s", nome1, nome2);
-    free(nome1);
-    free(nome2);
-    return final;
+void concatenarNomes(char *nome1, char *nome2, char *nomeSaida) {
+    sprintf(nomeSaida, "%s-%s", nome1, nome2);
 }
 
 FILE *abrirTXT(char *dirSaida, char *nomeArquivo) {
-    int num = strlen(dirSaida) + strlen(nomeArquivo) + 5; //.txt
+    int num = strlen(dirSaida) + strlen(nomeArquivo) + 5; 
     char *caminho = malloc(num*sizeof(char));
 
     if(dirSaida[strlen(dirSaida) - 1] == '/')
@@ -199,26 +190,38 @@ FILE *abrirTXT(char *dirSaida, char *nomeArquivo) {
     else
         sprintf(caminho, "%s/%s.txt", dirSaida, nomeArquivo);
 
-    FILE *arqTXT = fopen(caminho, "w"); // Ta dando seg fault
+    FILE *arqTXT = fopen(caminho, "w"); 
     if(arqTXT == NULL) {
-        perror("Falha na abertura do arquivo TXT");
+        perror("Falha na abertura do arquivo de entrada.");
         exit(1);
     }
 
-    free(nomeArquivo);
+    free(caminho);
     return arqTXT;
 }
+
 
 void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *dirArquivoConsulta, char *nomeArquivoConsulta, ArvoreBin *raiz) {
     if(nomeArquivoConsulta == NULL) 
         return;
     
-    FILE *consulta = abrirArquivo( tratarDiretorio(dirArquivoConsulta, nomeArquivoConsulta) );
-    FILE *arquivoTXT = abrirTXT(dirSaida, concatenarNomes(obterSemExtensao(nomeArquivoEntrada), obterSemExtensao(nomeArquivoConsulta)));
-    FILE *arquivoSVG = abrirSVG(dirSaida, concatenarNomes(obterSemExtensao(nomeArquivoEntrada), obterSemExtensao(nomeArquivoConsulta)));
+    char dirFinalArqConsulta[64];
+    tratarDiretorio(dirArquivoConsulta, nomeArquivoConsulta, dirFinalArqConsulta);
+    FILE *consulta = abrirArquivo( dirFinalArqConsulta );
+
+    char nomeArquivoEntradaSemExtensao[64];
+    char nomeArquivoConsultaSemExtensao[64];
+    obterSemExtensao(nomeArquivoEntrada, nomeArquivoEntradaSemExtensao);
+    obterSemExtensao(nomeArquivoConsulta, nomeArquivoConsultaSemExtensao);
+
+    char nomeEntradaConsultaSemExtensao[128];
+    concatenarNomes(nomeArquivoEntradaSemExtensao, nomeArquivoConsultaSemExtensao, nomeEntradaConsultaSemExtensao);
+
+    FILE *arquivoTXT = abrirTXT(dirSaida, nomeEntradaConsultaSemExtensao);
+    FILE *arquivoSVG = abrirSVG(dirSaida, nomeEntradaConsultaSemExtensao);
+
     iniciarSVG(arquivoSVG);
     escreverArvoreSVG(*raiz, arquivoSVG);
-
     char str[150], instrucao[10];
     while(true) {
         fgets(str, sizeof(str), consulta);
@@ -227,7 +230,7 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
 			break;
 
         if(strcmp(instrucao, "o?") == 0) {
-            fprintf(arquivoTXT, str);
+            fprintf(arquivoTXT, "%s", str);
             int j, k;
             sscanf(str, "%*s %d %d", &j, &k);
 
@@ -242,7 +245,7 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             }
             
         } else if(strcmp(instrucao, "i?") == 0) {
-            fprintf(arquivoTXT, str);
+            fprintf(arquivoTXT, "%s", str);
             int j;
             double x, y;
             sscanf(str, "%*s %d %lf %lf", &j, &x, &y);
@@ -257,7 +260,7 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             }
 
         } else if (strcmp(instrucao, "d?") == 0) {
-            fprintf(arquivoTXT, str);
+            fprintf(arquivoTXT, "%s", str);
             int j, k;
             sscanf(str, "%*s %d %d", &j, &k);
             
@@ -275,7 +278,15 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             char *sufixo = malloc(strlen(buffer)*sizeof(char));
             strcpy(sufixo, buffer);
 
-            FILE *bbSVG = abrirSVG( dirSaida, concatenarNomes( concatenarNomes( obterSemExtensao(nomeArquivoEntrada), obterSemExtensao(nomeArquivoConsulta) ) , sufixo ));
+            char nomeArqEntradaSemExtensao[64], nomeArqConsultaSemExtensao[64];
+            obterSemExtensao(nomeArquivoEntrada, nomeArqEntradaSemExtensao);
+            obterSemExtensao(nomeArquivoConsulta, nomeArqConsultaSemExtensao);
+
+            char nomeEntradaConsulta[128], nomeEntradaConsultaSufixo[256];
+            concatenarNomes(nomeArqEntradaSemExtensao, nomeArqConsultaSemExtensao, nomeEntradaConsulta);
+            concatenarNomes(nomeEntradaConsulta, sufixo, nomeEntradaConsultaSufixo);
+
+            FILE *bbSVG = abrirSVG( dirSaida, nomeEntradaConsultaSufixo);
             iniciarSVG(bbSVG);
 
             escreverFormasEnvoltas(bbSVG, *raiz, cor);
@@ -290,6 +301,7 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
     fclose(arquivoTXT);
     fclose(arquivoSVG);
 }
+
 
 void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, char *dirSaida) {
     if(dirEntrada)

@@ -13,11 +13,11 @@ FILE *abrirArquivo(char *diretorio);
 
 bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], char *nomeArquivoConsulta[], char *dirSaida[]);
 
-char *tratarDiretorio(char *diretorio, char *nomeArquivo);
+void tratarDiretorio(char *diretorio, char *nomeArquivo, char *diretorioFinal);
 
 void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, ArvoreBin *raiz);
 
-char *obterSemExtensao(char *arquivo);
+void obterSemExtensao(char *arquivo, char *arquivoSemExtensao);
 
 void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, char *dirSaida);
 
@@ -25,6 +25,6 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
 
 FILE *abrirTXT(char *dirSaida, char *nomeArquivo);
 
-char *concatenarNomes(char *nome1, char *nome2);
+void concatenarNomes(char *nome1, char *nome2, char *nomeSaida);
 
 #endif

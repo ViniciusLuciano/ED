@@ -1,6 +1,6 @@
 OBJS = *.c
 CC = gcc
-COMPILER_FLAGS = -w -std=c99
+COMPILER_FLAGS = -g -std=c99 -fstack-protector-all
 LINKER_FLAGS = -lm
 OBJ_NAME = siguel
 
