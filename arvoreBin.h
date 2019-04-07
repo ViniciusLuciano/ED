@@ -14,6 +14,8 @@ typedef struct Node* ArvoreBin;
 
 ArvoreBin* iniciaArvore();
 
+void liberarForma(Node *node);
+
 void liberarArvore(ArvoreBin* raiz);
 
 int estaVazia(ArvoreBin* raiz);

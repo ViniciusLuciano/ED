@@ -39,5 +39,8 @@ double distanciaCentro(Forma *j, Forma *k) {
 	double *centro2 = malloc(2*sizeof(double));
 	centroDeMassa(j, centro1);
 	centroDeMassa(k, centro2);
-	return distancia(centro1[0], centro1[1], centro2[0], centro2[1]);
+	double x1 = centro1[0], y1 = centro1[1], x2 = centro2[0], y2 = centro2[1];
+	free(centro1);
+	free(centro2);
+	return distancia(x1, y1, x2, y2);
 }

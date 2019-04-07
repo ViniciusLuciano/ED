@@ -13,6 +13,10 @@ void liberarNode(struct Node* node) {
         return;
     liberarNode(node->esq);
     liberarNode(node->dir);
+    liberarForma(node);
+}
+
+void liberarForma(Node *node) {
     if(node->forma->nomeForma == TEXTO)
         free(((Texto*)node->forma->tipoForma)->texto);
     else if(node->forma->nomeForma == CIRCULO || node->forma->nomeForma == RETANGULO) {
@@ -22,20 +26,6 @@ void liberarNode(struct Node* node) {
     free(node->forma->tipoForma); // Ponteiro void alocado
     free(node->forma);
     free(node);
-    node = NULL;
-}
-
-//Pega aqui melvi
-void printarArvore(struct Node* node, char* path){
-    if(node == NULL){
-        return;
-    }else{
-        printf("%s%d\n", path, node->forma->id);
-        char* vsf = calloc(1000, sizeof(char));
-        sprintf(vsf, "%s  ", path);        
-        printarArvore(node->esq, vsf);
-        printarArvore(node->dir, vsf);
-    }
 }
 
 void liberarArvore(ArvoreBin *raiz) {
@@ -85,7 +75,7 @@ int adicionarElemento(ArvoreBin *raiz, Forma *forma) {
                 } else {
                     (*raiz) = novo;
                 }
-                free(atual);
+                liberarForma(atual);
                 return 1;
             }
 

@@ -6,55 +6,52 @@ double clamp(double valor, double a, double b) {
     return clmp;
 }
 
-FILE* abrirArquivo(char *diretorio) {
-    FILE* arq = fopen(diretorio, "r");
+FILE* abrirArquivo(char *diretorio, char *nomeArquivo, char *modoAbertura) {
+    char dirFinal[128];
+    tratarDiretorio(diretorio, nomeArquivo, dirFinal);
+    FILE* arq = fopen(dirFinal, modoAbertura);
     if(arq == NULL)
-        perror("Falha na inicialização do arquivo");
+        printf("Falha na inicialização do arquivo %s\n", dirFinal);
     return arq;
 }
 
 bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], char *nomeArquivoConsulta[], char *dirSaida[]) {
-    int dirEntradaIndex, nomeArquivoEntradaIndex, nomeArquivoConsultaIndex, dirSaidaIndex;
     for(int i = 1; i < argc; i++) {
         if(strcmp(argv[i], "-e") == 0) {
             if( i+1 >= argc ) {
                 printf("'-e' requer um argumento\n");
                 return false;
             }
-			dirEntradaIndex=i+1;
 
-            *dirEntrada = malloc(strlen(argv[dirEntradaIndex])*sizeof(char));   
-            strcpy(*dirEntrada, argv[dirEntradaIndex]);
+            *dirEntrada = malloc(128*sizeof(char));   
+            strcpy(*dirEntrada, argv[i+1]);
 
         } else if(strcmp(argv[i], "-f") == 0) {
             if( i+1 >= argc ) {
                 printf("'-f' requer um argumento\n");
                 return false;
             }
-			nomeArquivoEntradaIndex=i+1;
 
-            *nomeArquivoEntrada = malloc(strlen(argv[nomeArquivoEntradaIndex])*sizeof(char));
-            strcpy(*nomeArquivoEntrada, argv[nomeArquivoEntradaIndex]);
+            *nomeArquivoEntrada = malloc(128*sizeof(char));
+            strcpy(*nomeArquivoEntrada, argv[i+1]);
 
         } else if(strcmp(argv[i], "-q") == 0) {
             if( i+1 >= argc ) {
                 printf("'-q' requer um argumento\n");
                 return false;
             }
-			nomeArquivoConsultaIndex=i+1;
 
-            *nomeArquivoConsulta = malloc(strlen(argv[nomeArquivoConsultaIndex])*sizeof(char));
-            strcpy(*nomeArquivoConsulta, argv[nomeArquivoConsultaIndex]);
+            *nomeArquivoConsulta = malloc(128*sizeof(char));
+            strcpy(*nomeArquivoConsulta, argv[i+1]);
 
         } else if(strcmp(argv[i], "-o") == 0) {
             if( i+1 >= argc ) {
                 printf("'-o' requer um argumento\n");
                 return false;
             }
-            dirSaidaIndex=i+1;
 
-            *dirSaida = malloc(strlen(argv[dirSaidaIndex])*sizeof(char));
-            strcpy(*dirSaida, argv[dirSaidaIndex]);
+            *dirSaida = malloc(128*sizeof(char));
+            strcpy(*dirSaida, argv[i+1]);
         }
     }
 
@@ -76,27 +73,21 @@ void tratarDiretorio(char *diretorio, char *nomeArquivo, char *diretorioFinal) {
 	}
 }
 
-void obterSemExtensao(char *arquivo, char *final) {
-    for(int i = strlen(arquivo); i > 0; i--) {
+void obterSemExtensao(char *arquivo) {
+    for(int i = strlen(arquivo)-1; i > 0; i--) {
         if(arquivo[i] == '.') {
-            strncpy(final, arquivo, i);
-            final[i] = '\0';
+            //strncpy(final, arquivo, i);
+            arquivo[i] = '\0';
+            break;
+        } else if(arquivo[i] == '/') {
+            break;
         }
     }
 }
 
-FILE* abrirSVG(char *dir, char *nomeArquivo) {
-
-    int num = strlen(dir) + strlen(nomeArquivo) + 4 + 2; //.svg / \0
-    char *caminho = malloc(num*sizeof(char));
-    if(dir[strlen(dir) - 1] == '/')
-        sprintf(caminho, "%s%s.svg", dir, nomeArquivo);
-    else
-        sprintf(caminho, "%s/%s.svg", dir, nomeArquivo);
-
-    FILE *SVG = fopen(caminho, "w");
-    free(caminho);
-    return SVG;
+void adicionarExtensao(char *arquivo, char *extensao) {
+    obterSemExtensao(arquivo);
+    sprintf(arquivo, "%s.%s", arquivo, extensao);
 }
 
 void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, ArvoreBin *raiz) {
@@ -104,14 +95,15 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
     char str[150], instrucao[10];
     int idText = -1; // Adicionar os textos na arvore
 
-    char *nomeArqSemExtensao = malloc(strlen(nomeArquivoSVG)*sizeof(char));
-    obterSemExtensao(nomeArquivoSVG, nomeArqSemExtensao);
-    FILE *SVG = abrirSVG(dirSVG, nomeArqSemExtensao);
-    if(SVG == NULL) {
-        printf("Falha no diretorio de saída\n");
+    char nomeArqSVG[64];
+    strcpy(nomeArqSVG, nomeArquivoSVG);
+    obterNomeArquivo(nomeArqSVG);
+
+    adicionarExtensao(nomeArqSVG, "svg");
+    FILE *SVG = abrirArquivo(dirSVG, nomeArqSVG, "w");
+    if(SVG == NULL)
         exit(1);
-    }
-    free(nomeArqSemExtensao);
+    
 
     iniciarSVG(SVG);
 	while(true) {
@@ -177,48 +169,49 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
     fclose(SVG);
 }
 
+void obterNomeArquivo(char *dirArquivo) {
+    obterSemExtensao(dirArquivo);
+    int index = strlen(dirArquivo) - 1;
+
+    while(index >= 0) {
+        if(dirArquivo[index] == '/')
+            break;
+        index--;
+    }
+
+    if(index >= 0)
+        strcpy(dirArquivo, dirArquivo + index + 1);
+}
+
 void concatenarNomes(char *nome1, char *nome2, char *nomeSaida) {
     sprintf(nomeSaida, "%s-%s", nome1, nome2);
 }
-
-FILE *abrirTXT(char *dirSaida, char *nomeArquivo) {
-    int num = strlen(dirSaida) + strlen(nomeArquivo) + 5; 
-    char *caminho = malloc(num*sizeof(char));
-
-    if(dirSaida[strlen(dirSaida) - 1] == '/')
-        sprintf(caminho, "%s%s.txt", dirSaida, nomeArquivo);
-    else
-        sprintf(caminho, "%s/%s.txt", dirSaida, nomeArquivo);
-
-    FILE *arqTXT = fopen(caminho, "w"); 
-    if(arqTXT == NULL) {
-        perror("Falha na abertura do arquivo de entrada.");
-        exit(1);
-    }
-
-    free(caminho);
-    return arqTXT;
-}
-
 
 void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *dirArquivoConsulta, char *nomeArquivoConsulta, ArvoreBin *raiz) {
     if(nomeArquivoConsulta == NULL) 
         return;
     
-    char dirFinalArqConsulta[64];
-    tratarDiretorio(dirArquivoConsulta, nomeArquivoConsulta, dirFinalArqConsulta);
-    FILE *consulta = abrirArquivo( dirFinalArqConsulta );
+    FILE *consulta = abrirArquivo( dirArquivoConsulta, nomeArquivoConsulta, "r" );
+    if(consulta == NULL)
+        exit(1);
 
-    char nomeArquivoEntradaSemExtensao[64];
-    char nomeArquivoConsultaSemExtensao[64];
-    obterSemExtensao(nomeArquivoEntrada, nomeArquivoEntradaSemExtensao);
-    obterSemExtensao(nomeArquivoConsulta, nomeArquivoConsultaSemExtensao);
+    char nomeArquivoEntradaSemExtensao[64], nomeArquivoConsultaSemExtensao[64];
+    strcpy(nomeArquivoEntradaSemExtensao, nomeArquivoEntrada);
+    strcpy(nomeArquivoConsultaSemExtensao, nomeArquivoConsulta);
+
+    obterNomeArquivo(nomeArquivoEntradaSemExtensao);
+    obterNomeArquivo(nomeArquivoConsultaSemExtensao);
 
     char nomeEntradaConsultaSemExtensao[128];
     concatenarNomes(nomeArquivoEntradaSemExtensao, nomeArquivoConsultaSemExtensao, nomeEntradaConsultaSemExtensao);
 
-    FILE *arquivoTXT = abrirTXT(dirSaida, nomeEntradaConsultaSemExtensao);
-    FILE *arquivoSVG = abrirSVG(dirSaida, nomeEntradaConsultaSemExtensao);
+    adicionarExtensao(nomeEntradaConsultaSemExtensao, "txt");
+    FILE *arquivoTXT = abrirArquivo(dirSaida, nomeEntradaConsultaSemExtensao, "w");
+
+    adicionarExtensao(nomeEntradaConsultaSemExtensao, "svg");
+    FILE *arquivoSVG = abrirArquivo(dirSaida, nomeEntradaConsultaSemExtensao, "w");
+    if(arquivoTXT == NULL || arquivoSVG == NULL)
+        exit(1);
 
     iniciarSVG(arquivoSVG);
     escreverArvoreSVG(*raiz, arquivoSVG);
@@ -236,6 +229,11 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
 
             Forma *forma1 = encontrarForma(raiz, j);
             Forma *forma2 = encontrarForma(raiz, k);
+            if(forma1 == NULL || forma2 == NULL) {
+                printf("ID %d/%d não encontrado.\n",j,k );
+                exit(1);
+            }
+
             if(formasColidem(forma1, forma2)) {
                 fprintf(arquivoTXT, "SIM\n\n");
                 retanguloDelimitador(arquivoSVG, forma1, forma2, true);
@@ -251,11 +249,16 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             sscanf(str, "%*s %d %lf %lf", &j, &x, &y);
 
             Forma *forma = encontrarForma(raiz, j);
+            if(forma == NULL) {
+                printf("ID %d não encontrado.\n",j);
+                exit(1);
+            }
+
             if(pontoInternoForma(x, y, forma)) {
-                fprintf(arquivoTXT, "SIM\n\n");
+                fprintf(arquivoTXT, "INTERNO\n\n");
                 escreverPontoInterno(arquivoSVG, forma, x, y, true);
             } else {
-                fprintf(arquivoTXT, "NAO\n\n");
+                fprintf(arquivoTXT, "NAO INTERNO\n\n");
                 escreverPontoInterno(arquivoSVG, forma, x, y, false);
             }
 
@@ -266,6 +269,10 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             
             Forma *forma1 = encontrarForma(raiz, j);
             Forma *forma2 = encontrarForma(raiz, k);
+            if(forma1 == NULL || forma2 == NULL) {
+                printf("ID %d/%d não encontrado.\n",j,k );
+                exit(1);
+            }
 
             double dist = distanciaCentro(forma1, forma2);
             fprintf(arquivoTXT, "%lf\n\n", dist);
@@ -273,20 +280,18 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             distanciaCentrosMassa(arquivoSVG, forma1, forma2, dist);
             
         } else if(strcmp(instrucao, "bb") == 0) {
-            char buffer[20], cor[20];
-            sscanf(str, "%*s %s %s", buffer, cor);
-            char *sufixo = malloc(strlen(buffer)*sizeof(char));
-            strcpy(sufixo, buffer);
+            char sufixo[64], cor[64];
+            sscanf(str, "%*s %s %s", sufixo, cor);
 
-            char nomeArqEntradaSemExtensao[64], nomeArqConsultaSemExtensao[64];
-            obterSemExtensao(nomeArquivoEntrada, nomeArqEntradaSemExtensao);
-            obterSemExtensao(nomeArquivoConsulta, nomeArqConsultaSemExtensao);
+            char nomeEntradaConsultaSufixo[256];
+            obterSemExtensao(nomeEntradaConsultaSemExtensao);
+            concatenarNomes(nomeEntradaConsultaSemExtensao, sufixo, nomeEntradaConsultaSufixo );
+            adicionarExtensao(nomeEntradaConsultaSufixo, "svg");
+            
+            FILE *bbSVG = abrirArquivo( dirSaida, nomeEntradaConsultaSufixo, "w");
+            if(bbSVG == NULL)
+                exit(1);
 
-            char nomeEntradaConsulta[128], nomeEntradaConsultaSufixo[256];
-            concatenarNomes(nomeArqEntradaSemExtensao, nomeArqConsultaSemExtensao, nomeEntradaConsulta);
-            concatenarNomes(nomeEntradaConsulta, sufixo, nomeEntradaConsultaSufixo);
-
-            FILE *bbSVG = abrirSVG( dirSaida, nomeEntradaConsultaSufixo);
             iniciarSVG(bbSVG);
 
             escreverFormasEnvoltas(bbSVG, *raiz, cor);

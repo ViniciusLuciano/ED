@@ -9,7 +9,9 @@
 
 double clamp(double valor, double a, double b);
 
-FILE *abrirArquivo(char *diretorio);
+void obterNomeArquivo(char *dirArquivo);
+
+FILE* abrirArquivo(char *diretorio, char *nomeArquivo, char *modoAbertura);
 
 bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], char *nomeArquivoConsulta[], char *dirSaida[]);
 
@@ -17,7 +19,9 @@ void tratarDiretorio(char *diretorio, char *nomeArquivo, char *diretorioFinal);
 
 void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, ArvoreBin *raiz);
 
-void obterSemExtensao(char *arquivo, char *arquivoSemExtensao);
+void obterSemExtensao(char *arquivo);
+
+void adicionarExtensao(char *arquivo, char *extensao);
 
 void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, char *dirSaida);
 

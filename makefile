@@ -1,10 +1,11 @@
-OBJS = *.c
 CC = gcc
-COMPILER_FLAGS = -g -std=c99 -fstack-protector-all
+COMPILER_FLAGS = -std=c99
 LINKER_FLAGS = -lm
-OBJ_NAME = siguel
+EXEC_NAME = siguel
+OBJECTS = main.o geometria.o colisao.o utils.o arvoreBin.o svg.o
 
-all: $(OBJS)
-	$(CC) $(OBJS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME) 
+all: $(OBJECTS)
+	$(CC) $(OBJECTS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(EXEC_NAME)
 
-	
+clean:
+	rm -rf *.o

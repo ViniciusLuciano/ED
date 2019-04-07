@@ -1,7 +1,5 @@
 #include "svg.h"
 
- // TROCAR TD PRA VOID 
-
 
 void iniciarSVG(FILE *SVG) {
 	fprintf(SVG, "<svg> \n");
@@ -34,8 +32,8 @@ void escreverArvoreSVG(struct Node* node, FILE *SVG) {
 			escreverCirculo(SVG, node->forma);
 		else if(node->forma->nomeForma == RETANGULO)
 			escreverRetangulo(SVG, node->forma);
-		else if(node->forma->nomeForma == TEXTO)
-			escreverTexto(SVG, node->forma);
+		//else if(node->forma->nomeForma == TEXTO)
+		//	escreverTexto(SVG, node->forma);
         escreverArvoreSVG(node->esq, SVG);
         escreverArvoreSVG(node->dir, SVG);
     }
@@ -128,9 +126,9 @@ void distanciaCentrosMassa(FILE *SVG, Forma *a, Forma *b, double distancia) {
 }
 
 void escreverFormasEnvoltas(FILE *SVG, struct Node* node, char *cor) {
-	if(node == NULL){
+	if(node == NULL) {
         return;
-    }else{
+    } else {
 		
 		if(node->forma->nomeForma == CIRCULO) {
 			escreverCirculo(SVG, node->forma);
@@ -150,6 +148,7 @@ void escreverFormasEnvoltas(FILE *SVG, struct Node* node, char *cor) {
 			centroDeMassa(node->forma, centro);
 
 			fprintf(SVG, "<ellipse cx=\"%lf\" cy=\"%lf\" rx=\"%lf\" ry=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />\n", centro[0], centro[1], ret->w/2, ret->h/2, cor);
+			free(centro);
 		}	
 
         escreverFormasEnvoltas(SVG, node->esq, cor);
