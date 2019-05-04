@@ -16,15 +16,22 @@ int main() {
     inserirUltimo(l, d);
     inserirUltimo(l, e);
 
+
+    
     printf("Lista antes de retirar: \n");
     imprimirLista(l, imprimirQuadra);
 
+    
     printf("\nLista depois de retirar: \n");
     Quadra k = criarQuadra(1, 2, 3, 4, "cambe");
-    excluirObjeto(l, k, quadraEquals);
+    excluirObjeto(l, k, quadraEquals, destruirQuadra);
     imprimirLista(l, imprimirQuadra);
 
+    
     printf("\nEncontrar objeto: \n");
     Quadra xd = encontrarObjeto(l, c, quadraEquals);
     imprimirQuadra(xd);
+
+    destruirQuadra(k);
+    destruirLista(l, destruirQuadra);
 }

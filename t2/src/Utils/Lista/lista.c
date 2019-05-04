@@ -23,13 +23,13 @@ Lista criarLista(int tamanhoMax) {
 }
 
 bool inserirPrimeiro(Lista l, Objeto objeto) {
-    Node n = malloc(sizeof(struct node));
-
     ponteiroLista lista = (ponteiroLista) l;
-    ponteiroNode node = (ponteiroNode) n;
     
     if(lista->primeiro == NULL) {
         if(++lista->tamanho <= lista->tamanhoMax) {
+            Node n = malloc(sizeof(struct node));
+            ponteiroNode node = (ponteiroNode) n;
+
             node->ant = NULL;
             node->prox = NULL;
             node->objeto = objeto;
@@ -40,6 +40,9 @@ bool inserirPrimeiro(Lista l, Objeto objeto) {
         }
     } else {
         if(++lista->tamanho <= lista->tamanhoMax) {
+            Node n = malloc(sizeof(struct node));
+            ponteiroNode node = (ponteiroNode) n;
+
             node->ant = NULL;
             node->prox = lista->primeiro;
             node->objeto = objeto;
@@ -48,21 +51,20 @@ bool inserirPrimeiro(Lista l, Objeto objeto) {
             return true;
         }
     }
-    free(n);
     return false;
 }
 
 bool inserirUltimo(Lista l, Objeto objeto) {
-    Node n = malloc(sizeof(struct node));
-
     ponteiroLista lista = (ponteiroLista) l;
-    ponteiroNode node = (ponteiroNode) n;
 
     if(lista->primeiro == NULL) {
         return inserirPrimeiro(l, objeto);
     }
 
     if(++lista->tamanho <= lista->tamanhoMax) {
+        Node n = malloc(sizeof(struct node));
+        ponteiroNode node = (ponteiroNode) n;
+
         node->ant = lista->ultimo;
         node->prox = NULL;
         node->objeto = objeto;
@@ -70,11 +72,32 @@ bool inserirUltimo(Lista l, Objeto objeto) {
         lista->ultimo = node;
         return true;
     }
-    free(n);
     return false;
 }
 
-bool excluirObjeto(Lista l, Objeto objeto, bool (*objetoEquals)(Objeto objetoLista, Objeto objeto)) {
+void destruirLista(Lista l, void(*destruirObjeto)(Objeto objeto)) {
+    ponteiroLista lista = (ponteiroLista) l;
+    ponteiroNode node = (ponteiroNode) lista->primeiro;
+
+    if(lista->primeiro == NULL)
+        return;
+    
+    for(node; node != NULL; node = node->prox) {
+        if(node->ant != NULL) {
+            destruirObjeto(node->ant->objeto);
+            free(node->ant);
+        }
+    }
+    destruirObjeto(lista->ultimo->objeto);
+    free(lista->ultimo);
+    free(lista);
+}
+
+bool excluirObjeto(Lista l, 
+                    Objeto objeto, 
+                    bool(*objetoEquals)(Objeto objetoLista, Objeto objeto), 
+                    void(*destruirObjeto)(Objeto objeto)) {
+
     ponteiroLista lista = (ponteiroLista) l;
     ponteiroNode node = (ponteiroNode) lista->primeiro;
 
@@ -92,7 +115,7 @@ bool excluirObjeto(Lista l, Objeto objeto, bool (*objetoEquals)(Objeto objetoLis
                 node->prox->ant = node->ant;
             }
             lista->tamanho--;
-            // dar free no objeto aqui
+            destruirObjeto(node->objeto);
             free(node);
             return true;
         }

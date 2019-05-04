@@ -16,29 +16,34 @@ Quadra criarQuadra(double x, double y, double w, double h, char *cep) {
     return quadra;
 }
 
-char* getQuadra_cep(Quadra q) {
-    ponteiroQuadra quadra = (ponteiroQuadra) q;
-    return quadra->cep;
+void destruirQuadra(Quadra quadra) {
+    ponteiroQuadra q = (ponteiroQuadra) quadra;
+    free(q);
 }
 
-double getQuadra_x(Quadra q) {
-    ponteiroQuadra quadra = (ponteiroQuadra) q;
-    return quadra->x;
+char* getQuadra_cep(Quadra quadra) {
+    ponteiroQuadra q = (ponteiroQuadra) quadra;
+    return q->cep;
 }
 
-double getQuadra_y(Quadra q) {
-    ponteiroQuadra quadra = (ponteiroQuadra) q;
-    return quadra->y;
+double getQuadra_x(Quadra quadra) {
+    ponteiroQuadra q = (ponteiroQuadra) quadra;
+    return q->x;
 }
 
-double getQuadra_w(Quadra q) {
-    ponteiroQuadra quadra = (ponteiroQuadra) q;
-    return quadra->w;
+double getQuadra_y(Quadra quadra) {
+    ponteiroQuadra q = (ponteiroQuadra) quadra;
+    return q->y;
 }
 
-double getQuadra_h(Quadra q) {
-    ponteiroQuadra quadra = (ponteiroQuadra) q;
-    return quadra->h;
+double getQuadra_w(Quadra quadra) {
+    ponteiroQuadra q = (ponteiroQuadra) quadra;
+    return q->w;
+}
+
+double getQuadra_h(Quadra quadra) {
+    ponteiroQuadra q = (ponteiroQuadra) quadra;
+    return q->h;
 }
 
 bool quadraEquals(Quadra quadra1, Quadra quadra2) {
