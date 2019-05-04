@@ -17,10 +17,8 @@ int main() {
     inserirUltimo(l, e);
 
 
-    
     printf("Lista antes de retirar: \n");
     imprimirLista(l, imprimirQuadra);
-
     
     printf("\nLista depois de retirar: \n");
     Quadra k = criarQuadra(1, 2, 3, 4, "cambe");

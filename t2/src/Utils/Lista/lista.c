@@ -48,6 +48,7 @@ bool inserirPrimeiro(Lista l, Objeto objeto) {
             node->objeto = objeto;
             node->prox->ant = node;
             lista->primeiro = node;
+            lista->tamanho++;
             return true;
         }
     }
@@ -70,6 +71,7 @@ bool inserirUltimo(Lista l, Objeto objeto) {
         node->objeto = objeto;
         node->ant->prox = node;
         lista->ultimo = node;
+        lista->tamanho++;
         return true;
     }
     return false;
