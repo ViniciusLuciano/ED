@@ -96,15 +96,15 @@ void destruirLista(Lista l, void(*destruirObjeto)(Objeto objeto)) {
 }
 
 bool excluirObjeto(Lista l, 
-                    Objeto objeto, 
-                    bool(*objetoEquals)(Objeto objetoLista, Objeto objeto), 
+                    char *identificador, 
+                    bool(*objetoEquals)(Objeto objetoLista, char *id), 
                     void(*destruirObjeto)(Objeto objeto)) {
 
     ponteiroLista lista = (ponteiroLista) l;
     ponteiroNode node = (ponteiroNode) lista->primeiro;
 
     for(node; node != NULL; node = node->prox) {
-        if( objetoEquals(node->objeto, objeto) ) {
+        if( objetoEquals(node->objeto, identificador) ) {
             
             // Excluir inicio
             if(node->ant == NULL) {
@@ -125,12 +125,12 @@ bool excluirObjeto(Lista l,
     return false;
 }
 
-Objeto encontrarObjeto(Lista l, Objeto objeto, bool (*objetoEquals)(Objeto objetoLista, Objeto objeto)) {
+Objeto encontrarObjeto(Lista l, char *identificador, bool (*objetoEquals)(Objeto objetoLista, char *id)) {
     ponteiroLista lista = (ponteiroLista) l;
     ponteiroNode node = (ponteiroNode) lista->primeiro;
 
     for(node; node != NULL; node = node->prox) {
-        if( objetoEquals(node->objeto, objeto) ) {
+        if( objetoEquals(node->objeto, identificador) ) {
             return node->objeto;
         }
     }

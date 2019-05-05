@@ -1,11 +1,11 @@
 #include "quadra.h"
 
 typedef struct quadra{
-    char cep[100];
+    char cep[100], cfill[100], cstrok[100], sw[20];
     double x, y, w, h;
 } *ponteiroQuadra;
 
-Quadra criarQuadra(double x, double y, double w, double h, char *cep) {
+Quadra criarQuadra(char *cep, double x, double y, double w, double h, char *cfill, char *cstrok, char *sw) {
     ponteiroQuadra q = malloc(sizeof(struct quadra));
     Quadra quadra = q;
     strcpy(q->cep, cep);
@@ -13,6 +13,9 @@ Quadra criarQuadra(double x, double y, double w, double h, char *cep) {
     q->y = y;
     q->w = w;
     q->h = h;
+    strcpy(q->cfill, cfill);
+    strcpy(q->cstrok, cstrok);
+    strcpy(q->sw, sw);
     return quadra;
 }
 
@@ -46,11 +49,10 @@ double getQuadra_h(Quadra quadra) {
     return q->h;
 }
 
-bool quadraEquals(Quadra quadra1, Quadra quadra2) {
+bool quadraEquals(Quadra quadra1, char *cep) {
     ponteiroQuadra q1 = (ponteiroQuadra) quadra1;
-    ponteiroQuadra q2 = (ponteiroQuadra) quadra2;
     //printf("%s %s\n", q1->cep, q2->cep);
-    return strcmp(q1->cep, q2->cep) == 0;
+    return strcmp(q1->cep, cep) == 0;
 }
 
 void imprimirQuadra(Quadra quadra) {

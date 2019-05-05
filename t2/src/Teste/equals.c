@@ -2,12 +2,17 @@
 #include "../Objetos/Quadra/quadra.h"
 #include "../Utils/Lista/lista.h"
 
+/*
+gcc -o teste equals.c ../Objetos/Quadra/quadra.c ../Utils/Lista/lista.c
+./teste
+*/
+
 int main() {
-    Quadra a = criarQuadra(1, 2, 3, 4, "londrina");
-    Quadra b = criarQuadra(1, 2, 3, 4, "sp");
-    Quadra c = criarQuadra(1, 2, 3, 4, "c");
-    Quadra d = criarQuadra(1, 2, 3, 4, "d");
-    Quadra e = criarQuadra(1, 2, 3, 4, "cambe");
+    Quadra a = criarQuadra("londrina", 1, 2, 3, 4, "green", "black", "2px");
+    Quadra b = criarQuadra("sp", 1, 2, 3, 4, "green", "black", "2px");
+    Quadra c = criarQuadra("floripa", 1, 2, 3, 4, "green", "black", "2px");
+    Quadra d = criarQuadra("rolandia", 1, 2, 3, 4, "green", "black", "2px");
+    Quadra e = criarQuadra("cambe", 1, 2, 3, 4, "green", "black", "2px");
 
     Lista l = criarLista(15);
     inserirUltimo(l, a);
@@ -16,20 +21,17 @@ int main() {
     inserirUltimo(l, d);
     inserirUltimo(l, e);
 
-
     printf("Lista antes de retirar: \n");
     imprimirLista(l, imprimirQuadra);
     
     printf("\nLista depois de retirar: \n");
-    Quadra k = criarQuadra(1, 2, 3, 4, "cambe");
-    excluirObjeto(l, k, quadraEquals, destruirQuadra);
+    excluirObjeto(l, "rolandia", quadraEquals, destruirQuadra);
     imprimirLista(l, imprimirQuadra);
 
     
     printf("\nEncontrar objeto: \n");
-    Quadra xd = encontrarObjeto(l, c, quadraEquals);
+    Quadra xd = encontrarObjeto(l, "londrina", quadraEquals);
     imprimirQuadra(xd);
 
-    destruirQuadra(k);
     destruirLista(l, destruirQuadra);
 }

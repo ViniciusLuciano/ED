@@ -14,10 +14,11 @@ bool inserirUltimo(Lista l, Objeto objeto);
 
 void destruirLista(Lista l, void (*destruirObjeto)(Objeto objeto));
 
-bool excluirObjeto(Lista l, Objeto objeto, 
-                    bool (*objetoEquals)(Objeto objetoLista, Objeto objeto), 
+bool excluirObjeto(Lista l, 
+                    char *identificador, 
+                    bool(*objetoEquals)(Objeto objetoLista, char *id), 
                     void(*destruirObjeto)(Objeto objeto));
-Objeto encontrarObjeto(Lista l, Objeto objeto, bool (*objetoEquals)(Objeto objetoLista, Objeto objeto));
+Objeto encontrarObjeto(Lista l, char *identificador, bool (*objetoEquals)(Objeto objetoLista, char *id));
 
 void imprimirLista(Lista l, void (*imprimirObjeto)(Objeto objeto));
 
