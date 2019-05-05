@@ -49,10 +49,9 @@ double getQuadra_h(Quadra quadra) {
     return q->h;
 }
 
-bool quadraEquals(Quadra quadra1, char *cep) {
-    ponteiroQuadra q1 = (ponteiroQuadra) quadra1;
-    //printf("%s %s\n", q1->cep, q2->cep);
-    return strcmp(q1->cep, cep) == 0;
+bool quadraEquals(Quadra quadra, char *cep) {
+    ponteiroQuadra q = (ponteiroQuadra) quadra;
+    return strcmp(q->cep, cep) == 0;
 }
 
 void imprimirQuadra(Quadra quadra) {

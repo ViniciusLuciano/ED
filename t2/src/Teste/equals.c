@@ -19,7 +19,7 @@ int main() {
     inserirUltimo(l, b);
     inserirUltimo(l, c);
     inserirUltimo(l, d);
-    inserirUltimo(l, e);
+    inserirPrimeiro(l, e);
 
     printf("Lista antes de retirar: \n");
     imprimirLista(l, imprimirQuadra);
