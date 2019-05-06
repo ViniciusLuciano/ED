@@ -1,9 +1,12 @@
 #ifndef RADIOBASE_H
 #define RADIOBASE_H
 
-#include "../../headers.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
 
-typedef void* RadioBase;
+typedef struct radioBase* RadioBase;
 
 RadioBase criarRadioBase(char *id, double x, double y, char *cfill, char *cstrok, char *sw);
 void destruirRadioBase(RadioBase radioBase);

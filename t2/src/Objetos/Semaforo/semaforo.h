@@ -1,9 +1,12 @@
 #ifndef SEMAFORO_H
 #define SEMAFORO_H
 
-#include "../../headers.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
 
-typedef void* Semaforo;
+typedef struct semaforo* Semaforo;
 
 Semaforo criarSemaforo(char *id, double x, double y, char *cfill, char *cstrok, char *sw);
 void destruirSemaforo(Semaforo semaforo);

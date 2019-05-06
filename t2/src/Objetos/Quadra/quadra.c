@@ -3,58 +3,54 @@
 typedef struct quadra{
     char cep[100], cfill[100], cstrok[100], sw[20];
     double x, y, w, h;
-} *ponteiroQuadra;
+};
 
 Quadra criarQuadra(char *cep, double x, double y, double w, double h, char *cfill, char *cstrok, char *sw) {
-    ponteiroQuadra q = malloc(sizeof(struct quadra));
-    Quadra quadra = q;
-    strcpy(q->cep, cep);
-    q->x = x;
-    q->y = y;
-    q->w = w;
-    q->h = h;
-    strcpy(q->cfill, cfill);
-    strcpy(q->cstrok, cstrok);
-    strcpy(q->sw, sw);
+    Quadra quadra = malloc(sizeof(struct quadra));
+    strcpy(quadra->cep, cep);
+    quadra->x = x;
+    quadra->y = y;
+    quadra->w = w;
+    quadra->h = h;
+    strcpy(quadra->cfill, cfill);
+    strcpy(quadra->cstrok, cstrok);
+    strcpy(quadra->sw, sw);
     return quadra;
 }
 
 void destruirQuadra(Quadra quadra) {
-    ponteiroQuadra q = (ponteiroQuadra) quadra;
-    free(q);
+    free(quadra);
 }
 
 char* getQuadra_cep(Quadra quadra) {
-    ponteiroQuadra q = (ponteiroQuadra) quadra;
-    return q->cep;
+    return quadra->cep;
 }
 
 double getQuadra_x(Quadra quadra) {
-    ponteiroQuadra q = (ponteiroQuadra) quadra;
-    return q->x;
+    return quadra->x;
 }
 
 double getQuadra_y(Quadra quadra) {
-    ponteiroQuadra q = (ponteiroQuadra) quadra;
-    return q->y;
+    return quadra->y;
 }
 
 double getQuadra_w(Quadra quadra) {
-    ponteiroQuadra q = (ponteiroQuadra) quadra;
-    return q->w;
+    return quadra->w;
 }
 
 double getQuadra_h(Quadra quadra) {
-    ponteiroQuadra q = (ponteiroQuadra) quadra;
-    return q->h;
+    return quadra->h;
+}
+
+// Para o comando cbq
+void setQuadra_cstrock(Quadra quadra, char *cstrok) {
+    strcpy(quadra->cstrok, cstrok);
 }
 
 bool quadraEquals(Quadra quadra, char *cep) {
-    ponteiroQuadra q = (ponteiroQuadra) quadra;
-    return strcmp(q->cep, cep) == 0;
+    return strcmp(quadra->cep, cep) == 0;
 }
 
 void imprimirQuadra(Quadra quadra) {
-    ponteiroQuadra q = (ponteiroQuadra) quadra;
-    printf("cep %s\n", q->cep);
+    printf("cep %s\n", quadra->cep);
 }

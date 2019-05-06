@@ -1,48 +1,41 @@
-#include "hidrante.h"
+#include "hidrante.hidrante"
 
 typedef struct hidrante{
     char id[100], cfill[100], cstrok[100], sw[20];
     double x, y;
-} *ponteiroHidrante;
+};
 
 Hidrante criarHidrante(char *id, double x, double y, char *cfill, char *cstrok, char *sw) {
-    ponteiroHidrante h = malloc(sizeof(struct hidrante));
-    Hidrante hidrante = h;
-    strcpy(h->id, id);
-    h->x = x;
-    h->y = y;
-    strcpy(h->cfill, cfill);
-    strcpy(h->cstrok, cstrok);
-    strcpy(h->sw, sw);
+    Hidrante hidrante = malloc(sizeof(struct hidrante));
+    strcpy(hidrante->id, id);
+    hidrante->x = x;
+    hidrante->y = y;
+    strcpy(hidrante->cfill, cfill);
+    strcpy(hidrante->cstrok, cstrok);
+    strcpy(hidrante->sw, sw);
     return hidrante;
 }
 
 void destruirHidrante(Hidrante hidrante) {
-    ponteiroHidrante h = (ponteiroHidrante) hidrante;
-    free(h);
+    free(hidrante);
 }
 
 char* getHidrante_id(Hidrante hidrante) {
-    ponteiroHidrante h = (ponteiroHidrante) hidrante;
-    return h->id;
+    return hidrante->id;
 }
 
 double getHidrante_x(Hidrante hidrante) {
-    ponteiroHidrante h = (ponteiroHidrante) hidrante;
-    return h->x;
+    return hidrante->x;
 }
 
 double getHidrante_y(Hidrante hidrante) {
-    ponteiroHidrante h = (ponteiroHidrante) hidrante;
-    return h->y;
+    return hidrante->y;
 }
 
 bool hidranteEquals(Hidrante hidrante, char *id) {
-    ponteiroHidrante h = (ponteiroHidrante) hidrante;
-    return strcmp(h->id, id) == 0;
+    return strcmp(hidrante->id, id) == 0;
 }
 
 void imprimirHidrante(Hidrante hidrante) {
-    ponteiroHidrante h = (ponteiroHidrante) hidrante;
-    printf("id %s\n", h->id);
+    printf("id %s\n", hidrante->id);
 }

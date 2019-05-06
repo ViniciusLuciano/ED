@@ -1,9 +1,12 @@
 #ifndef QUADRA_H
 #define QUADRA_H
 
-#include "../../headers.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
 
-typedef void* Quadra;
+typedef struct quadra* Quadra;
 
 Quadra criarQuadra(char *cep, double x, double y, double w, double h, char *cfill, char *cstrok, char *sw);
 void destruirQuadra(Quadra quadra);
@@ -12,6 +15,7 @@ double getQuadra_x(Quadra quadra);
 double getQuadra_y(Quadra quadra);
 double getQuadra_w(Quadra quadra);
 double getQuadra_h(Quadra quadra);
+void setQuadra_cstrock(Quadra quadra, char *cstrok);
 
 // Funções relacionadas com a lista
 bool quadraEquals(Quadra quadra, char *cep);
