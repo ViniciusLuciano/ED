@@ -49,6 +49,22 @@ char* getCirculo_cw(Circulo circulo) {
     return circulo->cw;
 }
 
+double getCirculo_max_x(Circulo circulo) {
+    return circulo->x + circulo->r;
+}
+
+double getCirculo_max_y(Circulo circulo) {
+    return circulo->y + circulo->r;
+}
+
+double getCirculo_min_x(Circulo circulo) {
+    return circulo->x - circulo->r;
+}
+
+double getCirculo_min_y(Circulo circulo) {
+    return circulo->y - circulo->r;
+}
+
 bool circuloEquals(Circulo circulo, char *id) {
     return strcmp(circulo->id, id) == 0;
 }

@@ -31,60 +31,41 @@ void escreverRetangulo(FILE *SVG, Retangulo r) {
 }
 
 /*
-void escreverTexto(FILE *SVG, Forma *t) {
+void escreverTexto(FILE *SVG, Texto t) {
 	fprintf(SVG, "<text x=\"%lf\" y=\"%lf\">%s</text>",, t->y, text->texto);
-}
-
-
-void escreverArvoreSVG(struct Node* node, FILE *SVG) {
-	if(node == NULL){
-        return;
-    }else{
-		if(node->forma->nomeForma == CIRCULO)
-			escreverCirculo(SVG, node->forma);
-		else if(node->forma->nomeForma == RETANGULO)
-			escreverRetangulo(SVG, node->forma);
-		//else if(node->forma->nomeForma == TEXTO)
-		//	escreverTexto(SVG, node->forma);
-        escreverArvoreSVG(node->esq, SVG);
-        escreverArvoreSVG(node->dir, SVG);
-    }
 }
 */
 
-void retanguloDelimitador(FILE *SVG2, Forma a, Forma b, bool colidem) {
+
+void escreverRetanguloDelimitador(FILE *SVG2, Forma a, Forma b, bool colidem) {
 	double xMin, xMax, yMin, yMax, largura, altura;
-	if(a->nomeForma == CIRCULO && b->nomeForma == RETANGULO) {
-		Circulo *circ = ((Circulo*) a->tipoForma);
-		Retangulo *ret = ((Retangulo*) b->tipoForma);
-		xMin = (a->x - circ->raio) < b->x ? (a->x - circ->raio) : b->x;
-		xMax = (a->x + circ->raio) > (b->x + ret->w) ? (a->x + circ->raio) : (b->x + ret->w);
-		yMin = (a->y - circ->raio) < b->y ? (a->y - circ->raio) : b->y;
-		yMax = (a->y + circ->raio) > (b->y + ret->h) ? (a->y + circ->raio) : (b->y + ret->h);
+	if(getForma_tipoForma(a) == CIRCULO && getForma_tipoForma(b) == RETANGULO) {
 
-	} else if(a->nomeForma == RETANGULO && b->nomeForma == CIRCULO) {
-		Circulo *circ = ((Circulo*) b->tipoForma);
-		xMin = (b->x - circ->raio) < a->x ? (b->x - circ->raio) : a->x;
-		xMax = (b->x + circ->raio) > a->x ? (b->x + circ->raio) : a->x;
-		yMin = (b->y - circ->raio) < a->y ? (b->y - circ->raio) : a->y;
-		yMax = (b->y + circ->raio) > a->y ? (b->y + circ->raio) : a->y;
+		xMin = getCirculo_min_x(a) < getRetangulo_x(b) ? getCirculo_min_x(a) : getRetangulo_x(b);
+		xMax = getCirculo_max_x(a) > getRetangulo_max_x(b) ? getCirculo_max_x(a) : getRetangulo_max_x(b);
+		yMin = getCirculo_min_y(a) < getRetangulo_y(b) ? getCirculo_min_y(a) : getRetangulo_y(b);
+		yMax = getCirculo_max_y(a) > getRetangulo_max_y(b) ? getCirculo_max_y(a) : getRetangulo_max_y(b);
 
-	} else if(a->nomeForma == RETANGULO && b->nomeForma == RETANGULO) {
-        Retangulo *ret1 = ((Retangulo*) a->tipoForma);
-		Retangulo *ret2 = ((Retangulo*) a->tipoForma);
-		xMin = a->x < b->x ? a->x : b->x;
-		xMax = (a->x + ret1->w) > (b->x + ret2->w) ? (a->x + ret1->w) : (b->x + ret2->w);
-		yMin = a->y < b->y ? a->y : b->y;
-		yMax = (a->y + ret1->h) > (b->y + ret2->h) ? (a->y + ret1->h) : (b->y + ret2->h);
+	} else if(getForma_tipoForma(a) == RETANGULO && getForma_tipoForma(b) == CIRCULO) {
 
-	} else if(a->nomeForma == CIRCULO && b->nomeForma == CIRCULO) {
-        Circulo *circ1 = ((Circulo*) a->tipoForma);
-		Circulo *circ2 = ((Circulo*) b->tipoForma);
+		xMin = getCirculo_min_x(b) < getRetangulo_x(a) ? getCirculo_min_x(b) : getRetangulo_x(a);
+		xMax = getCirculo_max_x(b) > getRetangulo_max_x(a) ? getCirculo_max_x(b) : getRetangulo_max_x(a);
+		yMin = getCirculo_min_y(b) < getRetangulo_y(a) ? getCirculo_min_y(b) : getRetangulo_y(a);
+		yMax = getCirculo_max_y(b) > getRetangulo_max_y(a) ? getCirculo_max_y(b) : getRetangulo_max_y(a);
 
-		xMin = (a->x - circ1->raio) < (b->x - circ2->raio) ? (a->x - circ1->raio) : (b->x - circ2->raio);
-		xMax = (a->x + circ1->raio) > (b->x + circ2->raio) ? (a->x + circ1->raio) : (b->x + circ2->raio);
-		yMin = (a->y - circ1->raio) < (b->y - circ2->raio) ? (a->y - circ1->raio) : (b->y - circ2->raio);
-		yMax = (a->y + circ1->raio) > (b->y + circ2->raio) ? (a->y + circ1->raio) : (b->y + circ2->raio);
+	} else if(getForma_tipoForma(a) == RETANGULO && getForma_tipoForma(b) == RETANGULO) {
+
+		xMin = getRetangulo_x(a) < getRetangulo_x(b) ? getRetangulo_x(a) : getRetangulo_x(b);
+		xMax = getRetangulo_max_x(a) > getRetangulo_max_x(b) ? getRetangulo_max_x(a) : getRetangulo_max_x(b);
+		yMin = getRetangulo_y(a) < getRetangulo_y(b) ? getRetangulo_y(a) : getRetangulo_y(b);
+		yMax = getRetangulo_max_y(a) > getRetangulo_max_y(b) ? getRetangulo_max_y(a) : getRetangulo_max_y(b);
+
+	} else if(getForma_tipoForma(a) == CIRCULO && getForma_tipoForma(b) == CIRCULO) {
+
+		xMin = getCirculo_min_x(a) < getCirculo_min_x(b) ? getCirculo_min_x(a) : getCirculo_min_x(b);
+		xMax = getCirculo_max_x(a) > getCirculo_max_x(b) ? getCirculo_max_x(a) : getCirculo_max_x(b);
+		yMin = getCirculo_min_y(a) < getCirculo_min_y(b) ? getCirculo_min_y(a) : getCirculo_min_y(b);
+		yMax = getCirculo_max_y(a) > getCirculo_max_y(b) ? getCirculo_max_y(a) : getCirculo_max_y(b);
 
 	}
 	
@@ -98,7 +79,7 @@ void retanguloDelimitador(FILE *SVG2, Forma a, Forma b, bool colidem) {
 	
 }
 
-void escreverPontoInterno(FILE *SVG, Forma *a, double x, double y, bool interno) {
+void escreverPontoInterno(FILE *SVG, Forma a, double x, double y, bool interno) {
 	double *centro = malloc(2*sizeof(double));
 	centroDeMassa(a, centro);
 
@@ -113,7 +94,7 @@ void escreverPontoInterno(FILE *SVG, Forma *a, double x, double y, bool interno)
 	free(centro);
 }
 
-void retaCentrosMassa(FILE *SVG, Forma *a, Forma *b) {
+void escreverRetaCentrosMassa(FILE *SVG, Forma a, Forma b) {
 	double *centro1 = malloc(2*sizeof(double));
 	double *centro2 = malloc(2*sizeof(double));
 	centroDeMassa(a, centro1);
@@ -124,7 +105,7 @@ void retaCentrosMassa(FILE *SVG, Forma *a, Forma *b) {
 	free(centro2);
 }
 
-void distanciaCentrosMassa(FILE *SVG, Forma *a, Forma *b, double distancia) {
+void escreverDistanciaCentrosMassa(FILE *SVG, Forma a, Forma b, double distancia) {
 	double *centro1 = malloc(2*sizeof(double));
 	double *centro2 = malloc(2*sizeof(double));
 	centroDeMassa(a, centro1);
@@ -138,6 +119,7 @@ void distanciaCentrosMassa(FILE *SVG, Forma *a, Forma *b, double distancia) {
 	free(centro2);
 }
 
+/* Pensar como resolver dps
 void escreverFormasEnvoltas(FILE *SVG, struct Node* node, char *cor) {
 	if(node == NULL) {
         return;
@@ -168,3 +150,4 @@ void escreverFormasEnvoltas(FILE *SVG, struct Node* node, char *cor) {
         escreverFormasEnvoltas(SVG, node->dir, cor);
     }
 }
+*/

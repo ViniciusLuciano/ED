@@ -18,6 +18,10 @@ double getCirculo_r(Circulo Circulo);
 char* getCirculo_cfill(Circulo circulo);
 char* getCirculo_cstrok(Circulo circulo);
 char* getCirculo_cw(Circulo circulo);
+double getCirculo_max_x(Circulo circulo);
+double getCirculo_max_y(Circulo circulo);
+double getCirculo_min_x(Circulo circulo);
+double getCirculo_min_y(Circulo circulo);
 
 // Funções relacionadas com a lista
 bool circuloEquals(Circulo circulo, char *id);
