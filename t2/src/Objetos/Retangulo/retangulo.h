@@ -18,6 +18,8 @@ double getRetangulo_h(Retangulo retangulo);
 char* getRetangulo_cfill(Retangulo retangulo);
 char* getRetangulo_cstrok(Retangulo retangulo);
 char* getRetangulo_rw(Retangulo retangulo);
+double getRetangulo_max_x(Retangulo retangulo);
+double getRetangulo_max_y(Retangulo retangulo);
 
 // Funções relacionadas com a lista
 bool retanguloEquals(Retangulo retangulo, char *id);

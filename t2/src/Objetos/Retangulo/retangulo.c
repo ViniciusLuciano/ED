@@ -52,6 +52,14 @@ char* getRetangulo_cw(Retangulo retangulo) {
     return retangulo->rw;
 }
 
+double getRetangulo_max_x(Retangulo retangulo) {
+    return retangulo->x + retangulo->w;
+}
+
+double getRetangulo_max_y(Retangulo retangulo) {
+    return retangulo->y + retangulo->h;
+}
+
 bool retanguloEquals(Retangulo retangulo, char *id) {
     return strcmp(retangulo->id, id) == 0;
 }

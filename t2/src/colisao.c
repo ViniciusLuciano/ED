@@ -1,39 +1,31 @@
 #include "colisao.h"
 
-bool colisaoCirculoRetangulo(Forma *c, Forma *r) {
-    Circulo *circ = ((Circulo*) c->tipoForma);
-    Retangulo *ret = ((Retangulo*) r->tipoForma);
+bool formasColidem(Forma a, Forma b) {
+    if(getForma_tipoForma(a) == CIRCULO && getForma_tipoForma(b) == RETANGULO)
+        return colisaoCirculoRetangulo(a, b);
+    else if(getForma_tipoForma(a) == RETANGULO && getForma_tipoForma(b) == CIRCULO)
+        return colisaoCirculoRetangulo(b, a);
+    else if(getForma_tipoForma(a) == RETANGULO && getForma_tipoForma(b) == RETANGULO)
+        return colisaoRetanguloRetangulo(a, b);
+    else if(getForma_tipoForma(a) == CIRCULO && getForma_tipoForma(b) == CIRCULO)
+        return colisaoCirculoCirculo(a, b);
+}   
 
-    double xMaisProx = clamp(c->x, r->x, r->x + ret->w);
-    double yMaisProx = clamp(c->y, r->y, r->y + ret->h);
+bool colisaoCirculoRetangulo(Circulo c, Retangulo r) {
+    double xMaisProx = clamp(getCirculo_x(c), getRetangulo_x(r), getRetangulo_max_x(r));
+    double yMaisProx = clamp(getCirculo_y(c), getRetangulo_y(r), getRetangulo_max_y(r));
 
-    if( distancia(c->x, c->y, xMaisProx, yMaisProx) < circ->raio )
+    if( distancia(getCirculo_x(c), getCirculo_y(c), xMaisProx, yMaisProx) < getCirculo_r(c) )
         return true;
     return false;
 }
 
-bool colisaoRetanguloRetangulo(Forma *r1, Forma *r2) {
-    Retangulo *ret1 = ((Retangulo*) r1->tipoForma);
-    Retangulo *ret2 = ((Retangulo*) r2->tipoForma);
-
-    return (r1->x < r2->x + ret2->w) && (r1->x + ret1->w > r2->x) &&
-            (r1->y < r2->y + ret2->h) && (r1->y + ret1->h > r2->y);
+bool colisaoRetanguloRetangulo(Retangulo r1, Retangulo r2) {
+    return (getRetangulo_x(r1) < getRetangulo_max_x(r2)) && (getRetangulo_max_x(r1) > getRetangulo_x(r2)) &&
+            (getRetangulo_y(r1) < getRetangulo_max_y(r2)) && (getRetangulo_max_y(r1) > getRetangulo_y(r2));
 }
 
-bool colisaoCirculoCirculo(Forma *c1, Forma *c2) {
-    Circulo *circ1 = ((Circulo*) c1->tipoForma);
-    Circulo *circ2 = ((Circulo*) c2->tipoForma);
-
-    return distancia(c1->x, c1->y, c2->x, c2->y) < circ1->raio + circ2->raio;
+bool colisaoCirculoCirculo(Circulo c1, Circulo c2) {
+    return distancia(getCirculo_x(c1), getCirculo_y(c1), getCirculo_x(c2), getCirculo_y(c2)) 
+    < getCirculo_r(c1) + getCirculo_r(c2);
 }
-
-bool formasColidem(Forma *a, Forma *b) {
-    if(a->nomeForma == CIRCULO && b->nomeForma == RETANGULO)
-        return colisaoCirculoRetangulo(a, b);
-    else if(a->nomeForma == RETANGULO && b->nomeForma == CIRCULO)
-        return colisaoCirculoRetangulo(b, a);
-    else if(a->nomeForma == RETANGULO && b->nomeForma == RETANGULO)
-        return colisaoRetanguloRetangulo(a, b);
-    else if(a->nomeForma == CIRCULO && b->nomeForma == CIRCULO)
-        return colisaoCirculoCirculo(a, b);
-}   
