@@ -1,6 +1,6 @@
 #include "radioBase.h"
 
-typedef struct radioBase{
+struct radioBase {
     char id[100], cfill[100], cstrok[100], sw[20];
     double x, y;
 };

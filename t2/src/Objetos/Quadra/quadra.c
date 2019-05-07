@@ -1,6 +1,6 @@
 #include "quadra.h"
 
-typedef struct quadra{
+struct quadra {
     char cep[100], cfill[100], cstrok[100], sw[20];
     double x, y, w, h;
 };

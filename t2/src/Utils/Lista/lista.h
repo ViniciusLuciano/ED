@@ -6,7 +6,6 @@
 typedef void* Objeto;
 typedef void* Lista;
 typedef void* Node;
-typedef void** Stk;
 
 Lista criarLista(int tamanhoMax);
 bool inserirPrimeiro(Lista l, Objeto objeto);

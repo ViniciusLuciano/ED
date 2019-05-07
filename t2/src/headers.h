@@ -7,4 +7,10 @@
 #include <string.h>
 #include <stdbool.h>
 
+typedef enum TipoForma{
+    CIRCULO,
+    RETANGULO,
+    TEXTO
+} TipoForma;
+
 #endif

@@ -1,6 +1,6 @@
 #include "retangulo.h"
 
-typedef struct retangulo{
+struct retangulo {
     char id[100], cfill[100], cstrok[100], rw[20];
     double x, y, w, h;
 };
