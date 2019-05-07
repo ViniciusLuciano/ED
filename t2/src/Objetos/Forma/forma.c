@@ -1,28 +1,43 @@
 #include "forma.h"
 
 struct forma {
-    int id;
+    char *id;
     int tipoForma;
     Figura figura;
 };
 
-Forma criarForma(int id, int tipoForma, Figura figura) {
+Forma criarForma(char *id, int tipoForma, Figura figura) {
     Forma forma = malloc(sizeof(struct forma));
     forma->tipoForma = tipoForma;
-    forma->id = id;
+    strcpy(forma->id, id);
     forma->figura = figura;
     return forma;
 }
 
+// Ver se precisa destruir coisas dentro da figura
+void destruirForma(Forma forma) {
+    free(forma->figura);
+    free(forma);
+}
+
+// Enum
 int getForma_tipoForma(Forma forma) {
     return forma->tipoForma;
 }
 
-int getForma_id(Forma forma) {
+char* getForma_id(Forma forma) {
     return forma->id;
 }
 
-// Retorna um circulo/retangulo/texto
+// Retorna um circulo ou retangulo
 Figura getForma_figura(Forma forma) {
     return forma->figura;
+}
+
+bool formaEquals(Forma forma, char *id) {
+    return strcmp(forma->id, id) == 0;
+}
+
+void imprimirForma(Forma forma) {
+    printf("id %s\n", forma->id);
 }

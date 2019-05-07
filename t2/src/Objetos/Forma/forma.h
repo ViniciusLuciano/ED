@@ -2,17 +2,24 @@
 #define FORMA_H
 
 #include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
 /*
-Formas podem ser do tipo Circulo/Retangulo/Texto
+Formas podem ser do tipo Circulo/Retangulo
 */
 
 typedef void* Figura;
 typedef struct forma* Forma;
 
-Forma criarForma(int id, int tipoForma, Figura figura);
+Forma criarForma(char *id, int tipoForma, Figura figura);
+void destruirForma(Forma forma);
 int getForma_tipoForma(Forma forma);
-int getForma_id(Forma forma);
+char* getForma_id(Forma forma);
 Figura getForma_figura(Forma forma);
+
+// Funções relacionadas com a lista
+bool formaEquals(Forma forma, char *id);
+void imprimirForma(Forma forma);
 
 #endif

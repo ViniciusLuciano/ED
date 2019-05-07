@@ -1,13 +1,12 @@
 #include "retangulo.h"
 
 struct retangulo {
-    char id[100], cfill[100], cstrok[100], rw[20];
+    char cfill[100], cstrok[100], rw[20];
     double x, y, w, h;
 };
 
-Retangulo criarRetangulo(char *id, double x, double y, double w, double h, char *cfill, char *cstrok, char *rw) {
+Retangulo criarRetangulo(double x, double y, double w, double h, char *cfill, char *cstrok, char *rw) {
     Retangulo retangulo = malloc(sizeof(struct retangulo));
-    strcpy(retangulo->id, id);
     retangulo->x = x;
     retangulo->y = y;
     strcpy(retangulo->cfill, cfill);
@@ -18,10 +17,6 @@ Retangulo criarRetangulo(char *id, double x, double y, double w, double h, char 
 
 void destruirRetangulo(Retangulo retangulo) {
     free(retangulo);
-}
-
-char* getRetangulo_id(Retangulo retangulo) {
-    return retangulo->id;
 }
 
 double getRetangulo_x(Retangulo retangulo) {
@@ -58,12 +53,4 @@ double getRetangulo_max_x(Retangulo retangulo) {
 
 double getRetangulo_max_y(Retangulo retangulo) {
     return retangulo->y + retangulo->h;
-}
-
-bool retanguloEquals(Retangulo retangulo, char *id) {
-    return strcmp(retangulo->id, id) == 0;
-}
-
-void imprimirRetangulo(Retangulo retangulo) {
-    printf("id %s\n", retangulo->id);
 }

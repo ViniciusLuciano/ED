@@ -1,13 +1,12 @@
 #include "circulo.h"
 
 struct circulo{
-    char id[100], cfill[100], cstrok[100], cw[20];
+    char cfill[100], cstrok[100], cw[20];
     double x, y, r;
 };
 
-Circulo criarCirculo(char *id, double x, double y, double r, char *cfill, char *cstrok, char *cw) {
+Circulo criarCirculo(double x, double y, double r, char *cfill, char *cstrok, char *cw) {
     Circulo circulo = malloc(sizeof(struct circulo));
-    strcpy(circulo->id, id);
     circulo->x = x;
     circulo->y = y;
     circulo->r = r;
@@ -19,10 +18,6 @@ Circulo criarCirculo(char *id, double x, double y, double r, char *cfill, char *
 
 void destruirCirculo(Circulo circulo) {
     free(circulo);
-}
-
-char* getCirculo_id(Circulo circulo) {
-    return circulo->id;
 }
 
 double getCirculo_x(Circulo circulo) {
@@ -63,12 +58,4 @@ double getCirculo_min_x(Circulo circulo) {
 
 double getCirculo_min_y(Circulo circulo) {
     return circulo->y - circulo->r;
-}
-
-bool circuloEquals(Circulo circulo, char *id) {
-    return strcmp(circulo->id, id) == 0;
-}
-
-void imprimirCirculo(Circulo circulo) {
-    printf("id %s\n", circulo->id);
 }

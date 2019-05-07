@@ -1,18 +1,10 @@
 #include "utils.h"
 
+// Tirar isso daqui
 double clamp(double valor, double a, double b) {
     double clmp = valor < a ? a : valor;
     clmp = valor > b ? b : clmp;
     return clmp;
-}
-
-FILE* abrirArquivo(char *diretorio, char *nomeArquivo, char *modoAbertura) {
-    char dirFinal[128];
-    tratarDiretorio(diretorio, nomeArquivo, dirFinal);
-    FILE* arq = fopen(dirFinal, modoAbertura);
-    if(arq == NULL)
-        printf("Falha na inicialização do arquivo %s\n", dirFinal);
-    return arq;
 }
 
 bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], char *nomeArquivoConsulta[], char *dirSaida[]) {
@@ -73,10 +65,18 @@ void tratarDiretorio(char *diretorio, char *nomeArquivo, char *diretorioFinal) {
 	}
 }
 
+FILE* abrirArquivo(char *diretorio, char *nomeArquivo, char *modoAbertura) {
+    char dirFinal[128];
+    tratarDiretorio(diretorio, nomeArquivo, dirFinal);
+    FILE* arq = fopen(dirFinal, modoAbertura);
+    if(arq == NULL)
+        printf("Falha na inicialização do arquivo %s\n", dirFinal);
+    return arq;
+}
+
 void obterSemExtensao(char *arquivo) {
     for(int i = strlen(arquivo)-1; i > 0; i--) {
         if(arquivo[i] == '.') {
-            //strncpy(final, arquivo, i);
             arquivo[i] = '\0';
             break;
         } else if(arquivo[i] == '/') {
@@ -88,85 +88,6 @@ void obterSemExtensao(char *arquivo) {
 void adicionarExtensao(char *arquivo, char *extensao) {
     obterSemExtensao(arquivo);
     sprintf(arquivo, "%s.%s", arquivo, extensao);
-}
-
-void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, ArvoreBin *raiz) {
-
-    char str[150], instrucao[10];
-    int idText = -1; // Adicionar os textos na arvore
-
-    char nomeArqSVG[64];
-    strcpy(nomeArqSVG, nomeArquivoSVG);
-    obterNomeArquivo(nomeArqSVG);
-
-    adicionarExtensao(nomeArqSVG, "svg");
-    FILE *SVG = abrirArquivo(dirSVG, nomeArqSVG, "w");
-    if(SVG == NULL)
-        exit(1);
-    
-
-    iniciarSVG(SVG);
-	while(true) {
-		fgets(str, sizeof(str), entrada);
-        sscanf(str, "%s", instrucao);
-		if(feof(entrada))
-			break;
-
-		if(strcmp(instrucao, "c") == 0){
-            Forma *forma = (Forma*)malloc(sizeof(Forma));
-            forma->nomeForma = CIRCULO;
-            forma->tipoForma = (Circulo*)malloc(sizeof(Circulo));
-            Circulo *circ = ((Circulo*) forma->tipoForma);
-
-            char bufferCorD[50], bufferCorB[50];
-			sscanf(str, "%*c %d %lf %lf %lf %s %s", &forma->id, &circ->raio, &forma->x, &forma->y, bufferCorB, bufferCorD);
-
-            forma->corB = malloc(strlen(bufferCorB)*sizeof(char));
-            forma->corD = malloc(strlen(bufferCorD)*sizeof(char));
-            strcpy(forma->corB, bufferCorB);
-            strcpy(forma->corD, bufferCorD);
-
-            escreverCirculo(SVG, forma);
-            adicionarElemento(raiz, forma); // Adicionar elemento na arvore
-
-		} else if(strcmp(instrucao, "r") == 0){
-            Forma *forma = (Forma*)malloc(sizeof(Forma));
-            forma->nomeForma = RETANGULO;
-            forma->tipoForma = (Retangulo*)malloc(sizeof(Retangulo));
-            Retangulo *ret = ((Retangulo*) forma->tipoForma);
-
-            char bufferCorD[50], bufferCorB[50];
-			sscanf(str, "%*c %d %lf %lf %lf %lf %s %s", &forma->id, &ret->w, &ret->h, &forma->x, &forma->y, bufferCorB, bufferCorD);
-            
-            forma->corB = malloc(strlen(bufferCorB)*sizeof(char));
-            forma->corD = malloc(strlen(bufferCorD)*sizeof(char));
-            strcpy(forma->corB, bufferCorB);
-            strcpy(forma->corD, bufferCorD);
-
-            escreverRetangulo(SVG, forma);
-            adicionarElemento(raiz, forma); // Adicionar elemento na arvore
-		} else if(strcmp(instrucao, "t") == 0) {
-            Forma *forma = (Forma*)malloc(sizeof(Forma));
-            forma->nomeForma = TEXTO;
-            forma->tipoForma = (Texto*)malloc(sizeof(Texto));
-            Texto *text = ((Texto*) forma->tipoForma);
-    
-            char bufferTexto[256];
-            sscanf(str, "%*c %lf %lf %256[^\n]", &forma->x, &forma->y, bufferTexto);
-
-            text->texto = malloc(strlen(bufferTexto)*sizeof(char));
-            strcpy(text->texto, bufferTexto);
-            forma->id = idText;
-            idText--;
-
-            escreverTexto(SVG, forma);
-            adicionarElemento(raiz, forma);
-		}
-
-	}
-    
-    finalizarSVG(SVG);
-    fclose(SVG);
 }
 
 void obterNomeArquivo(char *dirArquivo) {
@@ -186,6 +107,119 @@ void obterNomeArquivo(char *dirArquivo) {
 void concatenarNomes(char *nome1, char *nome2, char *nomeSaida) {
     sprintf(nomeSaida, "%s-%s", nome1, nome2);
 }
+
+
+// Processa isso na main? Better maybe
+void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) {
+
+    char str[150], instrucao[10];
+    int idText = -1; // Adicionar os textos na arvore
+
+	while(true) {
+		fgets(str, sizeof(str), entrada);
+        sscanf(str, "%s", instrucao);
+		if(feof(entrada))
+			break;
+
+		if(strcmp(instrucao, "c") == 0){
+
+            /*
+            Forma *forma = (Forma*)malloc(sizeof(Forma));
+            forma->nomeForma = CIRCULO;
+            forma->tipoForma = (Circulo*)malloc(sizeof(Circulo));
+            Circulo *circ = ((Circulo*) forma->tipoForma);
+            */
+
+            char cfill[50], cstrok[50];
+            int id;
+            double r, x, y;
+			sscanf(str, "%*c %d %lf %lf %lf %s %s", &id, &r, &x, &y, cstrok, cfill);
+            Circulo c = criarCirculo(id, x, y, r, cfill, cstrok, "2px");
+            Forma f = criarForma(id, CIRCULO, c);
+
+            /*
+            forma->corB = malloc(strlen(bufferCorB)*sizeof(char));
+            forma->corD = malloc(strlen(bufferCorD)*sizeof(char));
+            strcpy(forma->corB, bufferCorB);
+            strcpy(forma->corD, bufferCorD);
+            */
+
+            //escreverCirculo(SVG, f);
+            adicionarElemento(raiz, f); // Adicionar elemento na arvore
+
+		} else if(strcmp(instrucao, "r") == 0){
+            /*
+            Forma *forma = (Forma*)malloc(sizeof(Forma));
+            forma->nomeForma = RETANGULO;
+            forma->tipoForma = (Retangulo*)malloc(sizeof(Retangulo));
+            Retangulo *ret = ((Retangulo*) forma->tipoForma);
+            */
+
+            char cfill[50], cstrok[50];
+            int id;
+            double w, h, x, y;
+			sscanf(str, "%*c %d %lf %lf %lf %lf %s %s", &id, &w, &h, &x, &y, cstrok, cfill);
+            Retangulo r = criarRetangulo(id, x, y, w, h, cfill, cstrok, "2px");
+            Forma f = criarForma(id, RETANGULO, r);
+
+            /*
+            forma->corB = malloc(strlen(bufferCorB)*sizeof(char));
+            forma->corD = malloc(strlen(bufferCorD)*sizeof(char));
+            strcpy(forma->corB, bufferCorB);
+            strcpy(forma->corD, bufferCorD);
+            */
+
+            //escreverRetangulo(SVG, f);
+            adicionarElemento(raiz, f); // Adicionar elemento na arvore
+
+		} else if(strcmp(instrucao, "t") == 0) {
+            /*
+            Forma *forma = (Forma*)malloc(sizeof(Forma));
+            forma->nomeForma = TEXTO;
+            forma->tipoForma = (Texto*)malloc(sizeof(Texto));
+            Texto *text = ((Texto*) forma->tipoForma);
+            */
+    
+            char bufferTexto[256];
+            double x, y;
+            sscanf(str, "%*c %lf %lf %256[^\n]", &x, &y, bufferTexto);
+
+            /*
+            text->texto = malloc(strlen(bufferTexto)*sizeof(char));
+            strcpy(text->texto, bufferTexto);
+            */
+
+            //forma->id = idText;    VER SOBRE O ID
+            idText--;
+
+            //escreverTexto(SVG, forma);
+            //adicionarElemento(raiz, forma);
+		}
+
+	}
+
+    char nomeArqSVG[64];
+    strcpy(nomeArqSVG, nomeArquivoSVG);
+    obterNomeArquivo(nomeArqSVG);
+    adicionarExtensao(nomeArqSVG, "svg");
+
+    FILE *SVG = abrirArquivo(dirSVG, nomeArqSVG, "w");
+    if(SVG == NULL)
+        exit(1);
+    
+    iniciarSVG(SVG);
+    // Percorrer listas escrevendo no svg xD
+    finalizarSVG(SVG);
+    fclose(SVG);
+}
+
+
+
+
+
+
+
+
 
 void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *dirArquivoConsulta, char *nomeArquivoConsulta, ArvoreBin *raiz) {
     if(nomeArquivoConsulta == NULL) 

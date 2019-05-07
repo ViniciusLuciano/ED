@@ -15,10 +15,10 @@ int main(int argc, char* argv[]) {
     FILE *arquivoEntrada = abrirArquivo( dirEntrada, nomeArquivoEntrada, "r" );
     if(arquivoEntrada == NULL)
         return 1;
-    ArvoreBin *raiz = iniciaArvore();
+    //ArvoreBin *raiz = iniciaArvore();
 
 
-    processarArquivoEntrada(arquivoEntrada, dirSaida, nomeArquivoEntrada, raiz); // Arquivo de entrada / Arquivo SVG para escrever / raiz da arvore
+    processarArquivoEntrada(arquivoEntrada, dirSaida, nomeArquivoEntrada); // Arquivo de entrada / Arquivo SVG para escrever / raiz da arvore
     fclose(arquivoEntrada); 
 
     // Abrir na main
