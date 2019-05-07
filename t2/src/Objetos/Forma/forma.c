@@ -1,7 +1,7 @@
 #include "forma.h"
 
 struct forma {
-    char *id;
+    char id[20];
     int tipoForma;
     Figura figura;
 };

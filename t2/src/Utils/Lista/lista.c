@@ -1,34 +1,35 @@
 #include "lista.h"
 
-typedef struct node {
+struct node {
     struct node *prox;
     struct node *ant;
     Objeto objeto;
-} *ponteiroNode;
+};
 
-typedef struct lista {
+struct lista {
     struct node *primeiro;
     struct node *ultimo;
     int tamanho, tamanhoMax;
-} *ponteiroLista;
+};
 
 Lista criarLista(int tamanhoMax) {
-    Lista l = malloc(sizeof(struct lista));
-    ponteiroLista lista = (ponteiroLista) l;
+    Lista lista = malloc(sizeof(struct lista));
     lista->primeiro = NULL;
     lista->ultimo = NULL;
     lista->tamanho = 0;
     lista->tamanhoMax = tamanhoMax;
-    return l;
+    return lista;
 }
 
-bool inserirPrimeiro(Lista l, Objeto objeto) {
-    ponteiroLista lista = (ponteiroLista) l;
+void setLista_tamanhoMax(Lista lista, int tamanhoMax) {
+    lista->tamanhoMax = tamanhoMax;
+}
+
+bool inserirPrimeiro(Lista lista, Objeto objeto) {
     
     if(lista->primeiro == NULL) {
         if(++lista->tamanho <= lista->tamanhoMax) {
-            Node n = malloc(sizeof(struct node));
-            ponteiroNode node = (ponteiroNode) n;
+            Node node = malloc(sizeof(struct node));
 
             node->ant = NULL;
             node->prox = NULL;
@@ -40,8 +41,7 @@ bool inserirPrimeiro(Lista l, Objeto objeto) {
         }
     } else {
         if(++lista->tamanho <= lista->tamanhoMax) {
-            Node n = malloc(sizeof(struct node));
-            ponteiroNode node = (ponteiroNode) n;
+            Node node = malloc(sizeof(struct node));
 
             node->ant = NULL;
             node->prox = lista->primeiro;
@@ -55,16 +55,14 @@ bool inserirPrimeiro(Lista l, Objeto objeto) {
     return false;
 }
 
-bool inserirUltimo(Lista l, Objeto objeto) {
-    ponteiroLista lista = (ponteiroLista) l;
+bool inserirUltimo(Lista lista, Objeto objeto) {
 
     if(lista->primeiro == NULL) {
-        return inserirPrimeiro(l, objeto);
+        return inserirPrimeiro(lista, objeto);
     }
 
     if(++lista->tamanho <= lista->tamanhoMax) {
-        Node n = malloc(sizeof(struct node));
-        ponteiroNode node = (ponteiroNode) n;
+        Node node = malloc(sizeof(struct node));
 
         node->ant = lista->ultimo;
         node->prox = NULL;
@@ -77,9 +75,8 @@ bool inserirUltimo(Lista l, Objeto objeto) {
     return false;
 }
 
-void destruirLista(Lista l, void(*destruirObjeto)(Objeto objeto)) {
-    ponteiroLista lista = (ponteiroLista) l;
-    ponteiroNode node = (ponteiroNode) lista->primeiro;
+void destruirLista(Lista lista, void(*destruirObjeto)(Objeto objeto)) {
+    Node node = (Node) lista->primeiro;
 
     if(lista->primeiro == NULL)
         return;
@@ -95,13 +92,13 @@ void destruirLista(Lista l, void(*destruirObjeto)(Objeto objeto)) {
     free(lista);
 }
 
-bool excluirObjeto(Lista l, 
+bool excluirObjeto(Lista lista, 
                     char *identificador, 
                     bool(*objetoEquals)(Objeto objetoLista, char *id), 
                     void(*destruirObjeto)(Objeto objeto)) {
 
-    ponteiroLista lista = (ponteiroLista) l;
-    ponteiroNode node = (ponteiroNode) lista->primeiro;
+    
+    Node node = (Node) lista->primeiro;
 
     for(node; node != NULL; node = node->prox) {
         if( objetoEquals(node->objeto, identificador) ) {
@@ -125,9 +122,8 @@ bool excluirObjeto(Lista l,
     return false;
 }
 
-Objeto encontrarObjeto(Lista l, char *identificador, bool (*objetoEquals)(Objeto objetoLista, char *id)) {
-    ponteiroLista lista = (ponteiroLista) l;
-    ponteiroNode node = (ponteiroNode) lista->primeiro;
+Objeto encontrarObjeto(Lista lista, char *identificador, bool (*objetoEquals)(Objeto objetoLista, char *id)) {
+    Node node = (Node) lista->primeiro;
 
     for(node; node != NULL; node = node->prox) {
         if( objetoEquals(node->objeto, identificador) ) {
@@ -137,9 +133,8 @@ Objeto encontrarObjeto(Lista l, char *identificador, bool (*objetoEquals)(Objeto
     return NULL;
 }
 
-void imprimirLista(Lista l, void (*imprimirObjeto)(Objeto objeto)) {
-    ponteiroLista lista = (ponteiroLista) l;
-    ponteiroNode node = (ponteiroNode) lista->primeiro;
+void imprimirLista(Lista lista, void (*imprimirObjeto)(Objeto objeto)) {
+    Node node = (Node) lista->primeiro;
 
     for(node; node != NULL; node = node->prox) {
         imprimirObjeto(node->objeto);

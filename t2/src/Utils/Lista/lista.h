@@ -4,13 +4,13 @@
 #include "../../headers.h"
 
 typedef void* Objeto;
-typedef void* Lista;
-typedef void* Node;
+typedef struct lista* Lista;
+typedef struct node* Node;
 
 Lista criarLista(int tamanhoMax);
 bool inserirPrimeiro(Lista l, Objeto objeto);
 bool inserirUltimo(Lista l, Objeto objeto);
-
+void setLista_tamanhoMax(Lista lista, int tamanhoMax);
 void destruirLista(Lista l, void (*destruirObjeto)(Objeto objeto));
 
 bool excluirObjeto(Lista l, 

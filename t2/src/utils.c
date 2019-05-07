@@ -113,9 +113,22 @@ void concatenarNomes(char *nome1, char *nome2, char *nomeSaida) {
 void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) {
 
     char str[150], instrucao[10];
-    int idText = -1; // Adicionar os textos na arvore
+    
+    Lista listaForma = criarLista(1000);
+    Lista listaTexto = criarLista(1000);
+    Lista listaQuadra = criarLista(1000);
+    Lista listaHidrante = criarLista(1000);
+    Lista listaSemaforo = criarLista(1000);
+    Lista listaRadioBase = criarLista(1000);
+
+    char cqfill[50] = "pink", cqstrok[50] = "black", sqw[20] = "2px";
+    char chfill[50] = "red", chstrok[50] = "black", shw[20] = "2px";
+    char crfill[50] = "gray", crstrok[50] = "black", srw[20] = "2px";
+    char csfill[50] = "yellow", csstrok[50] = "black", ssw[20] = "2px";
+    char cw[20] = "2px", rw[20] = "2px";
 
 	while(true) {
+
 		fgets(str, sizeof(str), entrada);
         sscanf(str, "%s", instrucao);
 		if(feof(entrada))
@@ -123,81 +136,143 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
 
 		if(strcmp(instrucao, "c") == 0){
 
-            /*
-            Forma *forma = (Forma*)malloc(sizeof(Forma));
-            forma->nomeForma = CIRCULO;
-            forma->tipoForma = (Circulo*)malloc(sizeof(Circulo));
-            Circulo *circ = ((Circulo*) forma->tipoForma);
-            */
-
-            char cfill[50], cstrok[50];
-            int id;
+            char cfill[50], cstrok[50], id[20], bufferCW[20];
             double r, x, y;
-			sscanf(str, "%*c %d %lf %lf %lf %s %s", &id, &r, &x, &y, cstrok, cfill);
-            Circulo c = criarCirculo(id, x, y, r, cfill, cstrok, "2px");
+
+            sprintf(bufferCW, "%s", cw);
+
+			sscanf(str, "%*s %s %lf %lf %lf %s %s", id, &r, &x, &y, cstrok, cfill);
+            Circulo c = criarCirculo(x, y, r, cfill, cstrok, bufferCW);
             Forma f = criarForma(id, CIRCULO, c);
-
-            /*
-            forma->corB = malloc(strlen(bufferCorB)*sizeof(char));
-            forma->corD = malloc(strlen(bufferCorD)*sizeof(char));
-            strcpy(forma->corB, bufferCorB);
-            strcpy(forma->corD, bufferCorD);
-            */
-
-            //escreverCirculo(SVG, f);
-            adicionarElemento(raiz, f); // Adicionar elemento na arvore
+            inserirUltimo(listaForma, f);
 
 		} else if(strcmp(instrucao, "r") == 0){
-            /*
-            Forma *forma = (Forma*)malloc(sizeof(Forma));
-            forma->nomeForma = RETANGULO;
-            forma->tipoForma = (Retangulo*)malloc(sizeof(Retangulo));
-            Retangulo *ret = ((Retangulo*) forma->tipoForma);
-            */
 
-            char cfill[50], cstrok[50];
-            int id;
+            char cfill[50], cstrok[50], id[20], bufferRW[20];
             double w, h, x, y;
-			sscanf(str, "%*c %d %lf %lf %lf %lf %s %s", &id, &w, &h, &x, &y, cstrok, cfill);
-            Retangulo r = criarRetangulo(id, x, y, w, h, cfill, cstrok, "2px");
+
+            sprintf(bufferRW, "%s", rw);
+
+			sscanf(str, "%*s %s %lf %lf %lf %lf %s %s", id, &w, &h, &x, &y, cstrok, cfill);
+            Retangulo r = criarRetangulo(x, y, w, h, cfill, cstrok, bufferRW);
             Forma f = criarForma(id, RETANGULO, r);
-
-            /*
-            forma->corB = malloc(strlen(bufferCorB)*sizeof(char));
-            forma->corD = malloc(strlen(bufferCorD)*sizeof(char));
-            strcpy(forma->corB, bufferCorB);
-            strcpy(forma->corD, bufferCorD);
-            */
-
-            //escreverRetangulo(SVG, f);
-            adicionarElemento(raiz, f); // Adicionar elemento na arvore
+            inserirUltimo(listaForma, f);
 
 		} else if(strcmp(instrucao, "t") == 0) {
-            /*
-            Forma *forma = (Forma*)malloc(sizeof(Forma));
-            forma->nomeForma = TEXTO;
-            forma->tipoForma = (Texto*)malloc(sizeof(Texto));
-            Texto *text = ((Texto*) forma->tipoForma);
-            */
     
             char bufferTexto[256];
             double x, y;
-            sscanf(str, "%*c %lf %lf %256[^\n]", &x, &y, bufferTexto);
+            sscanf(str, "%*s %lf %lf %256[^\n]", &x, &y, bufferTexto);
+            Texto t = criarTexto(x, y, bufferTexto);
+            inserirUltimo(listaTexto, t);
+            
+		} else if(strcmp(instrucao, "q") == 0) {
 
-            /*
-            text->texto = malloc(strlen(bufferTexto)*sizeof(char));
-            strcpy(text->texto, bufferTexto);
-            */
+            char cep[30], bufferCfill[50], bufferCstrok[50], bufferSW[20];
+            double x, y, w, h;
 
-            //forma->id = idText;    VER SOBRE O ID
-            idText--;
+            sprintf(bufferCfill,"%s", cqfill);
+            sprintf(bufferCstrok,"%s", cqstrok);
+            sprintf(bufferSW,"%s", sqw);
 
-            //escreverTexto(SVG, forma);
-            //adicionarElemento(raiz, forma);
-		}
+            sscanf(str, "%*s %s %lf %lf %lf %lf", cep, &x, &y, &w, &h);
+            Quadra q = criarQuadra(cep, x, y, w, h, bufferCfill, bufferCstrok, bufferSW);
+            inserirUltimo(listaQuadra, q);
+
+        } else if(strcmp(instrucao, "h") == 0) {
+
+            char id[30], bufferCfill[50], bufferCstrok[50], bufferSW[20];
+            double x, y;
+
+            sprintf(bufferCfill,"%s", chfill);
+            sprintf(bufferCstrok,"%s", chstrok);
+            sprintf(bufferSW,"%s", shw);
+
+            sscanf(str, "%*s %s %lf %lf", id, &x, &y);
+            Hidrante h = criarHidrante(id, x, y, bufferCfill, bufferCstrok, bufferSW);
+            inserirUltimo(listaHidrante, h);
+
+        } else if(strcmp(instrucao, "s") == 0) {
+
+            char id[30], bufferCfill[50], bufferCstrok[50], bufferSW[20];
+            double x, y;
+
+            sprintf(bufferCfill,"%s", csfill);
+            sprintf(bufferCstrok,"%s", csstrok);
+            sprintf(bufferSW,"%s", ssw);
+
+            sscanf(str, "%*s %s %lf %lf", id, &x, &y);
+            Semaforo s = criarSemaforo(id, x, y, bufferCfill, bufferCstrok, bufferSW);
+            inserirUltimo(listaSemaforo, s);
+
+        } else if(strcmp(instrucao, "rb") == 0) {
+
+            char id[30], bufferCfill[50], bufferCstrok[50], bufferSW[20];
+            double x, y;
+
+            sprintf(bufferCfill,"%s", crfill);
+            sprintf(bufferCstrok,"%s", crstrok);
+            sprintf(bufferSW,"%s", srw);
+
+            sscanf(str, "%*s %s %lf %lf", id, &x, &y);
+            RadioBase rb = criarRadioBase(id, x, y, bufferCfill, bufferCstrok, bufferSW);
+            inserirUltimo(listaRadioBase, rb);
+
+        } else if(strcmp(instrucao, "cq") == 0) {
+
+            char bufferCfill[50], bufferCstrok[50], bufferSW[20];
+            sscanf(str, "%*s %s %s %s", bufferCfill, bufferCstrok, bufferSW);
+            strcpy(cqfill, bufferCfill);
+            strcpy(cqstrok, bufferCstrok);
+            strcpy(sqw, bufferSW);
+
+        } else if(strcmp(instrucao, "ch") == 0) {
+
+            char bufferCfill[50], bufferCstrok[50], bufferSW[20];
+            sscanf(str, "%*s %s %s %s", bufferCfill, bufferCstrok, bufferSW);
+            strcpy(chfill, bufferCfill);
+            strcpy(chstrok, bufferCstrok);
+            strcpy(shw, bufferSW);
+             
+        } else if(strcmp(instrucao, "cr") == 0) {
+
+            char bufferCfill[50], bufferCstrok[50], bufferSW[20];
+            sscanf(str, "%*s %s %s %s", bufferCfill, bufferCstrok, bufferSW);
+            strcpy(crfill, bufferCfill);
+            strcpy(crstrok, bufferCstrok);
+            strcpy(srw, bufferSW);
+
+        } else if(strcmp(instrucao, "cs") == 0) {
+
+            char bufferCfill[50], bufferCstrok[50], bufferSW[20];
+            sscanf(str, "%*s %s %s %s", bufferCfill, bufferCstrok, bufferSW);
+            strcpy(csfill, bufferCfill);
+            strcpy(csstrok, bufferCstrok);
+            strcpy(ssw, bufferSW);
+
+        } else if(strcmp(instrucao, "sw") == 0) {
+
+            char bufferCW[20], bufferRW[20];
+            sscanf(str, "%*s %s %s", bufferCW, bufferRW);
+            strcpy(cw, bufferCW);
+            strcpy(rw, bufferRW);
+
+        } else if(strcmp(instrucao, "nx") == 0) {
+
+            int i, nq, nh, ns, nr;
+            sscanf(str, "%*s %d %d %d %d %d", &i, &nq, &nh, &ns, &nr);
+            setLista_tamanhoMax(listaForma, i);
+            setLista_tamanhoMax(listaQuadra, nq);
+            setLista_tamanhoMax(listaHidrante, nh);
+            setLista_tamanhoMax(listaSemaforo, ns);
+            setLista_tamanhoMax(listaRadioBase, nr);
+
+        }
 
 	}
-
+    //imprimirLista(listaHidrante, (void*)imprimirHidrante);
+    //imprimirLista(listaForma, (void*)imprimirForma);
+    /*
     char nomeArqSVG[64];
     strcpy(nomeArqSVG, nomeArquivoSVG);
     obterNomeArquivo(nomeArqSVG);
@@ -211,6 +286,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
     // Percorrer listas escrevendo no svg xD
     finalizarSVG(SVG);
     fclose(SVG);
+    */
 }
 
 
@@ -220,7 +296,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
 
 
 
-
+/*
 void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *dirArquivoConsulta, char *nomeArquivoConsulta, ArvoreBin *raiz) {
     if(nomeArquivoConsulta == NULL) 
         return;
@@ -340,6 +416,7 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
     fclose(arquivoTXT);
     fclose(arquivoSVG);
 }
+*/
 
 
 void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, char *dirSaida) {

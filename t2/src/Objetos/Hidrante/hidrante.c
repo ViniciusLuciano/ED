@@ -37,5 +37,5 @@ bool hidranteEquals(Hidrante hidrante, char *id) {
 }
 
 void imprimirHidrante(Hidrante hidrante) {
-    printf("id %s\n", hidrante->id);
+    printf("id %s | cfill %s\n", hidrante->id, hidrante->cfill);
 }
