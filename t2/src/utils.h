@@ -2,8 +2,8 @@
 #define UTILS_H
 
 #include "headers.h"
-#include "formas.h"
-#include "arvoreBin.h"
+//#include "formas.h"
+//#include "arvoreBin.h"
 #include "svg.h"
 #include "colisao.h"
 
