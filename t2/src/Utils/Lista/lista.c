@@ -78,8 +78,10 @@ bool inserirUltimo(Lista lista, Objeto objeto) {
 void destruirLista(Lista lista, void(*destruirObjeto)(Objeto objeto)) {
     Node node = (Node) lista->primeiro;
 
-    if(lista->primeiro == NULL)
+    if(lista->primeiro == NULL) {
+        free(lista);
         return;
+    }
     
     for(node; node != NULL; node = node->prox) {
         if(node->ant != NULL) {
