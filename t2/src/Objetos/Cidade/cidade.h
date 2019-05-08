@@ -17,8 +17,9 @@ Uma cidade não é um TAD!!
 
 typedef struct cidade* Cidade;
 
-void inicializarCidade();
-Objeto getCidade_objeto(Cidade cidade, char *id);
+Cidade criarCidade();
+//Objeto getCidade_objeto(Cidade cidade, char *id);
+void destruirCidade(Cidade cidade);
 void setCidade_Forma(Cidade cidade, Forma forma);
 void setCidade_Quadra(Cidade cidade, Quadra quadra);
 void setCidade_Hidrante(Cidade cidade, Hidrante hidrante);

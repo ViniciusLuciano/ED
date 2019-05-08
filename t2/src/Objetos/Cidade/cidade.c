@@ -9,7 +9,7 @@ struct cidade {
     Lista listaTexto;
 };
 
-void inicializarCidade() {
+Cidade criarCidade() {
     Cidade cidade = malloc(sizeof(struct cidade));
     cidade->listaForma = criarLista(1000);
     cidade->listaQuadra = criarLista(1000);
@@ -17,6 +17,17 @@ void inicializarCidade() {
     cidade->listaSemaforo = criarLista(1000);
     cidade->listaRadioBase = criarLista(1000);
     cidade->listaTexto = criarLista(1000);
+    return cidade;
+}
+
+void destruirCidade(Cidade cidade) {
+    destruirLista(cidade->listaForma, (void*)destruirForma);
+    destruirLista(cidade->listaQuadra, (void*)destruirQuadra);
+    destruirLista(cidade->listaHidrante, (void*)destruirHidrante);
+    destruirLista(cidade->listaSemaforo, (void*)destruirSemaforo);
+    destruirLista(cidade->listaRadioBase, (void*)destruirRadioBase);
+    destruirLista(cidade->listaTexto, (void*)destruirTexto);
+    free(cidade);
 }
 
 /*
