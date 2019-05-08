@@ -290,12 +290,6 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
 }
 
 
-
-
-
-
-
-
 /*
 void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *dirArquivoConsulta, char *nomeArquivoConsulta, ArvoreBin *raiz) {
     if(nomeArquivoConsulta == NULL) 
