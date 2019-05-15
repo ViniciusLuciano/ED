@@ -37,5 +37,6 @@ bool removerCidade_Objeto(Cidade cidade, char *id);
 void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double py, double dist, char *op, FILE *txt);
 void setCidade_CstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk);
 void deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy, FILE *txt);
+void escreverCidade_svg(Cidade cidade, FILE *svg);
 
 #endif

@@ -306,9 +306,10 @@ bool processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
     if(nomeArquivoConsulta == NULL) 
         return;
     
+    // Abrir isso na main
     FILE *consulta = abrirArquivo( dirArquivoConsulta, nomeArquivoConsulta, "r" );
     if(consulta == NULL)
-        exit(1);
+        return false;
 
     char nomeArquivoEntradaSemExtensao[64], nomeArquivoConsultaSemExtensao[64];
     strcpy(nomeArquivoEntradaSemExtensao, nomeArquivoEntrada);
@@ -328,9 +329,7 @@ bool processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
     if(arquivoTXT == NULL || arquivoSVG == NULL)
         return false;
 
-    // Iniciar svg dps
-    //iniciarSVG(arquivoSVG);
-    //escreverArvoreSVG(*raiz, arquivoSVG);
+    iniciarSVG(arquivoSVG);
     char str[150], instrucao[10];
     while(true) {
         fgets(str, sizeof(str), consulta);
@@ -503,16 +502,19 @@ bool processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             }
 
         } else if(strcmp(instrucao, "trns") == 0) {
+            // Td certo a principio
 
             double x, y, w, h, dx, dy;
             sscanf(str, "%*s %lf %lf %lf %lf %lf %lf", x, y, w, h, dx, dy);
             Retangulo r = criarRetangulo(x, y, w, h, "", "", "");
 
-            // Vou precisar mudar pra escrever no txt zzzz
             deslocarEquipamentosInternosRetangulo(cidade, r, dx, dy, arquivoTXT);
             destruirRetangulo(r);
         }
     }
+
+    // ver direito
+    escreverCidade_svg(cidade, arquivoSVG);
     
     finalizarSVG(arquivoSVG);
     fclose(consulta);

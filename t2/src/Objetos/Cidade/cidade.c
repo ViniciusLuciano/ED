@@ -233,3 +233,29 @@ void deslocarCidade_EquipamentosInternosRetangulo(Cidade cidade, Retangulo r, do
         }
     }
 }
+
+void escreverCidade_svg(Cidade cidade, FILE *svg) {
+    Node node;
+    // Desenvolver isso depois
+
+    node = getLista_primeiro(cidade->listaQuadra);
+    for(node; node != NULL; getLista_prox(node)) {
+        Quadra q = getLista_ObjNode(node);
+    }
+
+    node = getLista_primeiro(cidade->listaHidrante);
+    for(node; node != NULL; getLista_prox(node)) {
+        Hidrante h = getLista_ObjNode(node);
+    }
+
+    node = getLista_primeiro(cidade->listaSemaforo);
+    for(node; node != NULL; getLista_prox(node)) {
+        Semaforo s = getLista_ObjNode(node);
+    }
+
+    node = getLista_primeiro(cidade->listaRadioBase);
+    for(node; node != NULL; getLista_prox(node)) {
+        RadioBase rb = getLista_ObjNode(node);
+    }
+    
+}
