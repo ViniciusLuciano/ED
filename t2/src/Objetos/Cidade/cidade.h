@@ -15,13 +15,11 @@
 
 /*
 Uma cidade contem todos os elementos.
-Uma cidade não é um TAD!!
 */
 
 typedef struct cidade* Cidade;
 
 Cidade criarCidade();
-//Objeto getCidade_objeto(Cidade cidade, char *id);
 void destruirCidade(Cidade cidade);
 void setCidade_tamanhoMax(Cidade cidade, int i, int nq, int nh, int ns, int nr);
 void setCidade_Forma(Cidade cidade, Forma forma);
@@ -36,7 +34,7 @@ Hidrante getCidade_Hidrante(Cidade cidade, char *id);
 Semaforo getCidade_Semaforo(Cidade cidade, char *id);
 RadioBase getCidade_RadioBase(Cidade cidade, char *id);
 bool removerCidade_Objeto(Cidade cidade, char *id);
-void executeCidade_Quadra(Cidade cidade, double px, double py, double dist, char *op);
+void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double py, double dist, char *op);
 void setCidade_CstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk);
 void deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy);
 
