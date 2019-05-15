@@ -163,14 +163,22 @@ void setCidade_CstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk
 }
 
 // trns
-void deslocarCidade_EquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy) {
+void deslocarCidade_EquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy, FILE *txt) {
     Node node;
+    fprintf(txt, "-- EQUIPAMENTOS URBANOS MOVIDOS --\n");
 
     node = getLista_primeiro(cidade->listaQuadra);
     for(node; node != NULL; getLista_prox(node)) {
         Quadra q = getLista_ObjNode(node);
         Retangulo rq = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
         if(retanguloInternoRetangulo(rq, r)) {
+            fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
+            fprintf(txt, "(%lf, %lf) -> (%lf, %lf)\n\n",
+                getQuadra_x(q),
+                getQuadra_y(q),
+                getQuadra_x(q) + dx,
+                getQuadra_y(q) + dy
+            );
             setQuadra_x(q, getQuadra_x(q) + dx);
             setQuadra_y(q, getQuadra_y(q) + dy);
         }
@@ -181,6 +189,13 @@ void deslocarCidade_EquipamentosInternosRetangulo(Cidade cidade, Retangulo r, do
     for(node; node != NULL; getLista_prox(node)) {
         Hidrante h = getLista_ObjNode(node);
         if(pontoInternoRetangulo(getHidrante_x(h), getHidrante_y(h), r)) {
+            fprintf(txt, "ID -> %s\n", getHidrante_id(h));
+            fprintf(txt, "(%lf, %lf) -> (%lf, %lf)\n\n",
+                getHidrante_x(h),
+                getHidrante_y(h),
+                getHidrante_x(h) + dx,
+                getHidrante_y(h) + dy
+            );
             setHidrante_x(h, getHidrante_x(h) + dx);
             setHidrante_y(h, getHidrante_y(h) + dy);
         }
@@ -190,6 +205,13 @@ void deslocarCidade_EquipamentosInternosRetangulo(Cidade cidade, Retangulo r, do
     for(node; node != NULL; getLista_prox(node)) {
         Semaforo s = getLista_ObjNode(node);
         if(pontoInternoRetangulo(getSemaforo_x(s), getSemaforo_y(s), r)) {
+            fprintf(txt, "ID -> %s\n", getSemaforo_id(s));
+            fprintf(txt, "(%lf, %lf) -> (%lf, %lf)\n\n",
+                getSemaforo_x(s),
+                getSemaforo_y(s),
+                getSemaforo_x(s) + dx,
+                getSemaforo_y(s) + dy
+            );
             setSemaforo_x(s, getSemaforo_x(s) + dx);
             setSemaforo_y(s, getSemaforo_y(s) + dy);
         }
@@ -199,6 +221,13 @@ void deslocarCidade_EquipamentosInternosRetangulo(Cidade cidade, Retangulo r, do
     for(node; node != NULL; getLista_prox(node)) {
         RadioBase rb = getLista_ObjNode(node);
         if(pontoInternoRetangulo(getRadioBase_x(rb), getRadioBase_y(rb), r)) {
+            fprintf(txt, "ID -> %s\n", getRadioBase_id(rb));
+            fprintf(txt, "(%lf, %lf) -> (%lf, %lf)\n\n",
+                getRadioBase_x(rb),
+                getRadioBase_y(rb),
+                getRadioBase_x(rb) + dx,
+                getRadioBase_y(rb) + dy
+            );
             setRadioBase_x(rb, getRadioBase_x(rb) + dx);
             setRadioBase_y(rb, getRadioBase_y(rb) + dy);
         }

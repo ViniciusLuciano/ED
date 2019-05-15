@@ -509,7 +509,7 @@ bool processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             Retangulo r = criarRetangulo(x, y, w, h, "", "", "");
 
             // Vou precisar mudar pra escrever no txt zzzz
-            deslocarEquipamentosInternosRetangulo(cidade, r, dx, dy);
+            deslocarEquipamentosInternosRetangulo(cidade, r, dx, dy, arquivoTXT);
             destruirRetangulo(r);
         }
     }

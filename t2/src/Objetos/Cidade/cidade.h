@@ -34,8 +34,8 @@ Hidrante getCidade_Hidrante(Cidade cidade, char *id);
 Semaforo getCidade_Semaforo(Cidade cidade, char *id);
 RadioBase getCidade_RadioBase(Cidade cidade, char *id);
 bool removerCidade_Objeto(Cidade cidade, char *id);
-void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double py, double dist, char *op, FILE* txt);
+void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double py, double dist, char *op, FILE *txt);
 void setCidade_CstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk);
-void deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy);
+void deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy, FILE *txt);
 
 #endif
