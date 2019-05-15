@@ -432,15 +432,19 @@ bool processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             if(h = getCidade_Hidrante(cidade, id) != NULL) {
                 px = getHidrante_x(h);
                 py = getHidrante_y(h);
-                removerCidade_QuadrasInternasEquipamento(cidade, px, py, dist, metrica);
+                // Melhorar esse print dps
+                fprintf(arquivoTXT, "ID: %s\nEquipamento: Hidrante\n", id);
+                removerCidade_QuadrasInternasEquipamento(cidade, px, py, dist, metrica, arquivoTXT);
             } else if(rb = getCidade_RadioBase(cidade, id) != NULL) {
                 px = getRadioBase_x(rb);
                 py = getRadioBase_y(rb);
-                removerCidade_QuadrasInternasEquipamento(cidade, px, py, dist, metrica);
+                fprintf(arquivoTXT, "ID: %s\nEquipamento: Radio Base\n", id);
+                removerCidade_QuadrasInternasEquipamento(cidade, px, py, dist, metrica, arquivoTXT);
             } else if(s = getCidade_Semaforo(cidade, id) != NULL) {
                 px = getSemaforo_x(s);
                 py = getSemaforo_y(s);
-                removerCidade_QuadrasInternasEquipamento(cidade, px, py, dist, metrica);
+                fprintf(arquivoTXT, "ID: %s\nEquipamento: Semaforo\n", id);
+                removerCidade_QuadrasInternasEquipamento(cidade, px, py, dist, metrica, arquivoTXT);
             }
 
         } else if(strcmp(instrucao, "del") == 0) {

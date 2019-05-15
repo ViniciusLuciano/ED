@@ -96,8 +96,8 @@ bool removerCidade_Objeto(Cidade cidade, char *id) {
 
 // Duvidas ainda??
 // dq
-void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double py, double dist, char *op) {
-
+void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double py, double dist, char *op, FILE *txt) {
+    fprintf(txt, "-- CEP(s) REMOVIDOS --\n");
     Node node = getLista_primeiro(cidade->listaQuadra);
     if(strcmp(op, "L1") == 0) {
     
@@ -107,13 +107,17 @@ void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double p
             Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
 
             if(getLista_prox(node) == NULL) {
-                if(retanguloInternoL1(px, py, r, dist))
+                if(retanguloInternoL1(px, py, r, dist)) {
+                    fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
                     excluirLista_Node(cidade->listaQuadra, node, destruirQuadra);
+                }
                 break;
             } else {
                 node = getLista_prox(node);
-                if(retanguloInternoL1(px, py, r, dist))
+                if(retanguloInternoL1(px, py, r, dist)) {
+                    fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
                     excluirLista_Node(cidade->listaQuadra, getLista_ant(node), destruirQuadra);
+                }
             }
             destruirRetangulo(r);
         }
@@ -126,18 +130,23 @@ void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double p
             Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
 
             if(getLista_prox(node) == NULL) {
-                if(retanguloInternoCirculo(r, c))
+                if(retanguloInternoCirculo(r, c)) {
+                    fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
                     excluirLista_Node(cidade->listaQuadra, node, destruirQuadra);
+                }
                 break;
             } else {
                 node = getLista_prox(node);
-                if(retanguloInternoCirculo(r, c))
+                if(retanguloInternoCirculo(r, c)) {
+                    fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
                     excluirLista_Node(cidade->listaQuadra, getLista_ant(node), destruirQuadra);
+                }
             }
             destruirRetangulo(r);
         }
         destruirCirculo(c);
     }
+    fprintf(txt, "\n");
 }
 
 // cbq
