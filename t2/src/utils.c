@@ -302,7 +302,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 
 
 
-bool processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *nomeArquivoConsulta, Cidade cidade) {
+bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, char *dirSaida, char *nomeArquivoConsulta, Cidade cidade) {
 
     char nomeArquivoEntradaSemExtensao[64], nomeArquivoConsultaSemExtensao[64];
     strcpy(nomeArquivoEntradaSemExtensao, nomeArquivoEntrada);
@@ -325,9 +325,9 @@ bool processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *no
     iniciarSVG(arquivoSVG);
     char str[150], instrucao[10];
     while(true) {
-        fgets(str, sizeof(str), consulta);
+        fgets(str, sizeof(str), arquivoConsulta);
         sscanf(str, "%s", instrucao);
-		if(feof(consulta))
+		if(feof(arquivoConsulta))
 			break;
 
         if(strcmp(instrucao, "o?") == 0) {

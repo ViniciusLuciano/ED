@@ -21,11 +21,11 @@ int main(int argc, char* argv[]) {
     fclose(arquivoEntrada); 
 
     if(nomeArquivoConsulta != NULL) {
-        FILE *consulta = abrirArquivo( dirEntrada, nomeArquivoConsulta, "r" );
-        if(consulta == NULL)
+        FILE *arquivoConsulta = abrirArquivo( dirEntrada, nomeArquivoConsulta, "r" );
+        if(arquivoConsulta == NULL)
             return 1;
-        processarArquivoConsulta(nomeArquivoEntrada, dirSaida, nomeArquivoConsulta, cidade);
-        fclose(consulta);
+        processarArquivoConsulta(arquivoConsulta, nomeArquivoEntrada, dirSaida, nomeArquivoConsulta, cidade);
+        fclose(arquivoConsulta);
     }
     
     desalocarArgumentos(dirEntrada, nomeArquivoEntrada, nomeArquivoConsulta, dirSaida);
