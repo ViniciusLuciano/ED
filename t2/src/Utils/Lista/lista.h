@@ -26,6 +26,6 @@ Node getLista_prox(Node node);
 Node getLista_primeiro(Lista lista);
 Node getLista_ant(Node node);
 Objeto getLista_ObjNode(Node node);
-bool excluirLista_Node(Node node, void(*destruirObjeto)(Objeto objeto));
+bool excluirLista_Node(Lista lista, Node node, void(*destruirObjeto)(Objeto objeto));
 
 #endif

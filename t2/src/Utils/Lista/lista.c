@@ -136,9 +136,17 @@ bool excluirObjeto(Lista lista,
     return false;
 }
 
-bool excluirLista_Node(Node node, void(*destruirObjeto)(Objeto objeto)) {
-    node->ant->prox = node->prox;
-    node->prox->ant = node->ant;
+// Verificar se o node é o primeiro/ ultimo zz
+bool excluirLista_Node(Lista lista, Node node, void(*destruirObjeto)(Objeto objeto)) {
+    if(node->ant == NULL) {
+        lista->primeiro = node->prox;
+    } else if(node->prox == NULL) { // Excluir ultimo
+        node->ant->prox = NULL;
+        lista->ultimo = node->ant;
+    } else { // Excluir no meio
+        node->ant->prox = node->prox;
+        node->prox->ant = node->ant;
+    }
     destruirObjeto(node->objeto);
     free(node);
 }

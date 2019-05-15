@@ -94,8 +94,9 @@ bool removerCidade_Objeto(Cidade cidade, char *id) {
     return false;
 }
 
-// SEPARAR ESSE LIXO AQUI
-void executeCidade_Quadra(Cidade cidade, double px, double py, double dist, char *op) {
+// Duvidas ainda??
+// dq
+void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double py, double dist, char *op) {
 
     Node node = getLista_primeiro(cidade->listaQuadra);
     if(strcmp(op, "L1") == 0) {
@@ -107,13 +108,14 @@ void executeCidade_Quadra(Cidade cidade, double px, double py, double dist, char
 
             if(getLista_prox(node) == NULL) {
                 if(retanguloInternoL1(px, py, r, dist))
-                    excluirLista_Node(node, destruirQuadra);
+                    excluirLista_Node(cidade->listaQuadra, node, destruirQuadra);
                 break;
             } else {
                 node = getLista_prox(node);
                 if(retanguloInternoL1(px, py, r, dist))
-                    excluirLista_Node(getLista_ant(node), destruirQuadra);
+                    excluirLista_Node(cidade->listaQuadra, getLista_ant(node), destruirQuadra);
             }
+            destruirRetangulo(r);
         }
 
     } else if(strcmp(op, "L2") == 0) {
@@ -125,54 +127,34 @@ void executeCidade_Quadra(Cidade cidade, double px, double py, double dist, char
 
             if(getLista_prox(node) == NULL) {
                 if(retanguloInternoCirculo(r, c))
-                    excluirLista_Node(node, destruirQuadra);
+                    excluirLista_Node(cidade->listaQuadra, node, destruirQuadra);
                 break;
             } else {
                 node = getLista_prox(node);
                 if(retanguloInternoCirculo(r, c))
-                    excluirLista_Node(getLista_ant(node), destruirQuadra);
+                    excluirLista_Node(cidade->listaQuadra, getLista_ant(node), destruirQuadra);
             }
+            destruirRetangulo(r);
         }
-
-        // for(node; node != NULL ; getLista_prox(node)) {
-        //     Node nodeAnt = getLista_ant(node);
-        //     if(nodeAnt == NULL)
-        //         continue;
-            
-        //     Quadra q = getLista_ObjNode(nodeAnt);
-        //     Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
-        //     if(retanguloInternoCirculo(r, c)) {
-        //         excluirLista_Node(nodeAnt, destruirQuadra);
-        //     }
-        // }
-
-        // Node nodeAnt = getLista_ant(node);
-        // Quadra q = getLista_ObjNode(nodeAnt);
-        // Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
-        // if(retanguloInternoCirculo(r, c)) {
-        //     excluirLista_Node(nodeAnt, destruirQuadra);
-        // }
-    } else {
-        Circulo c = criarCirculo(px, py, dist, "", "", "");
-
-        while(true) {
-            Quadra q = getLista_ObjNode(node);
-            Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
-
-            if(getLista_prox(node) == NULL) {
-                if(retanguloInternoCirculo(r, c))
-                    setQuadra_cstrk(q, op);
-                break;
-            } else {
-                node = getLista_prox(node);
-                if(retanguloInternoCirculo(r, c))
-                    setQuadra_cstrk(q, op);
-            }
-        }
+        destruirCirculo(c);
     }
 }
 
-void deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy) {
+// cbq
+void setCidade_CstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk) {
+    Node node = getLista_primeiro(cidade->listaQuadra);
+
+    for(node; node != NULL; getLista_prox(node)) {
+        Quadra q = getLista_ObjNode(node);
+        Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
+        if(retanguloInternoCirculo(r, c))
+            setQuadra_cstrk(q, cstrk);
+        destruirRetangulo(r);
+    }
+}
+
+// trns
+void deslocarCidade_EquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy) {
     Node node;
 
     node = getLista_primeiro(cidade->listaQuadra);

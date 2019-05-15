@@ -37,6 +37,7 @@ Semaforo getCidade_Semaforo(Cidade cidade, char *id);
 RadioBase getCidade_RadioBase(Cidade cidade, char *id);
 bool removerCidade_Objeto(Cidade cidade, char *id);
 void executeCidade_Quadra(Cidade cidade, double px, double py, double dist, char *op);
+void setCidade_CstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk);
 void deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy);
 
 #endif
