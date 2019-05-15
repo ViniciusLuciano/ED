@@ -39,5 +39,6 @@ void setCidade_CstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk
 void deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy, FILE *txt);
 void Cidade_escreverSvg(Cidade cidade, FILE *svg);
 void Cidade_escreverQuadrasEquipamentosSvg(Cidade cidade, FILE *svg);
+void Cidade_escreverFormasEnvoltas(Cidade cidade, FILE *svg, char *cor);
 
 #endif

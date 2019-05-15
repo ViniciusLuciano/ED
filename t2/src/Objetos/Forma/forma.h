@@ -4,6 +4,8 @@
 #include "../../headers.h"
 #include "../Circulo/circulo.h"
 #include "../Retangulo/retangulo.h"
+#include "../../svg.h"
+#include "../../Utils/Geometria/geometria.h"
 
 /*
 Formas podem ser do tipo Circulo/Retangulo
@@ -18,6 +20,7 @@ int getForma_tipoForma(Forma forma);
 char* getForma_id(Forma forma);
 Figura getForma_figura(Forma forma);
 void escreverForma_svg(Forma forma, FILE *svg);
+void Forma_escreverFormaEnvoltaSvg(Forma forma, FILE *svg, char *cor);
 
 // Funções relacionadas com a lista
 bool formaEquals(Forma forma, char *id);

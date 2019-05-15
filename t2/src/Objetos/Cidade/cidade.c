@@ -303,3 +303,11 @@ void Cidade_escreverQuadrasEquipamentosSvg(Cidade cidade, FILE *svg) {
         escreverRadioBase_svg(rb, svg);
     } 
 }
+
+void Cidade_escreverFormasEnvoltas(Cidade cidade, FILE *svg, char *cor) {
+    Node node = getLista_primeiro(cidade->listaForma);
+    for(node; node != NULL; getLista_prox(node)) {
+        Forma f = getLista_ObjNode(node);
+        Forma_escreverFormaEnvoltaSvg(f, svg, cor);
+    }
+}

@@ -48,3 +48,36 @@ void escreverForma_svg(Forma forma, FILE *svg) {
     else if(forma->tipoForma == RETANGULO)
         escreverRetangulo_svg(forma, svg);
 }
+
+void Forma_escreverFormaEnvoltaSvg(Forma forma, FILE *svg, char *cor) {
+    if(forma->tipoForma == CIRCULO) {
+        Circulo c = getForma_figura(forma);
+        escreverCirculo_svg(c, svg);
+
+        // "Bounding box"
+        double posX = getCirculo_min_x(c);
+        double posY = getCirculo_min_y(c);
+        double lado = 2*getCirculo_r(c);
+        fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />\n", 
+            posX, 
+            posY, 
+            lado, 
+            lado, 
+            cor);
+
+    } else if(forma->tipoForma == RETANGULO) {
+        Retangulo r = getForma_figura(forma);
+        escreverRetangulo_svg(r, svg);
+
+        double *centro = malloc(2*sizeof(double));
+        centroDeMassa(forma, centro);
+
+        fprintf(svg, "<ellipse cx=\"%lf\" cy=\"%lf\" rx=\"%lf\" ry=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />\n", 
+            centro[0], 
+            centro[1], 
+            getRetangulo_w(r)/2, 
+            getRetangulo_h(r)/2, 
+            cor);
+        free(centro);
+    }	
+}

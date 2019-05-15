@@ -376,12 +376,10 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             
             FILE *bbSVG = abrirArquivo( dirSaida, nomeEntradaConsultaSufixo, "w");
             if(bbSVG == NULL)
-                exit(1);
+                return false;
 
             iniciarSVG(bbSVG);
-
-            //escreverFormasEnvoltas(bbSVG, *raiz, cor);
-
+            Cidade_escreverFormasEnvoltas(cidade, bbSVG, cor);
             finalizarSVG(bbSVG);
             fclose(bbSVG);
 
