@@ -20,5 +20,6 @@ double getCirculo_max_x(Circulo circulo);
 double getCirculo_max_y(Circulo circulo);
 double getCirculo_min_x(Circulo circulo);
 double getCirculo_min_y(Circulo circulo);
+void escreverCirculo_svg(Circulo c, FILE *svg);
 
 #endif

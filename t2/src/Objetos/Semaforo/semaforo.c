@@ -40,6 +40,15 @@ void setSemaforo_y(Semaforo semaforo, double y) {
     semaforo->y = y;
 }
 
+void escreverSemaforo_svg(Semaforo s, FILE *svg) {
+    fprintf(svg, "<circle cx=\"%lf\" cy=\"%lf\" r=\"5\" stroke=\"%s\" fill=\"%s\" stroke-width=\"%s\" />\n", 
+            s->x,
+            s->y,
+            s->cstrok, 
+            s->cfill,
+            s->sw);
+}
+
 bool semaforoEquals(Semaforo semaforo, char *id) {
     return strcmp(semaforo->id, id) == 0;
 }

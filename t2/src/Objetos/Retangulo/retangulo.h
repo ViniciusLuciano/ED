@@ -19,5 +19,6 @@ char* getRetangulo_cstrok(Retangulo retangulo);
 char* getRetangulo_rw(Retangulo retangulo);
 double getRetangulo_max_x(Retangulo retangulo);
 double getRetangulo_max_y(Retangulo retangulo);
+void escreverRetangulo_svg(Retangulo r, FILE *svg);
 
 #endif

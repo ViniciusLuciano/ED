@@ -55,6 +55,11 @@ void setQuadra_y(Quadra quadra, double y) {
     quadra->y = y;
 }
 
+// Terminar isso
+void escreverQuadra_svg(Quadra q, FILE *svg) {
+
+}
+
 bool quadraEquals(Quadra quadra, char *cep) {
     return strcmp(quadra->cep, cep) == 0;
 }

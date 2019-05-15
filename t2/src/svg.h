@@ -9,8 +9,8 @@
 
 void iniciarSVG(FILE *SVG);
 void finalizarSVG(FILE *SVG);
-void escreverCirculo(FILE *SVG, Circulo c);
-void escreverRetangulo(FILE *SVG, Retangulo r);
+void escreverCirculo_svg(FILE *svg, Circulo c);
+void escreverRetangulo_svg(FILE *svg, Retangulo r);
 //void escreverTexto(FILE *SVG, Texto t);
 void escreverretanguloDelimitador(FILE *SVG2, Forma a, Forma b, bool colidem);
 void escreverPontoInterno(FILE *SVG, Forma a, double x, double y, bool interno);

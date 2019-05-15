@@ -40,6 +40,15 @@ void setRadioBase_y(RadioBase radioBase, double y) {
     radioBase->y = y;
 }
 
+void escreverRadioBase_svg(RadioBase rb, FILE *svg) {
+    fprintf(svg, "<circle cx=\"%lf\" cy=\"%lf\" r=\"5\" stroke=\"%s\" fill=\"%s\" stroke-width=\"%s\" />\n", 
+            rb->x,
+            rb->y,
+            rb->cstrok, 
+            rb->cfill,
+            rb->sw);
+}
+
 bool radioBaseEquals(RadioBase radioBase, char *id) {
     return strcmp(radioBase->id, id) == 0;
 }

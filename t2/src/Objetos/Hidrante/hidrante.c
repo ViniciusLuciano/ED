@@ -40,6 +40,15 @@ void setHidrante_y(Hidrante hidrante, double y) {
     hidrante->y = y;
 }
 
+void escreverHidrante_svg(Hidrante h, FILE *svg) {
+    fprintf(svg, "<circle cx=\"%lf\" cy=\"%lf\" r=\"5\" stroke=\"%s\" fill=\"%s\" stroke-width=\"%s\" />\n", 
+            h->x,
+            h->y,
+            h->cstrok, 
+            h->cfill,
+            h->sw);
+}
+
 bool hidranteEquals(Hidrante hidrante, char *id) {
     return strcmp(hidrante->id, id) == 0;
 }

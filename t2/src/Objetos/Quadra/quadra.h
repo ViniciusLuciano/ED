@@ -18,6 +18,7 @@ double getQuadra_h(Quadra quadra);
 void setQuadra_cstrk(Quadra quadra, char *cstrok);
 void setQuadra_x(Quadra quadra, double x);
 void setQuadra_y(Quadra quadra, double y);
+void escreverQuadra_svg(Quadra q, FILE *svg);
 
 // Funções relacionadas com a lista
 bool quadraEquals(Quadra quadra, char *cep);

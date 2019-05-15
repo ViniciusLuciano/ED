@@ -1,10 +1,9 @@
 #ifndef FORMA_H
 #define FORMA_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
+#include "../../headers.h"
+#include "../Circulo/circulo.h"
+#include "../Retangulo/retangulo.h"
 
 /*
 Formas podem ser do tipo Circulo/Retangulo
@@ -18,6 +17,7 @@ void destruirForma(Forma forma);
 int getForma_tipoForma(Forma forma);
 char* getForma_id(Forma forma);
 Figura getForma_figura(Forma forma);
+void escreverForma_svg(Forma forma, FILE *svg);
 
 // Funções relacionadas com a lista
 bool formaEquals(Forma forma, char *id);

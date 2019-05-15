@@ -234,28 +234,72 @@ void deslocarCidade_EquipamentosInternosRetangulo(Cidade cidade, Retangulo r, do
     }
 }
 
-void escreverCidade_svg(Cidade cidade, FILE *svg) {
+// Vou deixar isso msm ou escrever direto no svg?
+// Usado apenas para o .geo
+void Cidade_escreverSvg(Cidade cidade, FILE *svg) {
     Node node;
-    // Desenvolver isso depois
+    
+    node = getLista_primeiro(cidade->listaForma);
+    for(node; node != NULL; getLista_prox(node)) {
+        Forma f = getLista_ObjNode(node);
+        escreverForma_svg(f, svg);
+    }
+
+    node = getLista_primeiro(cidade->listaTexto);
+    for(node; node != NULL; getLista_prox(node)) {
+        Texto t = getLista_ObjNode(node);
+        escreverForma_svg(t, svg);
+    }
 
     node = getLista_primeiro(cidade->listaQuadra);
     for(node; node != NULL; getLista_prox(node)) {
         Quadra q = getLista_ObjNode(node);
+        escreverQuadra_svg(q, svg);
     }
 
     node = getLista_primeiro(cidade->listaHidrante);
     for(node; node != NULL; getLista_prox(node)) {
         Hidrante h = getLista_ObjNode(node);
+        escreverHidrante_svg(h, svg);
     }
 
     node = getLista_primeiro(cidade->listaSemaforo);
     for(node; node != NULL; getLista_prox(node)) {
         Semaforo s = getLista_ObjNode(node);
+        escreverSemaforo_svg(s, svg);
     }
 
     node = getLista_primeiro(cidade->listaRadioBase);
     for(node; node != NULL; getLista_prox(node)) {
         RadioBase rb = getLista_ObjNode(node);
+        escreverRadioBase_svg(rb, svg);
+    }   
+}
+
+void Cidade_escreverQuadrasEquipamentosSvg(Cidade cidade, FILE *svg) {
+    Node node;
+
+    node = getLista_primeiro(cidade->listaQuadra);
+    for(node; node != NULL; getLista_prox(node)) {
+        Quadra q = getLista_ObjNode(node);
+        escreverQuadra_svg(q, svg);
     }
-    
+
+    node = getLista_primeiro(cidade->listaHidrante);
+    for(node; node != NULL; getLista_prox(node)) {
+        Hidrante h = getLista_ObjNode(node);
+        escreverHidrante_svg(h, svg);
+    }
+
+    node = getLista_primeiro(cidade->listaSemaforo);
+    for(node; node != NULL; getLista_prox(node)) {
+        Semaforo s = getLista_ObjNode(node);
+        escreverSemaforo_svg(s, svg);
+    }
+
+    node = getLista_primeiro(cidade->listaRadioBase);
+    for(node; node != NULL; getLista_prox(node)) {
+        RadioBase rb = getLista_ObjNode(node);
+        escreverRadioBase_svg(rb, svg);
+    } 
 }

@@ -54,3 +54,14 @@ double getRetangulo_max_x(Retangulo retangulo) {
 double getRetangulo_max_y(Retangulo retangulo) {
     return retangulo->y + retangulo->h;
 }
+
+void escreverRetangulo_svg(Retangulo r, FILE *svg) {
+	fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"%s\" fill=\"%s\" stroke-width=\"%s\" />\n",
+            r->x,
+            r->y, 
+            r->w, 
+            r->h, 
+            r->cstrok,
+            r->cfill,
+            r->rw);
+}

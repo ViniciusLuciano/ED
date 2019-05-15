@@ -1,6 +1,6 @@
 #include "circulo.h"
 
-struct circulo{
+struct circulo {
     char cfill[100], cstrok[100], cw[20];
     double x, y, r;
 };
@@ -58,4 +58,14 @@ double getCirculo_min_x(Circulo circulo) {
 
 double getCirculo_min_y(Circulo circulo) {
     return circulo->y - circulo->r;
+}
+
+void escreverCirculo_svg(Circulo c, FILE *svg) {
+	fprintf(svg, "<circle cx=\"%lf\" cy=\"%lf\" r=\"%lf\" stroke=\"%s\" fill=\"%s\" stroke-width=\"%s\" />\n", 
+            c->x,
+            c->y,
+            c->r, 
+            c->cstrok, 
+            c->cfill,
+            c->cw);
 }

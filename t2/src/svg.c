@@ -9,35 +9,6 @@ void finalizarSVG(FILE *SVG) {
 	fprintf(SVG, "</svg>");
 }
 
-// Adicionar largura forma
-// Função escrever forma***
-// Passar pra dentro das formas
-void escreverCirculo_svg(FILE *SVG, Circulo c) {
-	fprintf(SVG, "<circle cx=\"%lf\" cy=\"%lf\" r=\"%lf\" stroke=\"%s\" fill=\"%s\" />\n", 
-	getCirculo_x(c),
-	getCirculo_y(c),
-	getCirculo_r(c), 
-	getCirculo_cstrok(c), 
-	getCirculo_cfill(c));
-}
-
-void escreverRetangulo_svg(FILE *SVG, Retangulo r) {
-	fprintf(SVG, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"%s\" fill=\"%s\" />\n",
-	getRetangulo_x(r),
-	getRetangulo_y(r), 
-	getRetangulo_w(r), 
-	getRetangulo_h(r), 
-	getRetangulo_cstrok(r),
-	getRetangulo_cfill(r));
-}
-
-/*
-void escreverTexto(FILE *SVG, Texto t) {
-	fprintf(SVG, "<text x=\"%lf\" y=\"%lf\">%s</text>",, t->y, text->texto);
-}
-*/
-
-
 void escreverRetanguloDelimitador(FILE *SVG2, Forma a, Forma b, bool colidem) {
 	double xMin, xMax, yMin, yMax, largura, altura;
 	if(getForma_tipoForma(a) == CIRCULO && getForma_tipoForma(b) == RETANGULO) {

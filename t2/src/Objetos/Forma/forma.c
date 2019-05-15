@@ -41,3 +41,10 @@ bool formaEquals(Forma forma, char *id) {
 void imprimirForma(Forma forma) {
     printf("id %s\n", forma->id);
 }
+
+void escreverForma_svg(Forma forma, FILE *svg) {
+    if(forma->tipoForma == CIRCULO)
+        escreverCirculo_svg(forma, svg);
+    else if(forma->tipoForma == RETANGULO)
+        escreverRetangulo_svg(forma, svg);
+}

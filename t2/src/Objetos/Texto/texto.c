@@ -28,3 +28,10 @@ double getTexto_y(Texto texto) {
 char* getTexto_text(Texto texto) {
     return texto->text;
 }
+
+void escreverTexto_svg(FILE *SVG, Texto t) {
+	fprintf(SVG, "<text x=\"%lf\" y=\"%lf\">%s</text>",
+        t->x, 
+        t->y, 
+        t->text);
+}
