@@ -28,7 +28,7 @@ void setLista_tamanhoMax(Lista lista, int tamanhoMax) {
 bool inserirPrimeiro(Lista lista, Objeto objeto) {
     
     if(lista->primeiro == NULL) {
-        if(++lista->tamanho <= lista->tamanhoMax) {
+        if(lista->tamanho + 1 <= lista->tamanhoMax) {
             Node node = malloc(sizeof(struct node));
 
             node->ant = NULL;
@@ -40,7 +40,7 @@ bool inserirPrimeiro(Lista lista, Objeto objeto) {
             return true;
         }
     } else {
-        if(++lista->tamanho <= lista->tamanhoMax) {
+        if(lista->tamanho + 1 <= lista->tamanhoMax) {
             Node node = malloc(sizeof(struct node));
 
             node->ant = NULL;
@@ -56,12 +56,11 @@ bool inserirPrimeiro(Lista lista, Objeto objeto) {
 }
 
 bool inserirUltimo(Lista lista, Objeto objeto) {
-
     if(lista->primeiro == NULL) {
         return inserirPrimeiro(lista, objeto);
     }
 
-    if(++lista->tamanho <= lista->tamanhoMax) {
+    if(lista->tamanho + 1<= lista->tamanhoMax) {
         Node node = malloc(sizeof(struct node));
 
         node->ant = lista->ultimo;
@@ -83,15 +82,28 @@ void destruirLista(Lista lista, void(*destruirObjeto)(Objeto objeto)) {
         return;
     }
     
-    for(node; node != NULL; node = node->prox) {
-        if(node->ant != NULL) {
+    while(true) {
+        if(node->prox == NULL) {
+            destruirObjeto(node->objeto);
+            free(node);
+            free(lista);
+            break;
+        } else {
+            node = node->prox;
             destruirObjeto(node->ant->objeto);
             free(node->ant);
         }
     }
-    destruirObjeto(lista->ultimo->objeto);
-    free(lista->ultimo);
-    free(lista);
+
+    // for(node; node != NULL; node = node->prox) {
+    //     if(node->ant != NULL) {
+    //         destruirObjeto(node->ant->objeto);
+    //         free(node->ant);
+    //     }
+    // }
+    // destruirObjeto(lista->ultimo->objeto);
+    // free(lista->ultimo);
+    // free(lista);
 }
 
 bool excluirObjeto(Lista lista, 
@@ -124,6 +136,13 @@ bool excluirObjeto(Lista lista,
     return false;
 }
 
+bool excluirLista_Node(Node node, void(*destruirObjeto)(Objeto objeto)) {
+    node->ant->prox = node->prox;
+    node->prox->ant = node->ant;
+    destruirObjeto(node->objeto);
+    free(node);
+}
+
 Objeto encontrarObjeto(Lista lista, char *identificador, bool (*objetoEquals)(Objeto objetoLista, char *id)) {
     Node node = (Node) lista->primeiro;
 
@@ -133,6 +152,22 @@ Objeto encontrarObjeto(Lista lista, char *identificador, bool (*objetoEquals)(Ob
         }
     }
     return NULL;
+}
+
+Node getLista_primeiro(Lista lista) {
+    return lista->primeiro;
+}
+
+Node getLista_prox(Node node) {
+    return node->prox;
+}
+
+Node getLista_ant(Node node) {
+    return node->ant;
+}
+
+Objeto getLista_ObjNode(Node node) {
+    return node->objeto;
 }
 
 void imprimirLista(Lista lista, void (*imprimirObjeto)(Objeto objeto)) {

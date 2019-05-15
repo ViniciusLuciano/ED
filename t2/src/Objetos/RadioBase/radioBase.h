@@ -13,6 +13,8 @@ void destruirRadioBase(RadioBase radioBase);
 char* getRadioBase_id(RadioBase radioBase);
 double getRadioBase_x(RadioBase radioBase);
 double getRadioBase_y(RadioBase radioBase);
+void setRadioBase_x(RadioBase radioBase, double x);
+void setRadioBase_y(RadioBase radioBase, double y);
 
 // Funções relacionadas com a lista
 bool radioBaseEquals(RadioBase radioBase, char *id);

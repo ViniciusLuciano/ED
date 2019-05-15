@@ -17,13 +17,13 @@ int main(int argc, char* argv[]) {
         return 1;
     //ArvoreBin *raiz = iniciaArvore();
 
-
-    processarArquivoEntrada(arquivoEntrada, dirSaida, nomeArquivoEntrada); // Arquivo de entrada / Arquivo SVG para escrever / raiz da arvore
+    Cidade cidade = criarCidade();
+    processarArquivoEntrada(arquivoEntrada, dirSaida, nomeArquivoEntrada, cidade); // Arquivo de entrada / Arquivo SVG para escrever / cidade
     fclose(arquivoEntrada); 
 
     // Abrir na main
-    processarArquivoConsulta(nomeArquivoEntrada, dirSaida, dirEntrada, nomeArquivoConsulta, raiz);
+    processarArquivoConsulta(nomeArquivoEntrada, dirSaida, dirEntrada, nomeArquivoConsulta, cidade);
     
     desalocarArgumentos(dirEntrada, nomeArquivoEntrada, nomeArquivoConsulta, dirSaida);
-    liberarArvore(raiz);
+    destruirCidade(cidade);
 }

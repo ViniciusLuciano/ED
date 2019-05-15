@@ -30,33 +30,13 @@ void destruirCidade(Cidade cidade) {
     free(cidade);
 }
 
-/*
-Objeto getCidade_objeto(Cidade cidade, char *id) {
-    Objeto obj;
-    
-    obj = encontrarObjeto(cidade->listaForma, id, formaEquals);
-    if(obj != NULL)
-        return obj;
-    
-    obj = encontrarObjeto(cidade->listaQuadra, id, quadraEquals);
-    if(obj != NULL)
-        return obj;
-    
-    obj = encontrarObjeto(cidade->listaHidrante, id, hidranteEquals);
-    if(obj != NULL)
-        return obj;
-    
-    obj = encontrarObjeto(cidade->listaSemaforo, id, semaforoEquals);
-    if(obj != NULL)
-        return obj;
-    
-    obj = encontrarObjeto(cidade->listaRadioBase, id, radioBaseEquals);
-    if(obj != NULL)
-        return obj;
-    
-    return NULL;
+void setCidade_tamanhoMax(Cidade cidade, int i, int nq, int nh, int ns, int nr) {
+    setLista_tamanhoMax(cidade->listaForma, i);
+    setLista_tamanhoMax(cidade->listaQuadra, nq);
+    setLista_tamanhoMax(cidade->listaHidrante, nh);
+    setLista_tamanhoMax(cidade->listaSemaforo, ns);
+    setLista_tamanhoMax(cidade->listaRadioBase, nr);
 }
-*/
 
 void setCidade_Forma(Cidade cidade, Forma forma) {
     inserirUltimo(cidade->listaForma, forma);
@@ -78,6 +58,10 @@ void setCidade_RadioBase(Cidade cidade, RadioBase radioBase) {
     inserirUltimo(cidade->listaRadioBase, radioBase);
 }
 
+void setCidade_Texto(Cidade cidade, Texto texto) {
+    inserirUltimo(cidade->listaTexto, texto);
+}
+
 Forma getCidade_Forma(Cidade cidade, char *id) {
     return encontrarObjeto(cidade->listaForma, id, (void*)formaEquals);
 }
@@ -96,4 +80,136 @@ Semaforo getCidade_Semaforo(Cidade cidade, char *id) {
 
 RadioBase getCidade_RadioBase(Cidade cidade, char *id) {
     return encontrarObjeto(cidade->listaRadioBase, id, (void*)radioBaseEquals);
+}
+
+bool removerCidade_Objeto(Cidade cidade, char *id) {
+    if(excluirObjeto(cidade->listaQuadra, id, quadraEquals, destruirQuadra))
+        return true;
+    else if(excluirObjeto(cidade->listaHidrante, id, hidranteEquals, destruirHidrante))
+        return true;
+    else if(excluirObjeto(cidade->listaSemaforo, id, semaforoEquals, destruirSemaforo))
+        return true;
+    else if(excluirObjeto(cidade->listaRadioBase, id, radioBaseEquals, destruirRadioBase))
+        return true;
+    return false;
+}
+
+// SEPARAR ESSE LIXO AQUI
+void executeCidade_Quadra(Cidade cidade, double px, double py, double dist, char *op) {
+
+    Node node = getLista_primeiro(cidade->listaQuadra);
+    if(strcmp(op, "L1") == 0) {
+    
+        // Ta certo isso aqui raaapaaaaiz?/
+        while(true) {
+            Quadra q = getLista_ObjNode(node);
+            Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
+
+            if(getLista_prox(node) == NULL) {
+                if(retanguloInternoL1(px, py, r, dist))
+                    excluirLista_Node(node, destruirQuadra);
+                break;
+            } else {
+                node = getLista_prox(node);
+                if(retanguloInternoL1(px, py, r, dist))
+                    excluirLista_Node(getLista_ant(node), destruirQuadra);
+            }
+        }
+
+    } else if(strcmp(op, "L2") == 0) {
+        Circulo c = criarCirculo(px, py, dist, "", "", "");
+
+        while(true) {
+            Quadra q = getLista_ObjNode(node);
+            Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
+
+            if(getLista_prox(node) == NULL) {
+                if(retanguloInternoCirculo(r, c))
+                    excluirLista_Node(node, destruirQuadra);
+                break;
+            } else {
+                node = getLista_prox(node);
+                if(retanguloInternoCirculo(r, c))
+                    excluirLista_Node(getLista_ant(node), destruirQuadra);
+            }
+        }
+
+        // for(node; node != NULL ; getLista_prox(node)) {
+        //     Node nodeAnt = getLista_ant(node);
+        //     if(nodeAnt == NULL)
+        //         continue;
+            
+        //     Quadra q = getLista_ObjNode(nodeAnt);
+        //     Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
+        //     if(retanguloInternoCirculo(r, c)) {
+        //         excluirLista_Node(nodeAnt, destruirQuadra);
+        //     }
+        // }
+
+        // Node nodeAnt = getLista_ant(node);
+        // Quadra q = getLista_ObjNode(nodeAnt);
+        // Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
+        // if(retanguloInternoCirculo(r, c)) {
+        //     excluirLista_Node(nodeAnt, destruirQuadra);
+        // }
+    } else {
+        Circulo c = criarCirculo(px, py, dist, "", "", "");
+
+        while(true) {
+            Quadra q = getLista_ObjNode(node);
+            Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
+
+            if(getLista_prox(node) == NULL) {
+                if(retanguloInternoCirculo(r, c))
+                    setQuadra_cstrk(q, op);
+                break;
+            } else {
+                node = getLista_prox(node);
+                if(retanguloInternoCirculo(r, c))
+                    setQuadra_cstrk(q, op);
+            }
+        }
+    }
+}
+
+void deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy) {
+    Node node;
+
+    node = getLista_primeiro(cidade->listaQuadra);
+    for(node; node != NULL; getLista_prox(node)) {
+        Quadra q = getLista_ObjNode(node);
+        Retangulo rq = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
+        if(retanguloInternoRetangulo(rq, r)) {
+            setQuadra_x(q, getQuadra_x(q) + dx);
+            setQuadra_y(q, getQuadra_y(q) + dy);
+        }
+        destruirRetangulo(rq);
+    }
+
+    node = getLista_primeiro(cidade->listaHidrante);
+    for(node; node != NULL; getLista_prox(node)) {
+        Hidrante h = getLista_ObjNode(node);
+        if(pontoInternoRetangulo(getHidrante_x(h), getHidrante_y(h), r)) {
+            setHidrante_x(h, getHidrante_x(h) + dx);
+            setHidrante_y(h, getHidrante_y(h) + dy);
+        }
+    }
+
+    node = getLista_primeiro(cidade->listaSemaforo);
+    for(node; node != NULL; getLista_prox(node)) {
+        Semaforo s = getLista_ObjNode(node);
+        if(pontoInternoRetangulo(getSemaforo_x(s), getSemaforo_y(s), r)) {
+            setSemaforo_x(s, getSemaforo_x(s) + dx);
+            setSemaforo_y(s, getSemaforo_y(s) + dy);
+        }
+    }
+
+    node = getLista_primeiro(cidade->listaRadioBase);
+    for(node; node != NULL; getLista_prox(node)) {
+        RadioBase rb = getLista_ObjNode(node);
+        if(pontoInternoRetangulo(getRadioBase_x(rb), getRadioBase_y(rb), r)) {
+            setRadioBase_x(rb, getRadioBase_x(rb) + dx);
+            setRadioBase_y(rb, getRadioBase_y(rb) + dy);
+        }
+    }
 }

@@ -11,7 +11,8 @@ void finalizarSVG(FILE *SVG) {
 
 // Adicionar largura forma
 // Função escrever forma***
-void escreverCirculo(FILE *SVG, Circulo c) {
+// Passar pra dentro das formas
+void escreverCirculo_svg(FILE *SVG, Circulo c) {
 	fprintf(SVG, "<circle cx=\"%lf\" cy=\"%lf\" r=\"%lf\" stroke=\"%s\" fill=\"%s\" />\n", 
 	getCirculo_x(c),
 	getCirculo_y(c),
@@ -20,7 +21,7 @@ void escreverCirculo(FILE *SVG, Circulo c) {
 	getCirculo_cfill(c));
 }
 
-void escreverRetangulo(FILE *SVG, Retangulo r) {
+void escreverRetangulo_svg(FILE *SVG, Retangulo r) {
 	fprintf(SVG, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"%s\" fill=\"%s\" />\n",
 	getRetangulo_x(r),
 	getRetangulo_y(r), 

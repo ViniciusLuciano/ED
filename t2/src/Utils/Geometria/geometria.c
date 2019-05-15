@@ -21,7 +21,7 @@ void centroDeMassa(Forma f, double *ponto) {
 	}
 }
 
-double distanciaCentro(Forma j, Forma k) {
+double distanciaL2Centro(Forma j, Forma k) {
 	double *centro1 = malloc(2*sizeof(double));
 	double *centro2 = malloc(2*sizeof(double));
 	centroDeMassa(j, centro1);
@@ -29,19 +29,40 @@ double distanciaCentro(Forma j, Forma k) {
 	double x1 = centro1[0], y1 = centro1[1], x2 = centro2[0], y2 = centro2[1];
 	free(centro1);
 	free(centro2);
-	return distancia(x1, y1, x2, y2);
+	return distanciaL2(x1, y1, x2, y2);
 }
 
-double distancia(double x1, double y1, double x2, double y2) {
+double distanciaL1(double x1, double y1, double x2, double y2) {
+	return fabs(x1-x2)+fabs(y1-y2);
+}
+
+double distanciaL2(double x1, double y1, double x2, double y2) {
     return sqrt(pow(x1-x2, 2) + pow(y1-y2, 2));
 }
 
 bool pontoInternoCirculo(double px, double py, Circulo c) {
 	double cx = getCirculo_x(c), cy = getCirculo_x(c), r = getCirculo_r(c);
-    return distancia(px, py, cx, cy) <= r;
+    return distanciaL2(px, py, cx, cy) <= r;
 }
 
 bool pontoInternoRetangulo(double px, double py, Retangulo r) {
 	double rx = getRetangulo_x(r), ry = getRetangulo_y(r), w = getRetangulo_w(r), h = getRetangulo_h(r);
     return px >= rx && px <= rx+w && py >= ry && py <= ry+h;
+}
+
+bool retanguloInternoCirculo(Retangulo r, Circulo c) {
+	return pontoInternoCirculo(getRetangulo_x(r), getRetangulo_y(r), c) && pontoInternoCirculo(getRetangulo_max_x(r), getRetangulo_y(r), c)
+	&& pontoInternoCirculo(getRetangulo_x(r), getRetangulo_max_y(r), c) && pontoInternoCirculo(getRetangulo_max_x(r), getRetangulo_max_y(r), c);
+}
+
+bool retanguloInternoRetangulo(Retangulo r1, Retangulo r2) {
+	return getRetangulo_x(r1) > getRetangulo_x(r2) && getRetangulo_max_x(r1) < getRetangulo_max_x(r2)
+	&& getRetangulo_y(r1) > getRetangulo_y(r2) && getRetangulo_max_y(r1) < getRetangulo_max_y(r2);
+}
+
+bool retanguloInternoL1(double px, double py, Retangulo r, double dist) {
+	return distanciaL1(px, py, getRetangulo_x(r), getRetangulo_y(r)) <= dist &&
+	distanciaL1(px, py, getRetangulo_max_x(r), getRetangulo_y(r)) <= dist &&
+	distanciaL1(px, py, getRetangulo_x(r), getRetangulo_max_y(r)) <= dist &&
+	distanciaL1(px, py, getRetangulo_max_x(r), getRetangulo_max_y(r));
 }

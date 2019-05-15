@@ -110,17 +110,20 @@ void concatenarNomes(char *nome1, char *nome2, char *nomeSaida) {
 
 
 // Processa isso na main? Better maybe
-void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) {
+void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, Cidade cidade) {
 
     char str[150], instrucao[10];
     
+    /*
     Lista listaForma = criarLista(1000);
     Lista listaTexto = criarLista(1000);
     Lista listaQuadra = criarLista(1000);
     Lista listaHidrante = criarLista(1000);
     Lista listaSemaforo = criarLista(1000);
     Lista listaRadioBase = criarLista(1000);
+    */
 
+    // Parametros padrao, sem estar setado no .geo
     char cqfill[50] = "pink", cqstrok[50] = "black", sqw[20] = "2px";
     char chfill[50] = "red", chstrok[50] = "black", shw[20] = "2px";
     char crfill[50] = "gray", crstrok[50] = "black", srw[20] = "2px";
@@ -144,7 +147,8 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
 			sscanf(str, "%*s %s %lf %lf %lf %s %s", id, &r, &x, &y, cstrok, cfill);
             Circulo c = criarCirculo(x, y, r, cfill, cstrok, bufferCW);
             Forma f = criarForma(id, CIRCULO, c);
-            inserirUltimo(listaForma, f);
+            //inserirUltimo(listaForma, f);
+            setCidade_Forma(cidade, f);
 
 		} else if(strcmp(instrucao, "r") == 0){
 
@@ -156,7 +160,8 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
 			sscanf(str, "%*s %s %lf %lf %lf %lf %s %s", id, &w, &h, &x, &y, cstrok, cfill);
             Retangulo r = criarRetangulo(x, y, w, h, cfill, cstrok, bufferRW);
             Forma f = criarForma(id, RETANGULO, r);
-            inserirUltimo(listaForma, f);
+            //inserirUltimo(listaForma, f);
+            setCidade_Forma(cidade, f);
 
 		} else if(strcmp(instrucao, "t") == 0) {
     
@@ -164,7 +169,8 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
             double x, y;
             sscanf(str, "%*s %lf %lf %256[^\n]", &x, &y, bufferTexto);
             Texto t = criarTexto(x, y, bufferTexto);
-            inserirUltimo(listaTexto, t);
+            //inserirUltimo(listaTexto, t);
+            setCidade_Texto(cidade, t);
             
 		} else if(strcmp(instrucao, "q") == 0) {
 
@@ -177,7 +183,8 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
 
             sscanf(str, "%*s %s %lf %lf %lf %lf", cep, &x, &y, &w, &h);
             Quadra q = criarQuadra(cep, x, y, w, h, bufferCfill, bufferCstrok, bufferSW);
-            inserirUltimo(listaQuadra, q);
+            //inserirUltimo(listaQuadra, q);
+            setCidade_Quadra(cidade, q);
 
         } else if(strcmp(instrucao, "h") == 0) {
 
@@ -190,7 +197,8 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
 
             sscanf(str, "%*s %s %lf %lf", id, &x, &y);
             Hidrante h = criarHidrante(id, x, y, bufferCfill, bufferCstrok, bufferSW);
-            inserirUltimo(listaHidrante, h);
+            //inserirUltimo(listaHidrante, h);
+            setCidade_Hidrante(cidade, h);
 
         } else if(strcmp(instrucao, "s") == 0) {
 
@@ -203,7 +211,8 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
 
             sscanf(str, "%*s %s %lf %lf", id, &x, &y);
             Semaforo s = criarSemaforo(id, x, y, bufferCfill, bufferCstrok, bufferSW);
-            inserirUltimo(listaSemaforo, s);
+            //inserirUltimo(listaSemaforo, s);
+            setCidade_Semaforo(cidade, s);
 
         } else if(strcmp(instrucao, "rb") == 0) {
 
@@ -216,7 +225,8 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
 
             sscanf(str, "%*s %s %lf %lf", id, &x, &y);
             RadioBase rb = criarRadioBase(id, x, y, bufferCfill, bufferCstrok, bufferSW);
-            inserirUltimo(listaRadioBase, rb);
+            //inserirUltimo(listaRadioBase, rb);
+            setCidade_RadioBase(cidade, rb);
 
         } else if(strcmp(instrucao, "cq") == 0) {
 
@@ -261,11 +271,12 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
 
             int i, nq, nh, ns, nr;
             sscanf(str, "%*s %d %d %d %d %d", &i, &nq, &nh, &ns, &nr);
-            setLista_tamanhoMax(listaForma, i);
-            setLista_tamanhoMax(listaQuadra, nq);
-            setLista_tamanhoMax(listaHidrante, nh);
-            setLista_tamanhoMax(listaSemaforo, ns);
-            setLista_tamanhoMax(listaRadioBase, nr);
+            // setLista_tamanhoMax(listaForma, i);
+            // setLista_tamanhoMax(listaQuadra, nq);
+            // setLista_tamanhoMax(listaHidrante, nh);
+            // setLista_tamanhoMax(listaSemaforo, ns);
+            // setLista_tamanhoMax(listaRadioBase, nr);
+            setCidade_tamanhoMax(cidade, i, nq, nh, ns, nr);
 
         }
 
@@ -290,8 +301,8 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG) 
 }
 
 
-/*
-void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *dirArquivoConsulta, char *nomeArquivoConsulta, ArvoreBin *raiz) {
+
+bool processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *dirArquivoConsulta, char *nomeArquivoConsulta, Cidade cidade) {
     if(nomeArquivoConsulta == NULL) 
         return;
     
@@ -315,10 +326,11 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
     adicionarExtensao(nomeEntradaConsultaSemExtensao, "svg");
     FILE *arquivoSVG = abrirArquivo(dirSaida, nomeEntradaConsultaSemExtensao, "w");
     if(arquivoTXT == NULL || arquivoSVG == NULL)
-        exit(1);
-
-    iniciarSVG(arquivoSVG);
-    escreverArvoreSVG(*raiz, arquivoSVG);
+        return false;
+        
+    // Iniciar svg dps
+    //iniciarSVG(arquivoSVG);
+    //escreverArvoreSVG(*raiz, arquivoSVG);
     char str[150], instrucao[10];
     while(true) {
         fgets(str, sizeof(str), consulta);
@@ -328,14 +340,14 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
 
         if(strcmp(instrucao, "o?") == 0) {
             fprintf(arquivoTXT, "%s", str);
-            int j, k;
-            sscanf(str, "%*s %d %d", &j, &k);
+            char j[20], k[20];
+            sscanf(str, "%*s %s %s", &j, &k);
 
-            Forma *forma1 = encontrarForma(raiz, j);
-            Forma *forma2 = encontrarForma(raiz, k);
+            Forma forma1 = getCidade_Forma(cidade, j);
+            Forma forma2 = getCidade_Forma(cidade, k);
             if(forma1 == NULL || forma2 == NULL) {
                 printf("ID %d/%d não encontrado.\n",j,k );
-                exit(1);
+                return false;
             }
 
             if(formasColidem(forma1, forma2)) {
@@ -348,14 +360,14 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             
         } else if(strcmp(instrucao, "i?") == 0) {
             fprintf(arquivoTXT, "%s", str);
-            int j;
+            char j[20];
             double x, y;
-            sscanf(str, "%*s %d %lf %lf", &j, &x, &y);
+            sscanf(str, "%*s %s %lf %lf", &j, &x, &y);
 
-            Forma *forma = encontrarForma(raiz, j);
+            Forma forma = getCidade_Forma(cidade, j);
             if(forma == NULL) {
                 printf("ID %d não encontrado.\n",j);
-                exit(1);
+                return false;
             }
 
             if(pontoInternoForma(x, y, forma)) {
@@ -371,19 +383,21 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
             int j, k;
             sscanf(str, "%*s %d %d", &j, &k);
             
-            Forma *forma1 = encontrarForma(raiz, j);
-            Forma *forma2 = encontrarForma(raiz, k);
+            Forma forma1 = getCidade_Forma(cidade, j);
+            Forma forma2 = getCidade_Forma(cidade, k);
             if(forma1 == NULL || forma2 == NULL) {
                 printf("ID %d/%d não encontrado.\n",j,k );
-                exit(1);
+                return false;
             }
 
             double dist = distanciaCentro(forma1, forma2);
             fprintf(arquivoTXT, "%lf\n\n", dist);
-            retaCentrosMassa(arquivoSVG, forma1, forma2);
-            distanciaCentrosMassa(arquivoSVG, forma1, forma2, dist);
+            escreverRetaCentrosMassa(arquivoSVG, forma1, forma2);
+            escreverDistanciaCentrosMassa(arquivoSVG, forma1, forma2, dist);
             
         } else if(strcmp(instrucao, "bb") == 0) {
+
+            // Ver como resolver dps
             char sufixo[64], cor[64];
             sscanf(str, "%*s %s %s", sufixo, cor);
 
@@ -398,10 +412,75 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
 
             iniciarSVG(bbSVG);
 
-            escreverFormasEnvoltas(bbSVG, *raiz, cor);
+            //escreverFormasEnvoltas(bbSVG, *raiz, cor);
 
             finalizarSVG(bbSVG);
             fclose(bbSVG);
+
+        } else if(strcmp(instrucao, "dq") == 0) {
+
+            char tipo[5], id[20];
+            double dist;
+            sscanf(str, "%*s %s %s %lf", tipo, id, dist);
+
+            Hidrante h;
+            RadioBase rb;
+            Semaforo s;
+            double px = 0;
+            double py = 0;
+            // trocar func de execute
+            if(h = getCidade_Hidrante(cidade, id) != NULL) {
+                px = getHidrante_x(h);
+                py = getHidrante_y(h);
+            } else if(rb = getCidade_RadioBase(cidade, id) != NULL) {
+                px = getRadioBase_x(rb);
+                py = getRadioBase_y(rb);
+            } else if(s = getCidade_Semaforo(cidade, id) != NULL) {
+                px = getSemaforo_x(s);
+                py = getSemaforo_y(s);
+            }
+            if(px == 0 && py == 0)
+                executeCidade_Quadra(cidade, px, py, dist, tipo);
+
+        } else if(strcmp(instrucao, "del") == 0) {
+
+            char id[20];
+            sscanf(str, "%*s %s", id);
+            removerCidade_Objeto(cidade, id);
+            
+        } else if(strcmp(instrucao, "cbq") == 0) {
+            
+            // Trocar func de execute
+            char cstrk[20];
+            double x, y, r;
+            sscanf(str, "%*s %lf %lf %lf %s", x, y, r, cstrk);
+            executeCidade_Quadra(cidade, x, y, r, cstrk);
+
+        } else if(strcmp(instrucao, "cdr?") == 0) {
+
+            // id/cep
+            char id[20];
+            sscanf(str, "%*s %s", id);
+
+            Hidrante h;
+            RadioBase rb;
+            Semaforo s;
+            // Ver se vou escrever no txt aberto
+            if(h = getCidade_Hidrante(cidade, id) != NULL) {
+                //getHidrante_x(h)
+            } else if(rb = getCidade_RadioBase(cidade, id) != NULL) {
+            
+            } else if(s = getCidade_Semaforo(cidade, id) != NULL) {
+            
+            }
+
+        } else if(strcmp(instrucao, "trns") == 0) {
+
+            double x, y, w, h, dx, dy;
+            sscanf(str, "%*s %lf %lf %lf %lf %lf %lf", x, y, w, h, dx, dy);
+            Retangulo r = criarRetangulo(x, y, w, h, "", "", "");
+            deslocarEquipamentosInternosRetangulo(cidade, r, dx, dy);
+            destruirRetangulo(r);
         }
     }
     
@@ -410,7 +489,7 @@ void processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
     fclose(arquivoTXT);
     fclose(arquivoSVG);
 }
-*/
+
 
 
 void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, char *dirSaida) {

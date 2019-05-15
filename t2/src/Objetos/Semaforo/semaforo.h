@@ -13,6 +13,8 @@ void destruirSemaforo(Semaforo semaforo);
 char* getSemaforo_id(Semaforo semaforo);
 double getSemaforo_x(Semaforo semaforo);
 double getSemaforo_y(Semaforo semaforo);
+void setSemaforo_x(Semaforo semaforo, double x);
+void setSemaforo_y(Semaforo semaforo, double y);
 
 // Funções relacionadas com a lista
 bool semaforoEquals(Semaforo semaforo, char *id);

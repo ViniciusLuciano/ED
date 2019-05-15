@@ -32,6 +32,14 @@ double getRadioBase_y(RadioBase radioBase) {
     return radioBase->y;
 }
 
+void setRadioBase_x(RadioBase radioBase, double x) {
+    radioBase->x = x;
+}
+
+void setRadioBase_y(RadioBase radioBase, double y) {
+    radioBase->y = y;
+}
+
 bool radioBaseEquals(RadioBase radioBase, char *id) {
     return strcmp(radioBase->id, id) == 0;
 }

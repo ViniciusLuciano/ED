@@ -21,4 +21,11 @@ Objeto encontrarObjeto(Lista l, char *identificador, bool (*objetoEquals)(Objeto
 
 void imprimirLista(Lista l, void (*imprimirObjeto)(Objeto objeto));
 
+Node getLista_primeiro(Lista lista);
+Node getLista_prox(Node node);
+Node getLista_primeiro(Lista lista);
+Node getLista_ant(Node node);
+Objeto getLista_ObjNode(Node node);
+bool excluirLista_Node(Node node, void(*destruirObjeto)(Objeto objeto));
+
 #endif

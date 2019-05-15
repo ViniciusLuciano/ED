@@ -43,8 +43,16 @@ double getQuadra_h(Quadra quadra) {
 }
 
 // Para o comando cbq
-void setQuadra_cstrock(Quadra quadra, char *cstrok) {
+void setQuadra_cstrk(Quadra quadra, char *cstrok) {
     strcpy(quadra->cstrok, cstrok);
+}
+
+void setQuadra_x(Quadra quadra, double x) {
+    quadra->x = x;
+}
+
+void setQuadra_y(Quadra quadra, double y) {
+    quadra->y = y;
 }
 
 bool quadraEquals(Quadra quadra, char *cep) {

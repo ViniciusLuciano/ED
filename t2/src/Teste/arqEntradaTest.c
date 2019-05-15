@@ -9,7 +9,8 @@ gcc -o teste arqEntradaTest.c ../utils.c ../Objetos/Circulo/circulo.c ../Objetos
 int main() {
 
     FILE* a = abrirArquivo("/home/vinicius/codes/evandro/projeto/ED", "arq.txt", "r");
-    processarArquivoEntrada(a, "x", "y");
+    Cidade cidade = criarCidade();
+    processarArquivoEntrada(a, "x", "y", cidade);
     fclose(a);
     
     return 0;

@@ -32,6 +32,14 @@ double getSemaforo_y(Semaforo semaforo) {
     return semaforo->y;
 }
 
+void setSemaforo_x(Semaforo semaforo, double x) {
+    semaforo->x = x;
+}
+
+void setSemaforo_y(Semaforo semaforo, double y) {
+    semaforo->y = y;
+}
+
 bool semaforoEquals(Semaforo semaforo, char *id) {
     return strcmp(semaforo->id, id) == 0;
 }

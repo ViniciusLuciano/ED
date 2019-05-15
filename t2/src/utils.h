@@ -5,6 +5,8 @@
 //#include "formas.h"
 //#include "arvoreBin.h"
 //#include "svg.h"
+
+#include "./Objetos/Cidade/cidade.h"
 #include "./Objetos/Forma/forma.h"
 #include "./Objetos/Circulo/circulo.h"
 #include "./Objetos/Retangulo/retangulo.h"
@@ -14,6 +16,8 @@
 #include "./Objetos/Semaforo/semaforo.h"
 #include "./Objetos/RadioBase/radioBase.h"
 #include "./Utils/Lista/lista.h"
+#include "./Utils/Geometria/geometria.h"
+#include "svg.h"
 
 double clamp(double valor, double a, double b);
 
@@ -24,7 +28,7 @@ FILE* abrirArquivo(char *diretorio, char *nomeArquivo, char *modoAbertura);
 bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], char *nomeArquivoConsulta[], char *dirSaida[]);
 
 void tratarDiretorio(char *diretorio, char *nomeArquivo, char *diretorioFinal);
-void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG);
+void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, Cidade cidade);
 void obterSemExtensao(char *arquivo);
 
 void adicionarExtensao(char *arquivo, char *extensao);

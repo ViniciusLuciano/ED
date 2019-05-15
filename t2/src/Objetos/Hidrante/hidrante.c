@@ -32,6 +32,14 @@ double getHidrante_y(Hidrante hidrante) {
     return hidrante->y;
 }
 
+void setHidrante_x(Hidrante hidrante, double x) {
+    hidrante->x = x;
+}
+
+void setHidrante_y(Hidrante hidrante, double y) {
+    hidrante->y = y;
+}
+
 bool hidranteEquals(Hidrante hidrante, char *id) {
     return strcmp(hidrante->id, id) == 0;
 }
