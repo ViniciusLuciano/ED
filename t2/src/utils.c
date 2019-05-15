@@ -365,7 +365,6 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             
         } else if(strcmp(instrucao, "bb") == 0) {
 
-            // Ver como resolver dps
             char sufixo[64], cor[64];
             sscanf(str, "%*s %s %s", sufixo, cor);
 
@@ -445,27 +444,29 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
                     getHidrante_x(h),
                     getHidrante_y(h)
                 );
+                removerCidade_Objeto(cidade, id);
             } else if(rb = getCidade_RadioBase(cidade, id) != NULL) {
                 fprintf(arquivoTXT, "ID: %s\nEquipamento: Radio Base\nCoordenadas: (%lf, %lf)\n\n",
                     id,
                     getRadioBase_x(h),
                     getRadioBase_y(h)
                 );
+                removerCidade_Objeto(cidade, id);
             } else if(s = getCidade_Semaforo(cidade, id) != NULL) {
                 fprintf(arquivoTXT, "ID: %s\nEquipamento: Semaforo\nCoordenadas: (%lf, %lf)\n\n",
                     id,
                     getSemaforo_x(h),
                     getSemaforo_y(h)
                 );
+                removerCidade_Objeto(cidade, id);
             } else if(q = getCidade_Quadra(cidade, id) != NULL) {
                 fprintf(arquivoTXT, "CEP: %s\nQuadra\nCoordenadas: (%lf, %lf)\n\n",
                     id,
                     getQuadra_x(h),
                     getQuadra_y(h)
                 );
+                removerCidade_Objeto(cidade, id);
             }
-
-            removerCidade_Objeto(cidade, id);
             
         } else if(strcmp(instrucao, "cbq") == 0) {
             // Td certo a principio 
@@ -521,7 +522,6 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             double x, y, w, h, dx, dy;
             sscanf(str, "%*s %lf %lf %lf %lf %lf %lf", x, y, w, h, dx, dy);
             Retangulo r = criarRetangulo(x, y, w, h, "", "", "");
-
             deslocarEquipamentosInternosRetangulo(cidade, r, dx, dy, arquivoTXT);
             destruirRetangulo(r);
         }
