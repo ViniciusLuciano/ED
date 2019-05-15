@@ -15,14 +15,18 @@ int main(int argc, char* argv[]) {
     FILE *arquivoEntrada = abrirArquivo( dirEntrada, nomeArquivoEntrada, "r" );
     if(arquivoEntrada == NULL)
         return 1;
-    //ArvoreBin *raiz = iniciaArvore();
 
     Cidade cidade = criarCidade();
-    processarArquivoEntrada(arquivoEntrada, dirSaida, nomeArquivoEntrada, cidade); // Arquivo de entrada / Arquivo SVG para escrever / cidade
+    processarArquivoEntrada(arquivoEntrada, dirSaida, nomeArquivoEntrada, cidade);
     fclose(arquivoEntrada); 
 
-    // Abrir na main
-    processarArquivoConsulta(nomeArquivoEntrada, dirSaida, dirEntrada, nomeArquivoConsulta, cidade);
+    if(nomeArquivoConsulta != NULL) {
+        FILE *consulta = abrirArquivo( dirEntrada, nomeArquivoConsulta, "r" );
+        if(consulta == NULL)
+            return 1;
+        processarArquivoConsulta(nomeArquivoEntrada, dirSaida, nomeArquivoConsulta, cidade);
+        fclose(consulta);
+    }
     
     desalocarArgumentos(dirEntrada, nomeArquivoEntrada, nomeArquivoConsulta, dirSaida);
     destruirCidade(cidade);

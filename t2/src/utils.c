@@ -302,14 +302,7 @@ void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 
 
 
-bool processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *dirArquivoConsulta, char *nomeArquivoConsulta, Cidade cidade) {
-    if(nomeArquivoConsulta == NULL) 
-        return;
-    
-    // Abrir isso na main
-    FILE *consulta = abrirArquivo( dirArquivoConsulta, nomeArquivoConsulta, "r" );
-    if(consulta == NULL)
-        return false;
+bool processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *nomeArquivoConsulta, Cidade cidade) {
 
     char nomeArquivoEntradaSemExtensao[64], nomeArquivoConsultaSemExtensao[64];
     strcpy(nomeArquivoEntradaSemExtensao, nomeArquivoEntrada);
@@ -515,9 +508,8 @@ bool processarArquivoConsulta(char *nomeArquivoEntrada, char *dirSaida, char *di
 
     // ver direito
     escreverCidade_svg(cidade, arquivoSVG);
-    
     finalizarSVG(arquivoSVG);
-    fclose(consulta);
+   
     fclose(arquivoTXT);
     fclose(arquivoSVG);
 }
