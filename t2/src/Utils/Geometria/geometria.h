@@ -6,6 +6,7 @@
 #include "../../Objetos/Retangulo/retangulo.h"
 #include "../../Objetos/Forma/forma.h"
 
+
 bool pontoInternoForma(double px, double py, Forma f);
 void centroDeMassa(Forma f, double *ponto);
 double distanciaCentro(Forma j, Forma k);

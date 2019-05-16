@@ -2,10 +2,6 @@
 #define UTILS_H
 
 #include "headers.h"
-//#include "formas.h"
-//#include "arvoreBin.h"
-//#include "svg.h"
-
 #include "./Objetos/Cidade/cidade.h"
 #include "./Objetos/Forma/forma.h"
 #include "./Objetos/Circulo/circulo.h"
@@ -24,7 +20,7 @@ void obterNomeArquivo(char *dirArquivo);
 FILE* abrirArquivo(char *diretorio, char *nomeArquivo, char *modoAbertura);
 bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], char *nomeArquivoConsulta[], char *dirSaida[]);
 void tratarDiretorio(char *diretorio, char *nomeArquivo, char *diretorioFinal);
-void processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, Cidade cidade);
+bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, Cidade cidade);
 void obterSemExtensao(char *arquivo);
 void adicionarExtensao(char *arquivo, char *extensao);
 void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, char *dirSaida);

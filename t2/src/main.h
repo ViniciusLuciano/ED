@@ -1,10 +1,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "./Utils/Geometria/geometria.h"
-//#include "arvoreBin.h"
-//#include "formas.h"
-#include "svg.h"
+#include "headers.h"
 #include "utils.h"
+#include "./Objetos/Cidade/cidade.h"
 
 #endif

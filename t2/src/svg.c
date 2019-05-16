@@ -9,30 +9,38 @@ void finalizarSVG(FILE *SVG) {
 	fprintf(SVG, "</svg>");
 }
 
-void escreverRetanguloDelimitador(FILE *SVG2, Forma a, Forma b, bool colidem) {
+void escreverRetanguloDelimitador(FILE *SVG2, Forma f1, Forma f2, bool colidem) {
 	double xMin, xMax, yMin, yMax, largura, altura;
-	if(getForma_tipoForma(a) == CIRCULO && getForma_tipoForma(b) == RETANGULO) {
+	if(getForma_tipoForma(f1) == CIRCULO && getForma_tipoForma(f2) == RETANGULO) {
+		Circulo a = getForma_figura(f1);
+		Retangulo b = getForma_figura(f2);
 
 		xMin = getCirculo_min_x(a) < getRetangulo_x(b) ? getCirculo_min_x(a) : getRetangulo_x(b);
 		xMax = getCirculo_max_x(a) > getRetangulo_max_x(b) ? getCirculo_max_x(a) : getRetangulo_max_x(b);
 		yMin = getCirculo_min_y(a) < getRetangulo_y(b) ? getCirculo_min_y(a) : getRetangulo_y(b);
 		yMax = getCirculo_max_y(a) > getRetangulo_max_y(b) ? getCirculo_max_y(a) : getRetangulo_max_y(b);
 
-	} else if(getForma_tipoForma(a) == RETANGULO && getForma_tipoForma(b) == CIRCULO) {
+	} else if(getForma_tipoForma(f1) == RETANGULO && getForma_tipoForma(f2) == CIRCULO) {
+		Retangulo a = getForma_figura(f1);
+		Circulo b = getForma_figura(f2);
 
 		xMin = getCirculo_min_x(b) < getRetangulo_x(a) ? getCirculo_min_x(b) : getRetangulo_x(a);
 		xMax = getCirculo_max_x(b) > getRetangulo_max_x(a) ? getCirculo_max_x(b) : getRetangulo_max_x(a);
 		yMin = getCirculo_min_y(b) < getRetangulo_y(a) ? getCirculo_min_y(b) : getRetangulo_y(a);
 		yMax = getCirculo_max_y(b) > getRetangulo_max_y(a) ? getCirculo_max_y(b) : getRetangulo_max_y(a);
 
-	} else if(getForma_tipoForma(a) == RETANGULO && getForma_tipoForma(b) == RETANGULO) {
+	} else if(getForma_tipoForma(f1) == RETANGULO && getForma_tipoForma(f2) == RETANGULO) {
+		Retangulo a = getForma_figura(f1);
+		Retangulo b = getForma_figura(f2);
 
 		xMin = getRetangulo_x(a) < getRetangulo_x(b) ? getRetangulo_x(a) : getRetangulo_x(b);
 		xMax = getRetangulo_max_x(a) > getRetangulo_max_x(b) ? getRetangulo_max_x(a) : getRetangulo_max_x(b);
 		yMin = getRetangulo_y(a) < getRetangulo_y(b) ? getRetangulo_y(a) : getRetangulo_y(b);
 		yMax = getRetangulo_max_y(a) > getRetangulo_max_y(b) ? getRetangulo_max_y(a) : getRetangulo_max_y(b);
 
-	} else if(getForma_tipoForma(a) == CIRCULO && getForma_tipoForma(b) == CIRCULO) {
+	} else if(getForma_tipoForma(f1) == CIRCULO && getForma_tipoForma(f2) == CIRCULO) {
+		Circulo a = getForma_figura(f1);
+		Circulo b = getForma_figura(f2);
 
 		xMin = getCirculo_min_x(a) < getCirculo_min_x(b) ? getCirculo_min_x(a) : getCirculo_min_x(b);
 		xMax = getCirculo_max_x(a) > getCirculo_max_x(b) ? getCirculo_max_x(a) : getCirculo_max_x(b);
@@ -90,36 +98,3 @@ void escreverDistanciaCentrosMassa(FILE *SVG, Forma a, Forma b, double distancia
 	free(centro1);
 	free(centro2);
 }
-
-/* Pensar como resolver dps
-void escreverFormasEnvoltas(FILE *SVG, struct Node* node, char *cor) {
-	if(node == NULL) {
-        return;
-    } else {
-		
-		if(node->forma->nomeForma == CIRCULO) {
-			escreverCirculo(SVG, node->forma);
-
-			// "Bounding box"
-			Circulo *circ = ((Circulo*) node->forma->tipoForma);
-			double posX = node->forma->x - circ->raio;
-			double posY = node->forma->y - circ->raio;
-			double lado = 2*circ->raio;
-			fprintf(SVG, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />\n", posX, posY, lado, lado, cor);
-	
-		} else if(node->forma->nomeForma == RETANGULO) {
-			escreverRetangulo(SVG, node->forma);
-
-			Retangulo *ret = ((Retangulo*) node->forma->tipoForma);
-			double *centro = malloc(2*sizeof(double));
-			centroDeMassa(node->forma, centro);
-
-			fprintf(SVG, "<ellipse cx=\"%lf\" cy=\"%lf\" rx=\"%lf\" ry=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />\n", centro[0], centro[1], ret->w/2, ret->h/2, cor);
-			free(centro);
-		}	
-
-        escreverFormasEnvoltas(SVG, node->esq, cor);
-        escreverFormasEnvoltas(SVG, node->dir, cor);
-    }
-}
-*/
