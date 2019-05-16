@@ -122,7 +122,6 @@ bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 	while(true) {
 
 		fgets(str, sizeof(str), entrada);
-        printf("%s\n", str);
         sscanf(str, "%s", instrucao);
 		if(feof(entrada))
 			break;
@@ -302,6 +301,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
     iniciarSVG(arquivoSVG);
     char str[150], instrucao[10];
     while(true) {
+        
         fgets(str, sizeof(str), arquivoConsulta);
         sscanf(str, "%s", instrucao);
 		if(feof(arquivoConsulta))
@@ -476,7 +476,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             double x, y, r;
             sscanf(str, "%*s %lf %lf %lf %s", &x, &y, &r, cstrk);
             Circulo c = criarCirculo(x, y, r, "", "", "");
-            setCidade_CstrkQuadrasInternasCirculo(cidade, c, cstrk);
+            setCidade_CstrkQuadrasInternasCirculo(cidade, c, cstrk, arquivoTXT);
             destruirCirculo(c);
 
         } else if(strcmp(instrucao, "cdr?") == 0) {
@@ -515,7 +515,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
                     getQuadra_x(q),
                     getQuadra_y(q)
                 );
-            }
+            } 
 
         } else if(strcmp(instrucao, "trns") == 0) {
             // Td certo a principio

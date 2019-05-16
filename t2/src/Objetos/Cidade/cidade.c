@@ -150,14 +150,16 @@ void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double p
 }
 
 // cbq
-void setCidade_CstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk) {
+void setCidade_CstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk, FILE *txt) {
     Node node = getLista_primeiro(cidade->listaQuadra);
-
+    fprintf(txt, "-- CEP(s) QUADRAS PINTADAS --\n");
     for(node; node != NULL; node = getLista_prox(node)) {
         Quadra q = getLista_ObjNode(node);
         Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
-        if(retanguloInternoCirculo(r, c))
+        if(retanguloInternoCirculo(r, c)) {
             setQuadra_cstrk(q, cstrk);
+            fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
+        }
         destruirRetangulo(r);
     }
 }
@@ -242,7 +244,6 @@ void Cidade_escreverSvg(Cidade cidade, FILE *svg) {
     node = getLista_primeiro(cidade->listaForma);
     for(node; node != NULL; node = getLista_prox(node)) {
         Forma f = getLista_ObjNode(node);
-        printf("a\n");
         escreverForma_svg(f, svg);
     }
 
@@ -255,7 +256,6 @@ void Cidade_escreverSvg(Cidade cidade, FILE *svg) {
     node = getLista_primeiro(cidade->listaQuadra);
     for(node; node != NULL; node = getLista_prox(node)) {
         Quadra q = getLista_ObjNode(node);
-        printf("b\n");
         escreverQuadra_svg(q, svg);
     }
 

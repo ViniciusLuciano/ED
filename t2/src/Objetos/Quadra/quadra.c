@@ -57,7 +57,14 @@ void setQuadra_y(Quadra quadra, double y) {
 
 // Terminar isso
 void escreverQuadra_svg(Quadra q, FILE *svg) {
-
+    fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"%s\" fill=\"%s\" stroke-width=\"%s\" />\n",
+            q->x,
+            q->y, 
+            q->w, 
+            q->h, 
+            q->cstrok,
+            q->cfill,
+            q->sw);
 }
 
 bool quadraEquals(Quadra quadra, char *cep) {
