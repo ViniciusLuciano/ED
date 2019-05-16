@@ -122,6 +122,7 @@ bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 	while(true) {
 
 		fgets(str, sizeof(str), entrada);
+        printf("%s\n", str);
         sscanf(str, "%s", instrucao);
 		if(feof(entrada))
 			break;
