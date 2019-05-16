@@ -320,10 +320,10 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 
             if(formasColidem(forma1, forma2)) {
                 fprintf(arquivoTXT, "SIM\n\n");
-                retanguloDelimitador(arquivoSVG, forma1, forma2, true);
+                escreverRetanguloDelimitador(arquivoSVG, forma1, forma2, true);
             } else {
                 fprintf(arquivoTXT, "NAO\n\n");
-                retanguloDelimitador(arquivoSVG, forma1, forma2, false);
+                escreverRetanguloDelimitador(arquivoSVG, forma1, forma2, false);
             }
             
         } else if(strcmp(instrucao, "i?") == 0) {
@@ -358,7 +358,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
                 return false;
             }
 
-            double dist = distanciaCentro(forma1, forma2);
+            double dist = distanciaL2Centro(forma1, forma2);
             fprintf(arquivoTXT, "%lf\n\n", dist);
             escreverRetaCentrosMassa(arquivoSVG, forma1, forma2);
             escreverDistanciaCentrosMassa(arquivoSVG, forma1, forma2, dist);
@@ -522,7 +522,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             double x, y, w, h, dx, dy;
             sscanf(str, "%*s %lf %lf %lf %lf %lf %lf", &x, &y, &w, &h, &dx, &dy);
             Retangulo r = criarRetangulo(x, y, w, h, "", "", "");
-            deslocarEquipamentosInternosRetangulo(cidade, r, dx, dy, arquivoTXT);
+            Cidade_deslocarEquipamentosInternosRetangulo(cidade, r, dx, dy, arquivoTXT);
             destruirRetangulo(r);
         }
     }

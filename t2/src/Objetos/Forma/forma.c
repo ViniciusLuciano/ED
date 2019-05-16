@@ -44,9 +44,9 @@ void imprimirForma(Forma forma) {
 
 void escreverForma_svg(Forma forma, FILE *svg) {
     if(forma->tipoForma == CIRCULO)
-        escreverCirculo_svg(forma, svg);
+        escreverCirculo_svg(forma->figura, svg);
     else if(forma->tipoForma == RETANGULO)
-        escreverRetangulo_svg(forma, svg);
+        escreverRetangulo_svg(forma->figura, svg);
 }
 
 void Forma_escreverFormaEnvoltaSvg(Forma forma, FILE *svg, char *cor) {

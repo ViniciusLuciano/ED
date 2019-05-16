@@ -83,13 +83,13 @@ RadioBase getCidade_RadioBase(Cidade cidade, char *id) {
 }
 
 bool removerCidade_Objeto(Cidade cidade, char *id) {
-    if(excluirObjeto(cidade->listaQuadra, id, quadraEquals, destruirQuadra))
+    if(excluirObjeto(cidade->listaQuadra, id, (void*)quadraEquals, (void*)destruirQuadra))
         return true;
-    else if(excluirObjeto(cidade->listaHidrante, id, hidranteEquals, destruirHidrante))
+    else if(excluirObjeto(cidade->listaHidrante, id, (void*)hidranteEquals, (void*)destruirHidrante))
         return true;
-    else if(excluirObjeto(cidade->listaSemaforo, id, semaforoEquals, destruirSemaforo))
+    else if(excluirObjeto(cidade->listaSemaforo, id, (void*)semaforoEquals, (void*)destruirSemaforo))
         return true;
-    else if(excluirObjeto(cidade->listaRadioBase, id, radioBaseEquals, destruirRadioBase))
+    else if(excluirObjeto(cidade->listaRadioBase, id, (void*)radioBaseEquals, (void*)destruirRadioBase))
         return true;
     return false;
 }
@@ -109,14 +109,14 @@ void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double p
             if(getLista_prox(node) == NULL) {
                 if(retanguloInternoL1(px, py, r, dist)) {
                     fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
-                    excluirLista_Node(cidade->listaQuadra, node, destruirQuadra);
+                    excluirLista_Node(cidade->listaQuadra, node, (void*)destruirQuadra);
                 }
                 break;
             } else {
                 node = getLista_prox(node);
                 if(retanguloInternoL1(px, py, r, dist)) {
                     fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
-                    excluirLista_Node(cidade->listaQuadra, getLista_ant(node), destruirQuadra);
+                    excluirLista_Node(cidade->listaQuadra, getLista_ant(node), (void*)destruirQuadra);
                 }
             }
             destruirRetangulo(r);
@@ -132,14 +132,14 @@ void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double p
             if(getLista_prox(node) == NULL) {
                 if(retanguloInternoCirculo(r, c)) {
                     fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
-                    excluirLista_Node(cidade->listaQuadra, node, destruirQuadra);
+                    excluirLista_Node(cidade->listaQuadra, node, (void*)destruirQuadra);
                 }
                 break;
             } else {
                 node = getLista_prox(node);
                 if(retanguloInternoCirculo(r, c)) {
                     fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
-                    excluirLista_Node(cidade->listaQuadra, getLista_ant(node), destruirQuadra);
+                    excluirLista_Node(cidade->listaQuadra, getLista_ant(node), (void*)destruirQuadra);
                 }
             }
             destruirRetangulo(r);
@@ -163,7 +163,7 @@ void setCidade_CstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk
 }
 
 // trns
-void deslocarCidade_EquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy, FILE *txt) {
+void Cidade_deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy, FILE *txt) {
     Node node;
     fprintf(txt, "-- EQUIPAMENTOS URBANOS MOVIDOS --\n");
 
@@ -248,7 +248,7 @@ void Cidade_escreverSvg(Cidade cidade, FILE *svg) {
     node = getLista_primeiro(cidade->listaTexto);
     for(node; node != NULL; getLista_prox(node)) {
         Texto t = getLista_ObjNode(node);
-        escreverForma_svg(t, svg);
+        escreverTexto_svg(t, svg);
     }
 
     node = getLista_primeiro(cidade->listaQuadra);

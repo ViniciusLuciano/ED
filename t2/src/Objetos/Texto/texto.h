@@ -13,7 +13,7 @@ void destruirTexto(Texto texto);
 double getTexto_x(Texto texto);
 double getTexto_y(Texto texto);
 char* getTexto_text(Texto texto);
-void escreverTexto_svg(FILE *SVG, Texto t);
+void escreverTexto_svg(Texto t, FILE *svg);
 
 // Funções relacionadas com a lista
 void imprimirTexto(Texto texto);

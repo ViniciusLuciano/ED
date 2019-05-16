@@ -29,8 +29,8 @@ char* getTexto_text(Texto texto) {
     return texto->text;
 }
 
-void escreverTexto_svg(FILE *SVG, Texto t) {
-	fprintf(SVG, "<text x=\"%lf\" y=\"%lf\">%s</text>",
+void escreverTexto_svg(Texto t, FILE *svg) {
+	fprintf(svg, "<text x=\"%lf\" y=\"%lf\">%s</text>",
         t->x, 
         t->y, 
         t->text);

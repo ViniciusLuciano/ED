@@ -9,7 +9,7 @@
 
 bool pontoInternoForma(double px, double py, Forma f);
 void centroDeMassa(Forma f, double *ponto);
-double distanciaCentro(Forma j, Forma k);
+double distanciaL2Centro(Forma j, Forma k);
 bool retanguloInternoCirculo(Retangulo r, Circulo c);
 
 // São funções usadas apenas nesse arquivo ?

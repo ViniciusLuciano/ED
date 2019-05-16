@@ -3,9 +3,10 @@
 
 #include "../../headers.h"
 #include "../Geometria/geometria.h"
-#include "./Objetos/Circulo/circulo.h"
-#include "./Objetos/Retangulo/retangulo.h"
-#include "./Objetos/Forma/forma.h"
+#include "../../Objetos/Circulo/circulo.h"
+#include "../../Objetos/Retangulo/retangulo.h"
+#include "../../Objetos/Forma/forma.h"
+#include "../../utils.h"
 
 bool formasColidem(Forma a, Forma b);
 // Funções usada apenas nesse arquivo?

@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include "headers.h"
+#include "svg.h"
 #include "./Objetos/Cidade/cidade.h"
 #include "./Objetos/Forma/forma.h"
 #include "./Objetos/Circulo/circulo.h"
@@ -13,7 +14,7 @@
 #include "./Objetos/RadioBase/radioBase.h"
 #include "./Utils/Lista/lista.h"
 #include "./Utils/Geometria/geometria.h"
-#include "svg.h"
+#include "./Utils/Colisao/colisao.h"
 
 double clamp(double valor, double a, double b);
 void obterNomeArquivo(char *dirArquivo);

@@ -4,8 +4,6 @@
 #include "../../headers.h"
 #include "../Circulo/circulo.h"
 #include "../Retangulo/retangulo.h"
-#include "../../svg.h"
-#include "../../Utils/Geometria/geometria.h"
 
 /*
 Formas podem ser do tipo Circulo/Retangulo
@@ -13,6 +11,9 @@ Formas podem ser do tipo Circulo/Retangulo
 
 typedef void* Figura;
 typedef struct forma* Forma;
+
+#include "../../svg.h"
+#include "../../Utils/Geometria/geometria.h"
 
 Forma criarForma(char *id, int tipoForma, Figura figura);
 void destruirForma(Forma forma);
