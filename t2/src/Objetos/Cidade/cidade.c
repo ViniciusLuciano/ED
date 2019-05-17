@@ -99,9 +99,12 @@ bool removerCidade_Objeto(Cidade cidade, char *id) {
 void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double py, double dist, char *op, FILE *txt) {
     fprintf(txt, "-- CEP(s) REMOVIDOS --\n");
     Node node = getLista_primeiro(cidade->listaQuadra);
+    if(node == NULL)
+        return;
+
     if(strcmp(op, "L1") == 0) {
     
-        // Ta certo isso aqui raaapaaaaiz?/
+        // sim
         while(true) {
             Quadra q = getLista_ObjNode(node);
             Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
@@ -111,6 +114,7 @@ void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double p
                     fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
                     excluirLista_Node(cidade->listaQuadra, node, (void*)destruirQuadra);
                 }
+                destruirRetangulo(r);
                 break;
             } else {
                 node = getLista_prox(node);
@@ -134,6 +138,7 @@ void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double p
                     fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
                     excluirLista_Node(cidade->listaQuadra, node, (void*)destruirQuadra);
                 }
+                destruirRetangulo(r);
                 break;
             } else {
                 node = getLista_prox(node);
@@ -236,7 +241,6 @@ void Cidade_deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, do
     }
 }
 
-// Vou deixar isso msm ou escrever direto no svg?
 // Usado apenas para o .geo
 void Cidade_escreverSvg(Cidade cidade, FILE *svg) {
     Node node;

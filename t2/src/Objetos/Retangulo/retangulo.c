@@ -9,6 +9,8 @@ Retangulo criarRetangulo(double x, double y, double w, double h, char *cfill, ch
     Retangulo retangulo = malloc(sizeof(struct retangulo));
     retangulo->x = x;
     retangulo->y = y;
+    retangulo->w = w;
+    retangulo->h = h;
     strcpy(retangulo->cfill, cfill);
     strcpy(retangulo->cstrok, cstrok);
     strcpy(retangulo->rw, rw);
