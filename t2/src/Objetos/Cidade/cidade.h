@@ -17,7 +17,7 @@
 Uma cidade contem todos os elementos.
 */
 
-typedef struct cidade* Cidade;
+typedef void* Cidade;
 
 Cidade criarCidade();
 void destruirCidade(Cidade cidade);

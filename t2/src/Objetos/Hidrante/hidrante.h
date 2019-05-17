@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-typedef struct hidrante* Hidrante;
+typedef void* Hidrante;
 
 Hidrante criarHidrante(char *id, double x, double y, char *cfill, char *cstrok, char *sw);
 void destruirHidrante(Hidrante hidrante);

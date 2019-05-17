@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-typedef struct circulo* Circulo;
+typedef void* Circulo;
 
 Circulo criarCirculo(double x, double y, double r, char *cfill, char *cstrok, char *cw);
 void destruirCirculo(Circulo circulo);

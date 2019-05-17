@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-typedef struct semaforo* Semaforo;
+typedef void* Semaforo;
 
 Semaforo criarSemaforo(char *id, double x, double y, char *cfill, char *cstrok, char *sw);
 void destruirSemaforo(Semaforo semaforo);

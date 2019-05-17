@@ -22,16 +22,16 @@ int main() {
     inserirPrimeiro(l, e);
 
     printf("Lista antes de retirar: \n");
-    imprimirLista(l, (void*)imprimirQuadra);
+    imprimirLista(l, imprimirQuadra);
     
     printf("\nLista depois de retirar: \n");
-    excluirObjeto(l, "rolandia", (void*)quadraEquals, (void*)destruirQuadra);
-    imprimirLista(l, (void*)imprimirQuadra);
+    excluirObjeto(l, "rolandia", quadraEquals, destruirQuadra);
+    imprimirLista(l, imprimirQuadra);
 
     
     printf("\nEncontrar objeto: \n");
-    Quadra xd = encontrarObjeto(l, "londrina", (void*)quadraEquals);
+    Quadra xd = encontrarObjeto(l, "londrina", quadraEquals);
     imprimirQuadra(xd);
 
-    destruirLista(l, (void*)destruirQuadra);
+    destruirLista(l, destruirQuadra);
 }

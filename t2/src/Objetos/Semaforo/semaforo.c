@@ -1,12 +1,13 @@
 #include "semaforo.h"
 
-struct semaforo {
+typedef struct semaforo {
     char id[100], cfill[100], cstrok[100], sw[20];
     double x, y;
-};
+}*pSemaforo;
 
 Semaforo criarSemaforo(char *id, double x, double y, char *cfill, char *cstrok, char *sw) {
-    Semaforo semaforo = malloc(sizeof(struct semaforo));
+    Semaforo s = malloc(sizeof(struct semaforo));
+    pSemaforo semaforo = (pSemaforo) s;
     strcpy(semaforo->id, id);
     semaforo->x = x;
     semaforo->y = y;
@@ -16,43 +17,52 @@ Semaforo criarSemaforo(char *id, double x, double y, char *cfill, char *cstrok, 
     return semaforo;
 }
 
-void destruirSemaforo(Semaforo semaforo) {
+void destruirSemaforo(Semaforo s) {
+    pSemaforo semaforo = (pSemaforo) s;
     free(semaforo);
 }
 
-char* getSemaforo_id(Semaforo semaforo) {
+char* getSemaforo_id(Semaforo s) {
+    pSemaforo semaforo = (pSemaforo) s;
     return semaforo->id;
 }
 
-double getSemaforo_x(Semaforo semaforo) {
+double getSemaforo_x(Semaforo s) {
+    pSemaforo semaforo = (pSemaforo) s;
     return semaforo->x;
 }
 
-double getSemaforo_y(Semaforo semaforo) {
+double getSemaforo_y(Semaforo s) {
+    pSemaforo semaforo = (pSemaforo) s;
     return semaforo->y;
 }
 
-void setSemaforo_x(Semaforo semaforo, double x) {
+void setSemaforo_x(Semaforo s, double x) {
+    pSemaforo semaforo = (pSemaforo) s;
     semaforo->x = x;
 }
 
-void setSemaforo_y(Semaforo semaforo, double y) {
+void setSemaforo_y(Semaforo s, double y) {
+    pSemaforo semaforo = (pSemaforo) s;
     semaforo->y = y;
 }
 
 void escreverSemaforo_svg(Semaforo s, FILE *svg) {
+    pSemaforo semaforo = (pSemaforo) s;
     fprintf(svg, "<circle cx=\"%lf\" cy=\"%lf\" r=\"5\" stroke=\"%s\" fill=\"%s\" stroke-width=\"%s\" />\n", 
-            s->x,
-            s->y,
-            s->cstrok, 
-            s->cfill,
-            s->sw);
+            semaforo->x,
+            semaforo->y,
+            semaforo->cstrok, 
+            semaforo->cfill,
+            semaforo->sw);
 }
 
-bool semaforoEquals(Semaforo semaforo, char *id) {
+bool semaforoEquals(Semaforo s, char *id) {
+    pSemaforo semaforo = (pSemaforo) s;
     return strcmp(semaforo->id, id) == 0;
 }
 
-void imprimirSemaforo(Semaforo semaforo) {
+void imprimirSemaforo(Semaforo s) {
+    pSemaforo semaforo = (pSemaforo) s;
     printf("id %semaforo\n", semaforo->id);
 }

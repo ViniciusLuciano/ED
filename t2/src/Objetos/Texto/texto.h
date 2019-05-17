@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-typedef struct texto* Texto;
+typedef void* Texto;
 
 Texto criarTexto(double x, double y, char *text);
 void destruirTexto(Texto texto);

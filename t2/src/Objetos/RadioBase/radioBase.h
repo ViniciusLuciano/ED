@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-typedef struct radioBase* RadioBase;
+typedef void* RadioBase;
 
 RadioBase criarRadioBase(char *id, double x, double y, char *cfill, char *cstrok, char *sw);
 void destruirRadioBase(RadioBase radioBase);

@@ -1,13 +1,14 @@
 #include "forma.h"
 
-struct forma {
+typedef struct forma {
     char id[20];
     int tipoForma;
     Figura figura;
-};
+}*pForma;
 
 Forma criarForma(char *id, int tipoForma, Figura figura) {
-    Forma forma = malloc(sizeof(struct forma));
+    Forma f = malloc(sizeof(struct forma));
+    pForma forma = (pForma) f;
     forma->tipoForma = tipoForma;
     strcpy(forma->id, id);
     forma->figura = figura;
@@ -15,41 +16,49 @@ Forma criarForma(char *id, int tipoForma, Figura figura) {
 }
 
 // Ver se precisa destruir coisas dentro da figura
-void destruirForma(Forma forma) {
+void destruirForma(Forma f) {
+    pForma forma = (pForma) f;
     free(forma->figura);
     free(forma);
 }
 
 // Enum
-int getForma_tipoForma(Forma forma) {
+int getForma_tipoForma(Forma f) {
+    pForma forma = (pForma) f;
     return forma->tipoForma;
 }
 
-char* getForma_id(Forma forma) {
+char* getForma_id(Forma f) {
+    pForma forma = (pForma) f;
     return forma->id;
 }
 
 // Retorna um circulo ou retangulo
-Figura getForma_figura(Forma forma) {
+Figura getForma_figura(Forma f) {
+    pForma forma = (pForma) f;
     return forma->figura;
 }
 
-bool formaEquals(Forma forma, char *id) {
+bool formaEquals(Forma f, char *id) {
+    pForma forma = (pForma) f;
     return strcmp(forma->id, id) == 0;
 }
 
-void imprimirForma(Forma forma) {
+void imprimirForma(Forma f) {
+    pForma forma = (pForma) f;
     printf("id %s\n", forma->id);
 }
 
-void escreverForma_svg(Forma forma, FILE *svg) {
+void escreverForma_svg(Forma f, FILE *svg) {
+    pForma forma = (pForma) f;
     if(forma->tipoForma == CIRCULO)
         escreverCirculo_svg(forma->figura, svg);
     else if(forma->tipoForma == RETANGULO)
         escreverRetangulo_svg(forma->figura, svg);
 }
 
-void Forma_escreverFormaEnvoltaSvg(Forma forma, FILE *svg, char *cor) {
+void Forma_escreverFormaEnvoltaSvg(Forma f, FILE *svg, char *cor) {
+    pForma forma = (pForma) f;
     if(forma->tipoForma == CIRCULO) {
         Circulo c = getForma_figura(forma);
         escreverCirculo_svg(c, svg);

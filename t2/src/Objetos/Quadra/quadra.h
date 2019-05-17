@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-typedef struct quadra* Quadra;
+typedef void* Quadra;
 
 Quadra criarQuadra(char *cep, double x, double y, double w, double h, char *cfill, char *cstrok, char *sw);
 void destruirQuadra(Quadra quadra);

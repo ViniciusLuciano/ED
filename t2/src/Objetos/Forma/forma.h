@@ -10,7 +10,7 @@ Formas podem ser do tipo Circulo/Retangulo
 */
 
 typedef void* Figura;
-typedef struct forma* Forma;
+typedef void* Forma;
 
 #include "../../svg.h"
 #include "../../Utils/Geometria/geometria.h"

@@ -1,16 +1,17 @@
 #include "cidade.h"
 
-struct cidade {
+typedef struct cidade {
     Lista listaForma;
     Lista listaQuadra;
     Lista listaHidrante;
     Lista listaSemaforo;
     Lista listaRadioBase;
     Lista listaTexto;
-};
+}*pCidade;
 
 Cidade criarCidade() {
-    Cidade cidade = malloc(sizeof(struct cidade));
+    Cidade c = malloc(sizeof(struct cidade));
+    pCidade cidade = (pCidade) c;
     cidade->listaForma = criarLista(1000);
     cidade->listaQuadra = criarLista(1000);
     cidade->listaHidrante = criarLista(1000);
@@ -20,17 +21,19 @@ Cidade criarCidade() {
     return cidade;
 }
 
-void destruirCidade(Cidade cidade) {
-    destruirLista(cidade->listaForma, (void*)destruirForma);
-    destruirLista(cidade->listaQuadra, (void*)destruirQuadra);
-    destruirLista(cidade->listaHidrante, (void*)destruirHidrante);
-    destruirLista(cidade->listaSemaforo, (void*)destruirSemaforo);
-    destruirLista(cidade->listaRadioBase, (void*)destruirRadioBase);
-    destruirLista(cidade->listaTexto, (void*)destruirTexto);
+void destruirCidade(Cidade c) {
+    pCidade cidade = (pCidade) c;
+    destruirLista(cidade->listaForma, destruirForma);
+    destruirLista(cidade->listaQuadra, destruirQuadra);
+    destruirLista(cidade->listaHidrante, destruirHidrante);
+    destruirLista(cidade->listaSemaforo, destruirSemaforo);
+    destruirLista(cidade->listaRadioBase, destruirRadioBase);
+    destruirLista(cidade->listaTexto, destruirTexto);
     free(cidade);
 }
 
-void setCidade_tamanhoMax(Cidade cidade, int i, int nq, int nh, int ns, int nr) {
+void setCidade_tamanhoMax(Cidade c, int i, int nq, int nh, int ns, int nr) {
+    pCidade cidade = (pCidade) c;
     setLista_tamanhoMax(cidade->listaForma, i);
     setLista_tamanhoMax(cidade->listaQuadra, nq);
     setLista_tamanhoMax(cidade->listaHidrante, nh);
@@ -38,65 +41,78 @@ void setCidade_tamanhoMax(Cidade cidade, int i, int nq, int nh, int ns, int nr) 
     setLista_tamanhoMax(cidade->listaRadioBase, nr);
 }
 
-void setCidade_Forma(Cidade cidade, Forma forma) {
+void setCidade_Forma(Cidade c, Forma forma) {
+    pCidade cidade = (pCidade) c;
     inserirUltimo(cidade->listaForma, forma);
 }
 
-void setCidade_Quadra(Cidade cidade, Quadra quadra) {
+void setCidade_Quadra(Cidade c, Quadra quadra) {
+    pCidade cidade = (pCidade) c;
     inserirUltimo(cidade->listaQuadra, quadra);
 }
 
-void setCidade_Hidrante(Cidade cidade, Hidrante hidrante) {
+void setCidade_Hidrante(Cidade c, Hidrante hidrante) {
+    pCidade cidade = (pCidade) c;
     inserirUltimo(cidade->listaHidrante, hidrante);
 }
 
-void setCidade_Semaforo(Cidade cidade, Semaforo semaforo) {
+void setCidade_Semaforo(Cidade c, Semaforo semaforo) {
+    pCidade cidade = (pCidade) c;
     inserirUltimo(cidade->listaSemaforo, semaforo);
 }
 
-void setCidade_RadioBase(Cidade cidade, RadioBase radioBase) {
+void setCidade_RadioBase(Cidade c, RadioBase radioBase) {
+    pCidade cidade = (pCidade) c;
     inserirUltimo(cidade->listaRadioBase, radioBase);
 }
 
-void setCidade_Texto(Cidade cidade, Texto texto) {
+void setCidade_Texto(Cidade c, Texto texto) {
+    pCidade cidade = (pCidade) c;
     inserirUltimo(cidade->listaTexto, texto);
 }
 
-Forma getCidade_Forma(Cidade cidade, char *id) {
-    return encontrarObjeto(cidade->listaForma, id, (void*)formaEquals);
+Forma getCidade_Forma(Cidade c, char *id) {
+    pCidade cidade = (pCidade) c;
+    return encontrarObjeto(cidade->listaForma, id, formaEquals);
 }
 
-Quadra getCidade_Quadra(Cidade cidade, char *id) {
-    return encontrarObjeto(cidade->listaQuadra, id, (void*)quadraEquals);
+Quadra getCidade_Quadra(Cidade c, char *id) {
+    pCidade cidade = (pCidade) c;
+    return encontrarObjeto(cidade->listaQuadra, id, quadraEquals);
 }
 
-Hidrante getCidade_Hidrante(Cidade cidade, char *id) {
-    return encontrarObjeto(cidade->listaHidrante, id, (void*)hidranteEquals);
+Hidrante getCidade_Hidrante(Cidade c, char *id) {
+    pCidade cidade = (pCidade) c;
+    return encontrarObjeto(cidade->listaHidrante, id, hidranteEquals);
 }
 
-Semaforo getCidade_Semaforo(Cidade cidade, char *id) {
-    return encontrarObjeto(cidade->listaSemaforo, id, (void*)semaforoEquals);
+Semaforo getCidade_Semaforo(Cidade c, char *id) {
+    pCidade cidade = (pCidade) c;
+    return encontrarObjeto(cidade->listaSemaforo, id, semaforoEquals);
 }
 
-RadioBase getCidade_RadioBase(Cidade cidade, char *id) {
-    return encontrarObjeto(cidade->listaRadioBase, id, (void*)radioBaseEquals);
+RadioBase getCidade_RadioBase(Cidade c, char *id) {
+    pCidade cidade = (pCidade) c;
+    return encontrarObjeto(cidade->listaRadioBase, id, radioBaseEquals);
 }
 
-bool removerCidade_Objeto(Cidade cidade, char *id) {
-    if(excluirObjeto(cidade->listaQuadra, id, (void*)quadraEquals, (void*)destruirQuadra))
+bool removerCidade_Objeto(Cidade c, char *id) {
+    pCidade cidade = (pCidade) c;
+    if(excluirObjeto(cidade->listaQuadra, id, quadraEquals, destruirQuadra))
         return true;
-    else if(excluirObjeto(cidade->listaHidrante, id, (void*)hidranteEquals, (void*)destruirHidrante))
+    else if(excluirObjeto(cidade->listaHidrante, id, hidranteEquals, destruirHidrante))
         return true;
-    else if(excluirObjeto(cidade->listaSemaforo, id, (void*)semaforoEquals, (void*)destruirSemaforo))
+    else if(excluirObjeto(cidade->listaSemaforo, id, semaforoEquals, destruirSemaforo))
         return true;
-    else if(excluirObjeto(cidade->listaRadioBase, id, (void*)radioBaseEquals, (void*)destruirRadioBase))
+    else if(excluirObjeto(cidade->listaRadioBase, id, radioBaseEquals, destruirRadioBase))
         return true;
     return false;
 }
 
 // Duvidas ainda??
 // dq
-void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double py, double dist, char *op, FILE *txt) {
+void removerCidade_QuadrasInternasEquipamento(Cidade c, double px, double py, double dist, char *op, FILE *txt) {
+    pCidade cidade = (pCidade) c;
     fprintf(txt, "-- CEP(s) REMOVIDOS --\n");
     Node node = getLista_primeiro(cidade->listaQuadra);
     if(node == NULL)
@@ -112,7 +128,7 @@ void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double p
             if(getLista_prox(node) == NULL) {
                 if(retanguloInternoL1(px, py, r, dist)) {
                     fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
-                    excluirLista_Node(cidade->listaQuadra, node, (void*)destruirQuadra);
+                    excluirLista_Node(cidade->listaQuadra, node, destruirQuadra);
                 }
                 destruirRetangulo(r);
                 break;
@@ -120,7 +136,7 @@ void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double p
                 node = getLista_prox(node);
                 if(retanguloInternoL1(px, py, r, dist)) {
                     fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
-                    excluirLista_Node(cidade->listaQuadra, getLista_ant(node), (void*)destruirQuadra);
+                    excluirLista_Node(cidade->listaQuadra, getLista_ant(node), destruirQuadra);
                 }
             }
             destruirRetangulo(r);
@@ -136,7 +152,7 @@ void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double p
             if(getLista_prox(node) == NULL) {
                 if(retanguloInternoCirculo(r, c)) {
                     fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
-                    excluirLista_Node(cidade->listaQuadra, node, (void*)destruirQuadra);
+                    excluirLista_Node(cidade->listaQuadra, node, destruirQuadra);
                 }
                 destruirRetangulo(r);
                 break;
@@ -144,7 +160,7 @@ void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double p
                 node = getLista_prox(node);
                 if(retanguloInternoCirculo(r, c)) {
                     fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
-                    excluirLista_Node(cidade->listaQuadra, getLista_ant(node), (void*)destruirQuadra);
+                    excluirLista_Node(cidade->listaQuadra, getLista_ant(node), destruirQuadra);
                 }
             }
             destruirRetangulo(r);
@@ -155,7 +171,8 @@ void removerCidade_QuadrasInternasEquipamento(Cidade cidade, double px, double p
 }
 
 // cbq
-void setCidade_CstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk, FILE *txt) {
+void setCidade_CstrkQuadrasInternasCirculo(Cidade cid, Circulo c, char *cstrk, FILE *txt) {
+    pCidade cidade = (pCidade) cid;
     Node node = getLista_primeiro(cidade->listaQuadra);
     fprintf(txt, "-- CEP(s) QUADRAS PINTADAS --\n");
     for(node; node != NULL; node = getLista_prox(node)) {
@@ -170,7 +187,8 @@ void setCidade_CstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk
 }
 
 // trns
-void Cidade_deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy, FILE *txt) {
+void Cidade_deslocarEquipamentosInternosRetangulo(Cidade c, Retangulo r, double dx, double dy, FILE *txt) {
+    pCidade cidade = (pCidade) c;
     Node node;
     fprintf(txt, "-- EQUIPAMENTOS URBANOS MOVIDOS --\n");
 
@@ -242,7 +260,8 @@ void Cidade_deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, do
 }
 
 // Usado apenas para o .geo
-void Cidade_escreverSvg(Cidade cidade, FILE *svg) {
+void Cidade_escreverSvg(Cidade c, FILE *svg) {
+    pCidade cidade = (pCidade) c;
     Node node;
     
     node = getLista_primeiro(cidade->listaForma);
@@ -282,7 +301,8 @@ void Cidade_escreverSvg(Cidade cidade, FILE *svg) {
     }   
 }
 
-void Cidade_escreverQuadrasEquipamentosSvg(Cidade cidade, FILE *svg) {
+void Cidade_escreverQuadrasEquipamentosSvg(Cidade c, FILE *svg) {
+    pCidade cidade = (pCidade) c;
     Node node;
 
     node = getLista_primeiro(cidade->listaQuadra);
@@ -310,7 +330,8 @@ void Cidade_escreverQuadrasEquipamentosSvg(Cidade cidade, FILE *svg) {
     } 
 }
 
-void Cidade_escreverFormasEnvoltas(Cidade cidade, FILE *svg, char *cor) {
+void Cidade_escreverFormasEnvoltas(Cidade c, FILE *svg, char *cor) {
+    pCidade cidade = (pCidade) c;
     Node node = getLista_primeiro(cidade->listaForma);
     for(node; node != NULL; getLista_prox(node)) {
         Forma f = getLista_ObjNode(node);

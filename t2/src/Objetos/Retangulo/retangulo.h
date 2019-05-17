@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-typedef struct retangulo* Retangulo;
+typedef void* Retangulo;
 
 Retangulo criarRetangulo(double x, double y, double w, double h, char *cfill, char *cstrok, char *rw);
 void destruirRetangulo(Retangulo retangulo);

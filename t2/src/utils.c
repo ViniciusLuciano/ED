@@ -258,8 +258,8 @@ bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
         }
 
 	}
-    //imprimirLista(listaHidrante, (void*)imprimirHidrante);
-    //imprimirLista(listaForma, (void*)imprimirForma);
+    //imprimirLista(listaHidrante, imprimirHidrante);
+    //imprimirLista(listaForma, imprimirForma);
     
     char nomeArqSVG[64];
     strcpy(nomeArqSVG, nomeArquivoSVG);
