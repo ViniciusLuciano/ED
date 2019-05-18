@@ -22,57 +22,57 @@ void destruirCirculo(Circulo c) {
     free(circulo);
 }
 
-double getCirculo_x(Circulo c) {
+double Circulo_get_x(Circulo c) {
     pCirculo circulo = (pCirculo) c;
     return circulo->x;
 }
 
-double getCirculo_y(Circulo c) {
+double Circulo_get_y(Circulo c) {
     pCirculo circulo = (pCirculo) c;
     return circulo->y;
 }
 
-double getCirculo_r(Circulo c) {
+double Circulo_get_r(Circulo c) {
     pCirculo circulo = (pCirculo) c;
     return circulo->r;
 }
 
-char* getCirculo_cfill(Circulo c) {
+char* Circulo_get_cfill(Circulo c) {
     pCirculo circulo = (pCirculo) c;
     return circulo->cfill;
 }
 
-char* getCirculo_cstrok(Circulo c) {
+char* Circulo_get_cstrok(Circulo c) {
     pCirculo circulo = (pCirculo) c;
     return circulo->cstrok;
 }
 
-char* getCirculo_cw(Circulo c) {
+char* Circulo_get_cw(Circulo c) {
     pCirculo circulo = (pCirculo) c;
     return circulo->cw;
 }
 
-double getCirculo_max_x(Circulo c) {
+double Circulo_get_max_x(Circulo c) {
     pCirculo circulo = (pCirculo) c;
     return circulo->x + circulo->r;
 }
 
-double getCirculo_max_y(Circulo c) {
+double Circulo_get_max_y(Circulo c) {
     pCirculo circulo = (pCirculo) c;
     return circulo->y + circulo->r;
 }
 
-double getCirculo_min_x(Circulo c) {
+double Circulo_get_min_x(Circulo c) {
     pCirculo circulo = (pCirculo) c;
     return circulo->x - circulo->r;
 }
 
-double getCirculo_min_y(Circulo c) {
+double Circulo_get_min_y(Circulo c) {
     pCirculo circulo = (pCirculo) c;
     return circulo->y - circulo->r;
 }
 
-void escreverCirculo_svg(Circulo c, FILE *svg) {
+void Circulo_escreverSvg(Circulo c, FILE *svg) {
     pCirculo circulo = (pCirculo) c;
 	fprintf(svg, "<circle cx=\"%lf\" cy=\"%lf\" r=\"%lf\" stroke=\"%s\" fill=\"%s\" stroke-width=\"%s\" />\n", 
             circulo->x,

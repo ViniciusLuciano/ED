@@ -52,7 +52,7 @@ void imprimirForma(Forma f) {
 void escreverForma_svg(Forma f, FILE *svg) {
     pForma forma = (pForma) f;
     if(forma->tipoForma == CIRCULO)
-        escreverCirculo_svg(forma->figura, svg);
+        Circulo_escreverSvg(forma->figura, svg);
     else if(forma->tipoForma == RETANGULO)
         escreverRetangulo_svg(forma->figura, svg);
 }
@@ -61,12 +61,12 @@ void Forma_escreverFormaEnvoltaSvg(Forma f, FILE *svg, char *cor) {
     pForma forma = (pForma) f;
     if(forma->tipoForma == CIRCULO) {
         Circulo c = getForma_figura(forma);
-        escreverCirculo_svg(c, svg);
+        Circulo_escreverSvg(c, svg);
 
         // "Bounding box"
-        double posX = getCirculo_min_x(c);
-        double posY = getCirculo_min_y(c);
-        double lado = 2*getCirculo_r(c);
+        double posX = Circulo_get_min_x(c);
+        double posY = Circulo_get_min_y(c);
+        double lado = 2*Circulo_get_r(c);
         fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />\n", 
             posX, 
             posY, 

@@ -55,6 +55,10 @@ void escreverHidrante_svg(Hidrante h, FILE *svg) {
             hidrante->cstrok, 
             hidrante->cfill,
             hidrante->sw);
+    
+    fprintf(svg, "<text x=\"%lf\" y=\"%lf\" fill=\"white\" font-size=\"9\" style=\"z-index:100 \">H</text>\n",
+            hidrante->x - 3.2,
+            hidrante->y + 3);
 }
 
 bool hidranteEquals(Hidrante h, char *id) {

@@ -76,6 +76,11 @@ void escreverQuadra_svg(Quadra q, FILE *svg) {
             quadra->cstrok,
             quadra->cfill,
             quadra->sw);
+
+    fprintf(svg, "<text x=\"%lf\" y=\"%lf\" fill=\"white\" font-size=\"16\" style=\"z-index:100\">%s</text>\n",
+            quadra->x,
+            quadra->y + 16,
+            quadra->cep);
 }
 
 bool quadraEquals(Quadra q, char *cep) {

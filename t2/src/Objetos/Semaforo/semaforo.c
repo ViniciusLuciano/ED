@@ -55,6 +55,10 @@ void escreverSemaforo_svg(Semaforo s, FILE *svg) {
             semaforo->cstrok, 
             semaforo->cfill,
             semaforo->sw);
+
+    fprintf(svg, "<text x=\"%lf\" y=\"%lf\" fill=\"white\" font-size=\"10\" style=\"z-index:100\">S</text>\n",
+            semaforo->x - 3,
+            semaforo->y + 3);
 }
 
 bool semaforoEquals(Semaforo s, char *id) {

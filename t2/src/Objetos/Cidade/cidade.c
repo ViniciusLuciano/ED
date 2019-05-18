@@ -32,7 +32,7 @@ void destruirCidade(Cidade c) {
     free(cidade);
 }
 
-void setCidade_tamanhoMax(Cidade c, int i, int nq, int nh, int ns, int nr) {
+void Cidade_setTamanhoMax(Cidade c, int i, int nq, int nh, int ns, int nr) {
     pCidade cidade = (pCidade) c;
     setLista_tamanhoMax(cidade->listaForma, i);
     setLista_tamanhoMax(cidade->listaQuadra, nq);
@@ -41,62 +41,62 @@ void setCidade_tamanhoMax(Cidade c, int i, int nq, int nh, int ns, int nr) {
     setLista_tamanhoMax(cidade->listaRadioBase, nr);
 }
 
-void setCidade_Forma(Cidade c, Forma forma) {
+void Cidade_setForma(Cidade c, Forma forma) {
     pCidade cidade = (pCidade) c;
     inserirUltimo(cidade->listaForma, forma);
 }
 
-void setCidade_Quadra(Cidade c, Quadra quadra) {
+void Cidade_setQuadra(Cidade c, Quadra quadra) {
     pCidade cidade = (pCidade) c;
     inserirUltimo(cidade->listaQuadra, quadra);
 }
 
-void setCidade_Hidrante(Cidade c, Hidrante hidrante) {
+void Cidade_setHidrante(Cidade c, Hidrante hidrante) {
     pCidade cidade = (pCidade) c;
     inserirUltimo(cidade->listaHidrante, hidrante);
 }
 
-void setCidade_Semaforo(Cidade c, Semaforo semaforo) {
+void Cidade_setSemaforo(Cidade c, Semaforo semaforo) {
     pCidade cidade = (pCidade) c;
     inserirUltimo(cidade->listaSemaforo, semaforo);
 }
 
-void setCidade_RadioBase(Cidade c, RadioBase radioBase) {
+void Cidade_setRadioBase(Cidade c, RadioBase radioBase) {
     pCidade cidade = (pCidade) c;
     inserirUltimo(cidade->listaRadioBase, radioBase);
 }
 
-void setCidade_Texto(Cidade c, Texto texto) {
+void Cidade_setTexto(Cidade c, Texto texto) {
     pCidade cidade = (pCidade) c;
     inserirUltimo(cidade->listaTexto, texto);
 }
 
-Forma getCidade_Forma(Cidade c, char *id) {
+Forma Cidade_getForma(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
     return encontrarObjeto(cidade->listaForma, id, formaEquals);
 }
 
-Quadra getCidade_Quadra(Cidade c, char *id) {
+Quadra Cidade_getQuadra(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
     return encontrarObjeto(cidade->listaQuadra, id, quadraEquals);
 }
 
-Hidrante getCidade_Hidrante(Cidade c, char *id) {
+Hidrante Cidade_getHidrante(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
     return encontrarObjeto(cidade->listaHidrante, id, hidranteEquals);
 }
 
-Semaforo getCidade_Semaforo(Cidade c, char *id) {
+Semaforo Cidade_getSemaforo(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
     return encontrarObjeto(cidade->listaSemaforo, id, semaforoEquals);
 }
 
-RadioBase getCidade_RadioBase(Cidade c, char *id) {
+RadioBase Cidade_getRadioBase(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
     return encontrarObjeto(cidade->listaRadioBase, id, radioBaseEquals);
 }
 
-bool removerCidade_Objeto(Cidade c, char *id) {
+bool Cidade_removerObjeto(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
     if(excluirObjeto(cidade->listaQuadra, id, quadraEquals, destruirQuadra))
         return true;
@@ -111,7 +111,7 @@ bool removerCidade_Objeto(Cidade c, char *id) {
 
 // Duvidas ainda??
 // dq
-void removerCidade_QuadrasInternasEquipamento(Cidade c, double px, double py, double dist, char *op, FILE *txt) {
+void Cidade_removerQuadrasInternasEquipamento(Cidade c, double px, double py, double dist, char *op, FILE *txt) {
     pCidade cidade = (pCidade) c;
     fprintf(txt, "-- CEP(s) REMOVIDOS --\n");
     Node node = getLista_primeiro(cidade->listaQuadra);
@@ -171,7 +171,7 @@ void removerCidade_QuadrasInternasEquipamento(Cidade c, double px, double py, do
 }
 
 // cbq
-void setCidade_CstrkQuadrasInternasCirculo(Cidade cid, Circulo c, char *cstrk, FILE *txt) {
+void Cidade_setCstrkQuadrasInternasCirculo(Cidade cid, Circulo c, char *cstrk, FILE *txt) {
     pCidade cidade = (pCidade) cid;
     Node node = getLista_primeiro(cidade->listaQuadra);
     fprintf(txt, "-- CEP(s) QUADRAS PINTADAS --\n");

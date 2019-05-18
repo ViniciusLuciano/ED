@@ -19,17 +19,17 @@ int main() {
     Semaforo s = criarSemaforo("s", 1, 2, "green", "black", "2px");
     RadioBase rb = criarRadioBase("rb", 1, 2, "green", "black", "2px");
 
-    setCidade_Quadra(city, a);
-    setCidade_Quadra(city, b);
-    setCidade_Quadra(city, c);
-    setCidade_Quadra(city, d);
-    setCidade_Quadra(city, e);
+    Cidade_setQuadra(city, a);
+    Cidade_setQuadra(city, b);
+    Cidade_setQuadra(city, c);
+    Cidade_setQuadra(city, d);
+    Cidade_setQuadra(city, e);
 
-    setCidade_Hidrante(city, h);
-    setCidade_Semaforo(city, s);
-    setCidade_RadioBase(city, rb);
+    Cidade_setHidrante(city, h);
+    Cidade_setSemaforo(city, s);
+    Cidade_setRadioBase(city, rb);
 
-    Quadra q = getCidade_Quadra(city, "floripa");
+    Quadra q = Cidade_getQuadra(city, "floripa");
     imprimirQuadra(q);
 
     destruirCidade(city);

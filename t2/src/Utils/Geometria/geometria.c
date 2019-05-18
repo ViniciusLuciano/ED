@@ -11,8 +11,8 @@ void centroDeMassa(Forma f, double *ponto) {
 	if(getForma_tipoForma(f) == CIRCULO) {
 		Circulo c = getForma_figura(f);
 
-		ponto[0] = getCirculo_x(c);
-		ponto[1] = getCirculo_y(c);
+		ponto[0] = Circulo_get_x(c);
+		ponto[1] = Circulo_get_y(c);
 	} else if(getForma_tipoForma(f) == RETANGULO) {
 		Retangulo r = getForma_figura(f);
 
@@ -41,7 +41,7 @@ double distanciaL2(double x1, double y1, double x2, double y2) {
 }
 
 bool pontoInternoCirculo(double px, double py, Circulo c) {
-	double cx = getCirculo_x(c), cy = getCirculo_x(c), r = getCirculo_r(c);
+	double cx = Circulo_get_x(c), cy = Circulo_get_x(c), r = Circulo_get_r(c);
     return distanciaL2(px, py, cx, cy) <= r;
 }
 

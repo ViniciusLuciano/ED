@@ -55,6 +55,10 @@ void escreverRadioBase_svg(RadioBase rb, FILE *svg) {
             radioBase->cstrok, 
             radioBase->cfill,
             radioBase->sw);
+    
+    fprintf(svg, "<text x=\"%lf\" y=\"%lf\" fill=\"white\" font-size=\"6\" style=\"z-index:100\">RB</text>\n",
+            radioBase->x - 3.6,
+            radioBase->y + 2);
 }
 
 bool radioBaseEquals(RadioBase rb, char *id) {

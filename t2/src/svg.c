@@ -1,33 +1,33 @@
 #include "svg.h"
 
 
-void iniciarSVG(FILE *SVG) {
+void svg_iniciar(FILE *SVG) {
 	fprintf(SVG, "<svg> \n");
 }
 
-void finalizarSVG(FILE *SVG) {
+void svg_finalizar(FILE *SVG) {
 	fprintf(SVG, "</svg>");
 }
 
-void escreverRetanguloDelimitador(FILE *SVG2, Forma f1, Forma f2, bool colidem) {
+void svg_escreverRetanguloDelimitador(FILE *SVG2, Forma f1, Forma f2, bool colidem) {
 	double xMin, xMax, yMin, yMax, largura, altura;
 	if(getForma_tipoForma(f1) == CIRCULO && getForma_tipoForma(f2) == RETANGULO) {
 		Circulo a = getForma_figura(f1);
 		Retangulo b = getForma_figura(f2);
 
-		xMin = getCirculo_min_x(a) < getRetangulo_x(b) ? getCirculo_min_x(a) : getRetangulo_x(b);
-		xMax = getCirculo_max_x(a) > getRetangulo_max_x(b) ? getCirculo_max_x(a) : getRetangulo_max_x(b);
-		yMin = getCirculo_min_y(a) < getRetangulo_y(b) ? getCirculo_min_y(a) : getRetangulo_y(b);
-		yMax = getCirculo_max_y(a) > getRetangulo_max_y(b) ? getCirculo_max_y(a) : getRetangulo_max_y(b);
+		xMin = Circulo_get_min_x(a) < getRetangulo_x(b) ? Circulo_get_min_x(a) : getRetangulo_x(b);
+		xMax = Circulo_get_max_x(a) > getRetangulo_max_x(b) ? Circulo_get_max_x(a) : getRetangulo_max_x(b);
+		yMin = Circulo_get_min_y(a) < getRetangulo_y(b) ? Circulo_get_min_y(a) : getRetangulo_y(b);
+		yMax = Circulo_get_max_y(a) > getRetangulo_max_y(b) ? Circulo_get_max_y(a) : getRetangulo_max_y(b);
 
 	} else if(getForma_tipoForma(f1) == RETANGULO && getForma_tipoForma(f2) == CIRCULO) {
 		Retangulo a = getForma_figura(f1);
 		Circulo b = getForma_figura(f2);
 
-		xMin = getCirculo_min_x(b) < getRetangulo_x(a) ? getCirculo_min_x(b) : getRetangulo_x(a);
-		xMax = getCirculo_max_x(b) > getRetangulo_max_x(a) ? getCirculo_max_x(b) : getRetangulo_max_x(a);
-		yMin = getCirculo_min_y(b) < getRetangulo_y(a) ? getCirculo_min_y(b) : getRetangulo_y(a);
-		yMax = getCirculo_max_y(b) > getRetangulo_max_y(a) ? getCirculo_max_y(b) : getRetangulo_max_y(a);
+		xMin = Circulo_get_min_x(b) < getRetangulo_x(a) ? Circulo_get_min_x(b) : getRetangulo_x(a);
+		xMax = Circulo_get_max_x(b) > getRetangulo_max_x(a) ? Circulo_get_max_x(b) : getRetangulo_max_x(a);
+		yMin = Circulo_get_min_y(b) < getRetangulo_y(a) ? Circulo_get_min_y(b) : getRetangulo_y(a);
+		yMax = Circulo_get_max_y(b) > getRetangulo_max_y(a) ? Circulo_get_max_y(b) : getRetangulo_max_y(a);
 
 	} else if(getForma_tipoForma(f1) == RETANGULO && getForma_tipoForma(f2) == RETANGULO) {
 		Retangulo a = getForma_figura(f1);
@@ -42,10 +42,10 @@ void escreverRetanguloDelimitador(FILE *SVG2, Forma f1, Forma f2, bool colidem) 
 		Circulo a = getForma_figura(f1);
 		Circulo b = getForma_figura(f2);
 
-		xMin = getCirculo_min_x(a) < getCirculo_min_x(b) ? getCirculo_min_x(a) : getCirculo_min_x(b);
-		xMax = getCirculo_max_x(a) > getCirculo_max_x(b) ? getCirculo_max_x(a) : getCirculo_max_x(b);
-		yMin = getCirculo_min_y(a) < getCirculo_min_y(b) ? getCirculo_min_y(a) : getCirculo_min_y(b);
-		yMax = getCirculo_max_y(a) > getCirculo_max_y(b) ? getCirculo_max_y(a) : getCirculo_max_y(b);
+		xMin = Circulo_get_min_x(a) < Circulo_get_min_x(b) ? Circulo_get_min_x(a) : Circulo_get_min_x(b);
+		xMax = Circulo_get_max_x(a) > Circulo_get_max_x(b) ? Circulo_get_max_x(a) : Circulo_get_max_x(b);
+		yMin = Circulo_get_min_y(a) < Circulo_get_min_y(b) ? Circulo_get_min_y(a) : Circulo_get_min_y(b);
+		yMax = Circulo_get_max_y(a) > Circulo_get_max_y(b) ? Circulo_get_max_y(a) : Circulo_get_max_y(b);
 
 	}
 	
@@ -59,7 +59,7 @@ void escreverRetanguloDelimitador(FILE *SVG2, Forma f1, Forma f2, bool colidem) 
 	
 }
 
-void escreverPontoInterno(FILE *SVG, Forma a, double x, double y, bool interno) {
+void svg_escreverPontoInterno(FILE *SVG, Forma a, double x, double y, bool interno) {
 	double *centro = malloc(2*sizeof(double));
 	centroDeMassa(a, centro);
 
@@ -74,7 +74,7 @@ void escreverPontoInterno(FILE *SVG, Forma a, double x, double y, bool interno) 
 	free(centro);
 }
 
-void escreverRetaCentrosMassa(FILE *SVG, Forma a, Forma b) {
+void svg_escreverRetaCentrosMassa(FILE *SVG, Forma a, Forma b) {
 	double *centro1 = malloc(2*sizeof(double));
 	double *centro2 = malloc(2*sizeof(double));
 	centroDeMassa(a, centro1);
@@ -85,7 +85,7 @@ void escreverRetaCentrosMassa(FILE *SVG, Forma a, Forma b) {
 	free(centro2);
 }
 
-void escreverDistanciaCentrosMassa(FILE *SVG, Forma a, Forma b, double distancia) {
+void svg_escreverDistanciaCentrosMassa(FILE *SVG, Forma a, Forma b, double distancia) {
 	double *centro1 = malloc(2*sizeof(double));
 	double *centro2 = malloc(2*sizeof(double));
 	centroDeMassa(a, centro1);
