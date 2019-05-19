@@ -11,36 +11,36 @@ void svg_finalizar(FILE *SVG) {
 
 void svg_escreverRetanguloDelimitador(FILE *SVG2, Forma f1, Forma f2, bool colidem) {
 	double xMin, xMax, yMin, yMax, largura, altura;
-	if(getForma_tipoForma(f1) == CIRCULO && getForma_tipoForma(f2) == RETANGULO) {
-		Circulo a = getForma_figura(f1);
-		Retangulo b = getForma_figura(f2);
+	if(Forma_get_tipoForma(f1) == CIRCULO && Forma_get_tipoForma(f2) == RETANGULO) {
+		Circulo a = Forma_getFigura(f1);
+		Retangulo b = Forma_getFigura(f2);
 
-		xMin = Circulo_get_min_x(a) < getRetangulo_x(b) ? Circulo_get_min_x(a) : getRetangulo_x(b);
-		xMax = Circulo_get_max_x(a) > getRetangulo_max_x(b) ? Circulo_get_max_x(a) : getRetangulo_max_x(b);
-		yMin = Circulo_get_min_y(a) < getRetangulo_y(b) ? Circulo_get_min_y(a) : getRetangulo_y(b);
-		yMax = Circulo_get_max_y(a) > getRetangulo_max_y(b) ? Circulo_get_max_y(a) : getRetangulo_max_y(b);
+		xMin = Circulo_get_min_x(a) < Retangulo_get_x(b) ? Circulo_get_min_x(a) : Retangulo_get_x(b);
+		xMax = Circulo_get_max_x(a) > Retangulo_get_max_x(b) ? Circulo_get_max_x(a) : Retangulo_get_max_x(b);
+		yMin = Circulo_get_min_y(a) < Retangulo_get_y(b) ? Circulo_get_min_y(a) : Retangulo_get_y(b);
+		yMax = Circulo_get_max_y(a) > Retangulo_get_max_y(b) ? Circulo_get_max_y(a) : Retangulo_get_max_y(b);
 
-	} else if(getForma_tipoForma(f1) == RETANGULO && getForma_tipoForma(f2) == CIRCULO) {
-		Retangulo a = getForma_figura(f1);
-		Circulo b = getForma_figura(f2);
+	} else if(Forma_get_tipoForma(f1) == RETANGULO && Forma_get_tipoForma(f2) == CIRCULO) {
+		Retangulo a = Forma_getFigura(f1);
+		Circulo b = Forma_getFigura(f2);
 
-		xMin = Circulo_get_min_x(b) < getRetangulo_x(a) ? Circulo_get_min_x(b) : getRetangulo_x(a);
-		xMax = Circulo_get_max_x(b) > getRetangulo_max_x(a) ? Circulo_get_max_x(b) : getRetangulo_max_x(a);
-		yMin = Circulo_get_min_y(b) < getRetangulo_y(a) ? Circulo_get_min_y(b) : getRetangulo_y(a);
-		yMax = Circulo_get_max_y(b) > getRetangulo_max_y(a) ? Circulo_get_max_y(b) : getRetangulo_max_y(a);
+		xMin = Circulo_get_min_x(b) < Retangulo_get_x(a) ? Circulo_get_min_x(b) : Retangulo_get_x(a);
+		xMax = Circulo_get_max_x(b) > Retangulo_get_max_x(a) ? Circulo_get_max_x(b) : Retangulo_get_max_x(a);
+		yMin = Circulo_get_min_y(b) < Retangulo_get_y(a) ? Circulo_get_min_y(b) : Retangulo_get_y(a);
+		yMax = Circulo_get_max_y(b) > Retangulo_get_max_y(a) ? Circulo_get_max_y(b) : Retangulo_get_max_y(a);
 
-	} else if(getForma_tipoForma(f1) == RETANGULO && getForma_tipoForma(f2) == RETANGULO) {
-		Retangulo a = getForma_figura(f1);
-		Retangulo b = getForma_figura(f2);
+	} else if(Forma_get_tipoForma(f1) == RETANGULO && Forma_get_tipoForma(f2) == RETANGULO) {
+		Retangulo a = Forma_getFigura(f1);
+		Retangulo b = Forma_getFigura(f2);
 
-		xMin = getRetangulo_x(a) < getRetangulo_x(b) ? getRetangulo_x(a) : getRetangulo_x(b);
-		xMax = getRetangulo_max_x(a) > getRetangulo_max_x(b) ? getRetangulo_max_x(a) : getRetangulo_max_x(b);
-		yMin = getRetangulo_y(a) < getRetangulo_y(b) ? getRetangulo_y(a) : getRetangulo_y(b);
-		yMax = getRetangulo_max_y(a) > getRetangulo_max_y(b) ? getRetangulo_max_y(a) : getRetangulo_max_y(b);
+		xMin = Retangulo_get_x(a) < Retangulo_get_x(b) ? Retangulo_get_x(a) : Retangulo_get_x(b);
+		xMax = Retangulo_get_max_x(a) > Retangulo_get_max_x(b) ? Retangulo_get_max_x(a) : Retangulo_get_max_x(b);
+		yMin = Retangulo_get_y(a) < Retangulo_get_y(b) ? Retangulo_get_y(a) : Retangulo_get_y(b);
+		yMax = Retangulo_get_max_y(a) > Retangulo_get_max_y(b) ? Retangulo_get_max_y(a) : Retangulo_get_max_y(b);
 
-	} else if(getForma_tipoForma(f1) == CIRCULO && getForma_tipoForma(f2) == CIRCULO) {
-		Circulo a = getForma_figura(f1);
-		Circulo b = getForma_figura(f2);
+	} else if(Forma_get_tipoForma(f1) == CIRCULO && Forma_get_tipoForma(f2) == CIRCULO) {
+		Circulo a = Forma_getFigura(f1);
+		Circulo b = Forma_getFigura(f2);
 
 		xMin = Circulo_get_min_x(a) < Circulo_get_min_x(b) ? Circulo_get_min_x(a) : Circulo_get_min_x(b);
 		xMax = Circulo_get_max_x(a) > Circulo_get_max_x(b) ? Circulo_get_max_x(a) : Circulo_get_max_x(b);

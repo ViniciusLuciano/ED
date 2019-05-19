@@ -7,7 +7,7 @@ gcc -o teste cidadeTest.c ../Objetos/Quadra/quadra.c ../Objetos/Cidade/cidade.c 
 */
 
 int main() {
-    Cidade city = criarCidade();
+    Cidade city = criarCidade(10, 10, 10, 10, 10);
     
     Quadra a = criarQuadra("londrina", 1, 2, 3, 4, "green", "black", "2px");
     Quadra b = criarQuadra("sp", 1, 2, 3, 4, "green", "black", "2px");
@@ -30,7 +30,10 @@ int main() {
     Cidade_setRadioBase(city, rb);
 
     Quadra q = Cidade_getQuadra(city, "floripa");
-    imprimirQuadra(q);
+    Quadra_imprimir(q);
+
+    Semaforo xd = Cidade_getSemaforo(city, "s");
+    Semaforo_imprimir(xd);
 
     destruirCidade(city);
 

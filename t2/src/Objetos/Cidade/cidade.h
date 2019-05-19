@@ -19,9 +19,8 @@ Uma cidade contem todos os elementos.
 
 typedef void* Cidade;
 
-Cidade criarCidade();
+Cidade criarCidade(int i, int nq, int nh, int ns, int nr);
 void destruirCidade(Cidade cidade);
-void Cidade_setTamanhoMax(Cidade cidade, int i, int nq, int nh, int ns, int nr);
 void Cidade_setForma(Cidade cidade, Forma forma);
 void Cidade_setQuadra(Cidade cidade, Quadra quadra);
 void Cidade_setHidrante(Cidade cidade, Hidrante hidrante);
@@ -41,4 +40,5 @@ void Cidade_escreverSvg(Cidade cidade, FILE *svg);
 void Cidade_escreverQuadrasEquipamentosSvg(Cidade cidade, FILE *svg);
 void Cidade_escreverFormasEnvoltas(Cidade cidade, FILE *svg, char *cor);
 
+void imprimirCidade(Cidade c);
 #endif

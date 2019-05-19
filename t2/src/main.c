@@ -16,18 +16,18 @@ int main(int argc, char* argv[]) {
     if(arquivoEntrada == NULL)
         return 1;
 
-    Cidade cidade = criarCidade();
-    processarArquivoEntrada(arquivoEntrada, dirSaida, nomeArquivoEntrada, cidade);
-    fclose(arquivoEntrada); 
+    Cidade cidade;
+    processarArquivoEntrada(arquivoEntrada, dirSaida, nomeArquivoEntrada, &cidade);
+    fclose(arquivoEntrada);
 
     if(nomeArquivoConsulta != NULL) {
         FILE *arquivoConsulta = abrirArquivo( dirEntrada, nomeArquivoConsulta, "r" );
         if(arquivoConsulta == NULL)
             return 1;
-        processarArquivoConsulta(arquivoConsulta, nomeArquivoEntrada, dirSaida, nomeArquivoConsulta, cidade);
+        processarArquivoConsulta(arquivoConsulta, nomeArquivoEntrada, dirSaida, nomeArquivoConsulta, &cidade);
         fclose(arquivoConsulta);
     }
-    
+
     desalocarArgumentos(dirEntrada, nomeArquivoEntrada, nomeArquivoConsulta, dirSaida);
     destruirCidade(cidade);
 }

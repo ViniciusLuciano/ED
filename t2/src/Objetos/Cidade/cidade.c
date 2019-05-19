@@ -9,102 +9,93 @@ typedef struct cidade {
     Lista listaTexto;
 }*pCidade;
 
-Cidade criarCidade() {
+Cidade criarCidade(int i, int nq, int nh, int ns, int nr) {
     Cidade c = malloc(sizeof(struct cidade));
     pCidade cidade = (pCidade) c;
-    cidade->listaForma = criarLista(1000);
-    cidade->listaQuadra = criarLista(1000);
-    cidade->listaHidrante = criarLista(1000);
-    cidade->listaSemaforo = criarLista(1000);
-    cidade->listaRadioBase = criarLista(1000);
+    cidade->listaForma = criarLista(i);
+    cidade->listaQuadra = criarLista(nq);
+    cidade->listaHidrante = criarLista(nh);
+    cidade->listaSemaforo = criarLista(ns);
+    cidade->listaRadioBase = criarLista(nr);
     cidade->listaTexto = criarLista(1000);
     return cidade;
 }
 
 void destruirCidade(Cidade c) {
     pCidade cidade = (pCidade) c;
-    destruirLista(cidade->listaForma, destruirForma);
-    destruirLista(cidade->listaQuadra, destruirQuadra);
-    destruirLista(cidade->listaHidrante, destruirHidrante);
-    destruirLista(cidade->listaSemaforo, destruirSemaforo);
-    destruirLista(cidade->listaRadioBase, destruirRadioBase);
-    destruirLista(cidade->listaTexto, destruirTexto);
+    lista_destruir(cidade->listaForma, destruirForma);
+    lista_destruir(cidade->listaQuadra, destruirQuadra);
+    lista_destruir(cidade->listaHidrante, destruirHidrante);
+    lista_destruir(cidade->listaSemaforo, destruirSemaforo);
+    lista_destruir(cidade->listaRadioBase, destruirRadioBase);
+    lista_destruir(cidade->listaTexto, destruirTexto);
     free(cidade);
-}
-
-void Cidade_setTamanhoMax(Cidade c, int i, int nq, int nh, int ns, int nr) {
-    pCidade cidade = (pCidade) c;
-    setLista_tamanhoMax(cidade->listaForma, i);
-    setLista_tamanhoMax(cidade->listaQuadra, nq);
-    setLista_tamanhoMax(cidade->listaHidrante, nh);
-    setLista_tamanhoMax(cidade->listaSemaforo, ns);
-    setLista_tamanhoMax(cidade->listaRadioBase, nr);
 }
 
 void Cidade_setForma(Cidade c, Forma forma) {
     pCidade cidade = (pCidade) c;
-    inserirUltimo(cidade->listaForma, forma);
+    lista_inserirUltimo(cidade->listaForma, forma);
 }
 
 void Cidade_setQuadra(Cidade c, Quadra quadra) {
     pCidade cidade = (pCidade) c;
-    inserirUltimo(cidade->listaQuadra, quadra);
+    lista_inserirUltimo(cidade->listaQuadra, quadra);
 }
 
 void Cidade_setHidrante(Cidade c, Hidrante hidrante) {
     pCidade cidade = (pCidade) c;
-    inserirUltimo(cidade->listaHidrante, hidrante);
+    lista_inserirUltimo(cidade->listaHidrante, hidrante);
 }
 
 void Cidade_setSemaforo(Cidade c, Semaforo semaforo) {
     pCidade cidade = (pCidade) c;
-    inserirUltimo(cidade->listaSemaforo, semaforo);
+    lista_inserirUltimo(cidade->listaSemaforo, semaforo);
 }
 
 void Cidade_setRadioBase(Cidade c, RadioBase radioBase) {
     pCidade cidade = (pCidade) c;
-    inserirUltimo(cidade->listaRadioBase, radioBase);
+    lista_inserirUltimo(cidade->listaRadioBase, radioBase);
 }
 
 void Cidade_setTexto(Cidade c, Texto texto) {
     pCidade cidade = (pCidade) c;
-    inserirUltimo(cidade->listaTexto, texto);
+    lista_inserirUltimo(cidade->listaTexto, texto);
 }
 
 Forma Cidade_getForma(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
-    return encontrarObjeto(cidade->listaForma, id, formaEquals);
+    return lista_getObjeto(cidade->listaForma, id, formaEquals);
 }
 
 Quadra Cidade_getQuadra(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
-    return encontrarObjeto(cidade->listaQuadra, id, quadraEquals);
+    return lista_getObjeto(cidade->listaQuadra, id, quadraEquals);
 }
 
 Hidrante Cidade_getHidrante(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
-    return encontrarObjeto(cidade->listaHidrante, id, hidranteEquals);
+    return lista_getObjeto(cidade->listaHidrante, id, hidranteEquals);
 }
 
 Semaforo Cidade_getSemaforo(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
-    return encontrarObjeto(cidade->listaSemaforo, id, semaforoEquals);
+    return lista_getObjeto(cidade->listaSemaforo, id, semaforoEquals);
 }
 
 RadioBase Cidade_getRadioBase(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
-    return encontrarObjeto(cidade->listaRadioBase, id, radioBaseEquals);
+    return lista_getObjeto(cidade->listaRadioBase, id, radioBaseEquals);
 }
 
 bool Cidade_removerObjeto(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
-    if(excluirObjeto(cidade->listaQuadra, id, quadraEquals, destruirQuadra))
+    if(lista_excluirObjeto(cidade->listaQuadra, id, quadraEquals, destruirQuadra))
         return true;
-    else if(excluirObjeto(cidade->listaHidrante, id, hidranteEquals, destruirHidrante))
+    else if(lista_excluirObjeto(cidade->listaHidrante, id, hidranteEquals, destruirHidrante))
         return true;
-    else if(excluirObjeto(cidade->listaSemaforo, id, semaforoEquals, destruirSemaforo))
+    else if(lista_excluirObjeto(cidade->listaSemaforo, id, semaforoEquals, destruirSemaforo))
         return true;
-    else if(excluirObjeto(cidade->listaRadioBase, id, radioBaseEquals, destruirRadioBase))
+    else if(lista_excluirObjeto(cidade->listaRadioBase, id, radioBaseEquals, destruirRadioBase))
         return true;
     return false;
 }
@@ -114,29 +105,29 @@ bool Cidade_removerObjeto(Cidade c, char *id) {
 void Cidade_removerQuadrasInternasEquipamento(Cidade c, double px, double py, double dist, char *op, FILE *txt) {
     pCidade cidade = (pCidade) c;
     fprintf(txt, "-- CEP(s) REMOVIDOS --\n");
-    Node node = getLista_primeiro(cidade->listaQuadra);
-    if(node == NULL)
+    int i = lista_getPrimeiro(cidade->listaQuadra);
+    if(i == -1)
         return;
 
     if(strcmp(op, "L1") == 0) {
     
         // sim
         while(true) {
-            Quadra q = getLista_ObjNode(node);
-            Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
+            Quadra q = lista_getObjPosic(cidade->listaQuadra, i);
+            Retangulo r = criarRetangulo(Quadra_get_x(q), Quadra_get_y(q), Quadra_get_w(q), Quadra_get_h(q), "", "", "");
 
-            if(getLista_prox(node) == NULL) {
+            if(lista_getProx(cidade->listaQuadra, i) == -1) {
                 if(retanguloInternoL1(px, py, r, dist)) {
-                    fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
-                    excluirLista_Node(cidade->listaQuadra, node, destruirQuadra);
+                    fprintf(txt, "CEP -> %s\n", Quadra_get_cep(q));
+                    lista_excluirPosic(cidade->listaQuadra, i, destruirQuadra);
                 }
                 destruirRetangulo(r);
                 break;
             } else {
-                node = getLista_prox(node);
+                i = lista_getProx(cidade->listaQuadra, i);
                 if(retanguloInternoL1(px, py, r, dist)) {
-                    fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
-                    excluirLista_Node(cidade->listaQuadra, getLista_ant(node), destruirQuadra);
+                    fprintf(txt, "CEP -> %s\n", Quadra_get_cep(q));
+                    lista_excluirPosic(cidade->listaQuadra, lista_getAnt(cidade->listaQuadra, i), destruirQuadra);
                 }
             }
             destruirRetangulo(r);
@@ -146,21 +137,21 @@ void Cidade_removerQuadrasInternasEquipamento(Cidade c, double px, double py, do
         Circulo c = criarCirculo(px, py, dist, "", "", "");
 
         while(true) {
-            Quadra q = getLista_ObjNode(node);
-            Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
+            Quadra q = lista_getObjPosic(cidade->listaQuadra, i);
+            Retangulo r = criarRetangulo(Quadra_get_x(q), Quadra_get_y(q), Quadra_get_w(q), Quadra_get_h(q), "", "", "");
 
-            if(getLista_prox(node) == NULL) {
+            if(lista_getProx(cidade->listaQuadra, i) == -1) {
                 if(retanguloInternoCirculo(r, c)) {
-                    fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
-                    excluirLista_Node(cidade->listaQuadra, node, destruirQuadra);
+                    fprintf(txt, "CEP -> %s\n", Quadra_get_cep(q));
+                    lista_excluirPosic(cidade->listaQuadra, i, destruirQuadra);
                 }
                 destruirRetangulo(r);
                 break;
             } else {
-                node = getLista_prox(node);
+                i = lista_getProx(cidade->listaQuadra, i);
                 if(retanguloInternoCirculo(r, c)) {
-                    fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
-                    excluirLista_Node(cidade->listaQuadra, getLista_ant(node), destruirQuadra);
+                    fprintf(txt, "CEP -> %s\n", Quadra_get_cep(q));
+                    lista_excluirPosic(cidade->listaQuadra, lista_getAnt(cidade->listaQuadra, i), destruirQuadra);
                 }
             }
             destruirRetangulo(r);
@@ -173,14 +164,15 @@ void Cidade_removerQuadrasInternasEquipamento(Cidade c, double px, double py, do
 // cbq
 void Cidade_setCstrkQuadrasInternasCirculo(Cidade cid, Circulo c, char *cstrk, FILE *txt) {
     pCidade cidade = (pCidade) cid;
-    Node node = getLista_primeiro(cidade->listaQuadra);
     fprintf(txt, "-- CEP(s) QUADRAS PINTADAS --\n");
-    for(node; node != NULL; node = getLista_prox(node)) {
-        Quadra q = getLista_ObjNode(node);
-        Retangulo r = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
+
+    int i = lista_getPrimeiro(cidade->listaQuadra);
+    for(i; i != -1; i = lista_getProx(cidade->listaQuadra, i)) {
+        Quadra q = lista_getObjPosic(cidade->listaQuadra, i);
+        Retangulo r = criarRetangulo(Quadra_get_x(q), Quadra_get_y(q), Quadra_get_w(q), Quadra_get_h(q), "", "", "");
         if(retanguloInternoCirculo(r, c)) {
-            setQuadra_cstrk(q, cstrk);
-            fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
+            Quadra_set_cstrk(q, cstrk);
+            fprintf(txt, "CEP -> %s\n", Quadra_get_cep(q));
         }
         destruirRetangulo(r);
     }
@@ -189,72 +181,72 @@ void Cidade_setCstrkQuadrasInternasCirculo(Cidade cid, Circulo c, char *cstrk, F
 // trns
 void Cidade_deslocarEquipamentosInternosRetangulo(Cidade c, Retangulo r, double dx, double dy, FILE *txt) {
     pCidade cidade = (pCidade) c;
-    Node node;
+    int i;
     fprintf(txt, "-- EQUIPAMENTOS URBANOS MOVIDOS --\n");
 
-    node = getLista_primeiro(cidade->listaQuadra);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        Quadra q = getLista_ObjNode(node);
-        Retangulo rq = criarRetangulo(getQuadra_x(q), getQuadra_y(q), getQuadra_w(q), getQuadra_h(q), "", "", "");
+    i = lista_getPrimeiro(cidade->listaQuadra);
+    for(i; i != -1; i = lista_getProx(cidade->listaQuadra, i)) {
+        Quadra q = lista_getObjPosic(cidade->listaQuadra, i);
+        Retangulo rq = criarRetangulo(Quadra_get_x(q), Quadra_get_y(q), Quadra_get_w(q), Quadra_get_h(q), "", "", "");
         if(retanguloInternoRetangulo(rq, r)) {
-            fprintf(txt, "CEP -> %s\n", getQuadra_cep(q));
+            fprintf(txt, "CEP -> %s\n", Quadra_get_cep(q));
             fprintf(txt, "(%lf, %lf) -> (%lf, %lf)\n\n",
-                getQuadra_x(q),
-                getQuadra_y(q),
-                getQuadra_x(q) + dx,
-                getQuadra_y(q) + dy
+                Quadra_get_x(q),
+                Quadra_get_y(q),
+                Quadra_get_x(q) + dx,
+                Quadra_get_y(q) + dy
             );
-            setQuadra_x(q, getQuadra_x(q) + dx);
-            setQuadra_y(q, getQuadra_y(q) + dy);
+            Quadra_set_x(q, Quadra_get_x(q) + dx);
+            Quadra_set_y(q, Quadra_get_y(q) + dy);
         }
         destruirRetangulo(rq);
     }
 
-    node = getLista_primeiro(cidade->listaHidrante);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        Hidrante h = getLista_ObjNode(node);
-        if(pontoInternoRetangulo(getHidrante_x(h), getHidrante_y(h), r)) {
-            fprintf(txt, "ID -> %s\n", getHidrante_id(h));
+    i = lista_getPrimeiro(cidade->listaHidrante);
+    for(i; i != -1; i = lista_getProx(cidade->listaHidrante, i)) {
+        Hidrante h = lista_getObjPosic(cidade->listaHidrante, i);
+        if(pontoInternoRetangulo(Hidrante_get_x(h), Hidrante_get_y(h), r)) {
+            fprintf(txt, "ID -> %s\n", Hidrante_get_id(h));
             fprintf(txt, "(%lf, %lf) -> (%lf, %lf)\n\n",
-                getHidrante_x(h),
-                getHidrante_y(h),
-                getHidrante_x(h) + dx,
-                getHidrante_y(h) + dy
+                Hidrante_get_x(h),
+                Hidrante_get_y(h),
+                Hidrante_get_x(h) + dx,
+                Hidrante_get_y(h) + dy
             );
-            setHidrante_x(h, getHidrante_x(h) + dx);
-            setHidrante_y(h, getHidrante_y(h) + dy);
+            Hidrante_set_x(h, Hidrante_get_x(h) + dx);
+            Hidrante_set_y(h, Hidrante_get_y(h) + dy);
         }
     }
 
-    node = getLista_primeiro(cidade->listaSemaforo);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        Semaforo s = getLista_ObjNode(node);
-        if(pontoInternoRetangulo(getSemaforo_x(s), getSemaforo_y(s), r)) {
-            fprintf(txt, "ID -> %s\n", getSemaforo_id(s));
+    i = lista_getPrimeiro(cidade->listaSemaforo);
+    for(i; i != -1; i = lista_getProx(cidade->listaSemaforo, i)) {
+        Semaforo s = lista_getObjPosic(cidade->listaSemaforo, i);
+        if(pontoInternoRetangulo(Semaforo_get_x(s), Semaforo_get_y(s), r)) {
+            fprintf(txt, "ID -> %s\n", Semaforo_get_id(s));
             fprintf(txt, "(%lf, %lf) -> (%lf, %lf)\n\n",
-                getSemaforo_x(s),
-                getSemaforo_y(s),
-                getSemaforo_x(s) + dx,
-                getSemaforo_y(s) + dy
+                Semaforo_get_x(s),
+                Semaforo_get_y(s),
+                Semaforo_get_x(s) + dx,
+                Semaforo_get_y(s) + dy
             );
-            setSemaforo_x(s, getSemaforo_x(s) + dx);
-            setSemaforo_y(s, getSemaforo_y(s) + dy);
+            Semaforo_set_x(s, Semaforo_get_x(s) + dx);
+            Semaforo_set_y(s, Semaforo_get_y(s) + dy);
         }
     }
 
-    node = getLista_primeiro(cidade->listaRadioBase);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        RadioBase rb = getLista_ObjNode(node);
-        if(pontoInternoRetangulo(getRadioBase_x(rb), getRadioBase_y(rb), r)) {
-            fprintf(txt, "ID -> %s\n", getRadioBase_id(rb));
+    i = lista_getPrimeiro(cidade->listaRadioBase);
+    for(i; i != -1; i = lista_getProx(cidade->listaRadioBase, i)) {
+        RadioBase rb = lista_getObjPosic(cidade->listaRadioBase, i);
+        if(pontoInternoRetangulo(RadioBase_get_x(rb), RadioBase_get_y(rb), r)) {
+            fprintf(txt, "ID -> %s\n", RadioBase_get_id(rb));
             fprintf(txt, "(%lf, %lf) -> (%lf, %lf)\n\n",
-                getRadioBase_x(rb),
-                getRadioBase_y(rb),
-                getRadioBase_x(rb) + dx,
-                getRadioBase_y(rb) + dy
+                RadioBase_get_x(rb),
+                RadioBase_get_y(rb),
+                RadioBase_get_x(rb) + dx,
+                RadioBase_get_y(rb) + dy
             );
-            setRadioBase_x(rb, getRadioBase_x(rb) + dx);
-            setRadioBase_y(rb, getRadioBase_y(rb) + dy);
+            RadioBase_set_x(rb, RadioBase_get_x(rb) + dx);
+            RadioBase_set_y(rb, RadioBase_get_y(rb) + dy);
         }
     }
 }
@@ -262,79 +254,88 @@ void Cidade_deslocarEquipamentosInternosRetangulo(Cidade c, Retangulo r, double 
 // Usado apenas para o .geo
 void Cidade_escreverSvg(Cidade c, FILE *svg) {
     pCidade cidade = (pCidade) c;
-    Node node;
+    int i;
     
-    node = getLista_primeiro(cidade->listaForma);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        Forma f = getLista_ObjNode(node);
-        escreverForma_svg(f, svg);
+    i = lista_getPrimeiro(cidade->listaForma);
+    for(i; i != -1; i = lista_getProx(cidade->listaForma, i)) {
+        Forma f = lista_getObjPosic(cidade->listaForma, i);
+        Forma_escreverSvg(f, svg);
     }
 
-    node = getLista_primeiro(cidade->listaTexto);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        Texto t = getLista_ObjNode(node);
-        escreverTexto_svg(t, svg);
+    i = lista_getPrimeiro(cidade->listaTexto);
+    for(i; i != -1; i = lista_getProx(cidade->listaTexto, i)) {
+        Texto t = lista_getObjPosic(cidade->listaTexto, i);
+        Texto_escreverSvg(t, svg);
     }
 
-    node = getLista_primeiro(cidade->listaQuadra);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        Quadra q = getLista_ObjNode(node);
-        escreverQuadra_svg(q, svg);
+    i = lista_getPrimeiro(cidade->listaQuadra);
+    for(i; i != -1; i = lista_getProx(cidade->listaQuadra, i)) {
+        Quadra q = lista_getObjPosic(cidade->listaQuadra, i);
+        Quadra_escreverSvg(q, svg);
     }
 
-    node = getLista_primeiro(cidade->listaHidrante);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        Hidrante h = getLista_ObjNode(node);
-        escreverHidrante_svg(h, svg);
+    i = lista_getPrimeiro(cidade->listaHidrante);
+    for(i; i != -1; i = lista_getProx(cidade->listaHidrante, i)) {
+        Hidrante h = lista_getObjPosic(cidade->listaHidrante, i);
+        Hidrante_escreverSvg(h, svg);
     }
 
-    node = getLista_primeiro(cidade->listaSemaforo);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        Semaforo s = getLista_ObjNode(node);
-        escreverSemaforo_svg(s, svg);
+    i = lista_getPrimeiro(cidade->listaSemaforo);
+    for(i; i != -1; i = lista_getProx(cidade->listaSemaforo, i)) {
+        Semaforo s = lista_getObjPosic(cidade->listaSemaforo, i);
+        Semaforo_escreverSvg(s, svg);
     }
 
-    node = getLista_primeiro(cidade->listaRadioBase);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        RadioBase rb = getLista_ObjNode(node);
-        escreverRadioBase_svg(rb, svg);
+    i = lista_getPrimeiro(cidade->listaRadioBase);
+    for(i; i != -1; i = lista_getProx(cidade->listaRadioBase, i)) {
+        RadioBase rb = lista_getObjPosic(cidade->listaRadioBase, i);
+        RadioBase_escreverSvg(rb, svg);
     }   
 }
 
 void Cidade_escreverQuadrasEquipamentosSvg(Cidade c, FILE *svg) {
     pCidade cidade = (pCidade) c;
-    Node node;
+    int i;
 
-    node = getLista_primeiro(cidade->listaQuadra);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        Quadra q = getLista_ObjNode(node);
-        escreverQuadra_svg(q, svg);
+    i = lista_getPrimeiro(cidade->listaQuadra);
+    for(i; i!= -1; i = lista_getProx(cidade->listaQuadra, i)) {
+        Quadra q = lista_getObjPosic(cidade->listaQuadra, i);
+        Quadra_escreverSvg(q, svg);
     }
 
-    node = getLista_primeiro(cidade->listaHidrante);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        Hidrante h = getLista_ObjNode(node);
-        escreverHidrante_svg(h, svg);
+    i = lista_getPrimeiro(cidade->listaHidrante);
+    for(i; i!= -1; i = lista_getProx(cidade->listaHidrante, i)) {
+        Hidrante h = lista_getObjPosic(cidade->listaHidrante, i);
+        Hidrante_escreverSvg(h, svg);
     }
 
-    node = getLista_primeiro(cidade->listaSemaforo);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        Semaforo s = getLista_ObjNode(node);
-        escreverSemaforo_svg(s, svg);
+    i = lista_getPrimeiro(cidade->listaSemaforo);
+    for(i; i!= -1; i = lista_getProx(cidade->listaSemaforo, i)) {
+        Semaforo s = lista_getObjPosic(cidade->listaSemaforo, i);
+        Semaforo_escreverSvg(s, svg);
     }
 
-    node = getLista_primeiro(cidade->listaRadioBase);
-    for(node; node != NULL; node = getLista_prox(node)) {
-        RadioBase rb = getLista_ObjNode(node);
-        escreverRadioBase_svg(rb, svg);
+    i = lista_getPrimeiro(cidade->listaRadioBase);
+    for(i; i!= -1; i = lista_getProx(cidade->listaRadioBase, i)) {
+        RadioBase rb = lista_getObjPosic(cidade->listaRadioBase, i);
+        RadioBase_escreverSvg(rb, svg);
     } 
 }
 
 void Cidade_escreverFormasEnvoltas(Cidade c, FILE *svg, char *cor) {
     pCidade cidade = (pCidade) c;
-    Node node = getLista_primeiro(cidade->listaForma);
-    for(node; node != NULL; getLista_prox(node)) {
-        Forma f = getLista_ObjNode(node);
+    int i = lista_getPrimeiro(cidade->listaForma);
+    for(i; i!= -1; i = lista_getProx(cidade->listaForma, i)) {
+        Forma f = lista_getObjPosic(cidade->listaForma, i);
         Forma_escreverFormaEnvoltaSvg(f, svg, cor);
+    }
+}
+
+void imprimirCidade(Cidade c) {
+    pCidade cidade = (pCidade) c;
+    int i = lista_getPrimeiro(cidade->listaHidrante);
+    for(i; i!= -1; i = lista_getProx(cidade->listaHidrante, i)) {
+        Hidrante h = lista_getObjPosic(cidade->listaHidrante, i);
+        Hidrante_imprimir(h);
     }
 }

@@ -14,24 +14,23 @@ int main() {
     Quadra d = criarQuadra("rolandia", 1, 2, 3, 4, "green", "black", "2px");
     Quadra e = criarQuadra("cambe", 1, 2, 3, 4, "green", "black", "2px");
 
-    Lista l = criarLista(15);
-    inserirUltimo(l, a);
-    inserirUltimo(l, b);
-    inserirUltimo(l, c);
-    inserirUltimo(l, d);
-    inserirPrimeiro(l, e);
+    Lista l = criarLista(10);
+    lista_inserirUltimo(l, a);
+    lista_inserirUltimo(l, b);
+    lista_inserirUltimo(l, c);
+    lista_inserirUltimo(l, d);  
+    lista_inserirUltimo(l, e);
 
     printf("Lista antes de retirar: \n");
-    imprimirLista(l, imprimirQuadra);
-    
+    lista_imprimir(l, Quadra_imprimir);
+
     printf("\nLista depois de retirar: \n");
-    excluirObjeto(l, "rolandia", quadraEquals, destruirQuadra);
-    imprimirLista(l, imprimirQuadra);
+    lista_excluirObjeto(l, "rolandia", quadraEquals, destruirQuadra);
+    lista_imprimir(l, Quadra_imprimir);
 
-    
     printf("\nEncontrar objeto: \n");
-    Quadra xd = encontrarObjeto(l, "londrina", quadraEquals);
-    imprimirQuadra(xd);
+    Quadra xd = lista_getObjeto(l, "londrina", quadraEquals);
+    Quadra_imprimir(xd);
 
-    destruirLista(l, destruirQuadra);
+    lista_destruir(l, destruirQuadra);
 }
