@@ -23,18 +23,18 @@ void destruirForma(Forma f) {
 }
 
 // Enum
-int getForma_tipoForma(Forma f) {
+int Forma_get_tipoForma(Forma f) {
     pForma forma = (pForma) f;
     return forma->tipoForma;
 }
 
-char* getForma_id(Forma f) {
+char* Forma_get_id(Forma f) {
     pForma forma = (pForma) f;
     return forma->id;
 }
 
 // Retorna um circulo ou retangulo
-Figura getForma_figura(Forma f) {
+Figura Forma_getFigura(Forma f) {
     pForma forma = (pForma) f;
     return forma->figura;
 }
@@ -44,23 +44,23 @@ bool formaEquals(Forma f, char *id) {
     return strcmp(forma->id, id) == 0;
 }
 
-void imprimirForma(Forma f) {
+void Forma_imprimir(Forma f) {
     pForma forma = (pForma) f;
     printf("id %s\n", forma->id);
 }
 
-void escreverForma_svg(Forma f, FILE *svg) {
+void Forma_escreverSvg(Forma f, FILE *svg) {
     pForma forma = (pForma) f;
     if(forma->tipoForma == CIRCULO)
         Circulo_escreverSvg(forma->figura, svg);
     else if(forma->tipoForma == RETANGULO)
-        escreverRetangulo_svg(forma->figura, svg);
+        Retangulo_escreverSvg(forma->figura, svg);
 }
 
 void Forma_escreverFormaEnvoltaSvg(Forma f, FILE *svg, char *cor) {
     pForma forma = (pForma) f;
     if(forma->tipoForma == CIRCULO) {
-        Circulo c = getForma_figura(forma);
+        Circulo c = Forma_getFigura(forma);
         Circulo_escreverSvg(c, svg);
 
         // "Bounding box"
@@ -75,8 +75,8 @@ void Forma_escreverFormaEnvoltaSvg(Forma f, FILE *svg, char *cor) {
             cor);
 
     } else if(forma->tipoForma == RETANGULO) {
-        Retangulo r = getForma_figura(forma);
-        escreverRetangulo_svg(r, svg);
+        Retangulo r = Forma_getFigura(forma);
+        Retangulo_escreverSvg(r, svg);
 
         double *centro = malloc(2*sizeof(double));
         centroDeMassa(forma, centro);
@@ -84,8 +84,8 @@ void Forma_escreverFormaEnvoltaSvg(Forma f, FILE *svg, char *cor) {
         fprintf(svg, "<ellipse cx=\"%lf\" cy=\"%lf\" rx=\"%lf\" ry=\"%lf\" stroke=\"%s\" fill-opacity=\"0\" />\n", 
             centro[0], 
             centro[1], 
-            getRetangulo_w(r)/2, 
-            getRetangulo_h(r)/2, 
+            Retangulo_get_w(r)/2, 
+            Retangulo_get_h(r)/2, 
             cor);
         free(centro);
     }	

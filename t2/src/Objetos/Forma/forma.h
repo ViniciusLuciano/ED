@@ -17,14 +17,14 @@ typedef void* Forma;
 
 Forma criarForma(char *id, int tipoForma, Figura figura);
 void destruirForma(Forma forma);
-int getForma_tipoForma(Forma forma);
-char* getForma_id(Forma forma);
-Figura getForma_figura(Forma forma);
-void escreverForma_svg(Forma forma, FILE *svg);
+int Forma_get_tipoForma(Forma forma);
+char* Forma_get_id(Forma forma);
+Figura Forma_getFigura(Forma forma);
+void Forma_escreverSvg(Forma forma, FILE *svg);
 void Forma_escreverFormaEnvoltaSvg(Forma forma, FILE *svg, char *cor);
 
 // Funções relacionadas com a lista
 bool formaEquals(Forma forma, char *id);
-void imprimirForma(Forma forma);
+void Forma_imprimir(Forma forma);
 
 #endif
