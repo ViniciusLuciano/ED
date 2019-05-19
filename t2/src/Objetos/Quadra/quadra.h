@@ -10,18 +10,18 @@ typedef void* Quadra;
 
 Quadra criarQuadra(char *cep, double x, double y, double w, double h, char *cfill, char *cstrok, char *sw);
 void destruirQuadra(Quadra quadra);
-char* getQuadra_cep(Quadra quadra);
-double getQuadra_x(Quadra quadra);
-double getQuadra_y(Quadra quadra);
-double getQuadra_w(Quadra quadra);
-double getQuadra_h(Quadra quadra);
-void setQuadra_cstrk(Quadra quadra, char *cstrok);
-void setQuadra_x(Quadra quadra, double x);
-void setQuadra_y(Quadra quadra, double y);
-void escreverQuadra_svg(Quadra q, FILE *svg);
+char* Quadra_get_cep(Quadra quadra);
+double Quadra_get_x(Quadra quadra);
+double Quadra_get_y(Quadra quadra);
+double Quadra_get_w(Quadra quadra);
+double Quadra_get_h(Quadra quadra);
+void Quadra_set_cstrk(Quadra quadra, char *cstrok);
+void Quadra_set_x(Quadra quadra, double x);
+void Quadra_set_y(Quadra quadra, double y);
+void Quadra_escreverSvg(Quadra q, FILE *svg);
 
 // Funções relacionadas com a lista
 bool quadraEquals(Quadra quadra, char *cep);
-void imprimirQuadra(Quadra quadra);
+void Quadra_imprimir(Quadra quadra);
 
 #endif

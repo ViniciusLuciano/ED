@@ -24,49 +24,49 @@ void destruirQuadra(Quadra q) {
     free(quadra);
 }
 
-char* getQuadra_cep(Quadra q) {
+char* Quadra_get_cep(Quadra q) {
     pQuadra quadra = (pQuadra) q;
     return quadra->cep;
 }
 
-double getQuadra_x(Quadra q) {
+double Quadra_get_x(Quadra q) {
     pQuadra quadra = (pQuadra) q;
     return quadra->x;
 }
 
-double getQuadra_y(Quadra q) {
+double Quadra_get_y(Quadra q) {
     pQuadra quadra = (pQuadra) q;
     return quadra->y;
 }
 
-double getQuadra_w(Quadra q) {
+double Quadra_get_w(Quadra q) {
     pQuadra quadra = (pQuadra) q;
     return quadra->w;
 }
 
-double getQuadra_h(Quadra q) {
+double Quadra_get_h(Quadra q) {
     pQuadra quadra = (pQuadra) q;
     return quadra->h;
 }
 
 // Para o comando cbq
-void setQuadra_cstrk(Quadra q, char *cstrok) {
+void Quadra_set_cstrk(Quadra q, char *cstrok) {
     pQuadra quadra = (pQuadra) q;
     strcpy(quadra->cstrok, cstrok);
 }
 
-void setQuadra_x(Quadra q, double x) {
+void Quadra_set_x(Quadra q, double x) {
     pQuadra quadra = (pQuadra) q;
     quadra->x = x;
 }
 
-void setQuadra_y(Quadra q, double y) {
+void Quadra_set_y(Quadra q, double y) {
     pQuadra quadra = (pQuadra) q;
     quadra->y = y;
 }
 
 // Terminar isso
-void escreverQuadra_svg(Quadra q, FILE *svg) {
+void Quadra_escreverSvg(Quadra q, FILE *svg) {
     pQuadra quadra = (pQuadra) q;
     fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"%s\" fill=\"%s\" stroke-width=\"%s\" />\n",
             quadra->x,
@@ -88,7 +88,7 @@ bool quadraEquals(Quadra q, char *cep) {
     return strcmp(quadra->cep, cep) == 0;
 }
 
-void imprimirQuadra(Quadra q) {
+void Quadra_imprimir(Quadra q) {
     pQuadra quadra = (pQuadra) q;
     printf("cep %s\n", quadra->cep);
 }
