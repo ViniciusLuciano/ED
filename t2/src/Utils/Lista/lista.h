@@ -4,28 +4,24 @@
 #include "../../headers.h"
 
 typedef void* Objeto;
-typedef struct lista* Lista;
-typedef struct node* Node;
+typedef void* Lista;
+typedef void* Node;
 
 Lista criarLista(int tamanhoMax);
-bool inserirPrimeiro(Lista l, Objeto objeto);
-bool inserirUltimo(Lista l, Objeto objeto);
-void setLista_tamanhoMax(Lista lista, int tamanhoMax);
-void destruirLista(Lista l, void (*destruirObjeto)(Objeto objeto));
-
-bool excluirObjeto(Lista l, 
-                    char *identificador, 
+void lista_destruir(Lista l, void(*destruirObjeto)(Objeto objeto));
+int lista_getLivre(Lista l);
+int lista_getPrimeiro(Lista l);
+int lista_getProx(Lista l, int i);
+int lista_getAnt(Lista l, int i);
+bool lista_inserirUltimo(Lista l, Objeto objeto);
+bool lista_excluirObjeto(Lista l, 
+                    char *id, 
                     bool(*objetoEquals)(Objeto objetoLista, char *id), 
                     void(*destruirObjeto)(Objeto objeto));
-Objeto encontrarObjeto(Lista l, char *identificador, bool (*objetoEquals)(Objeto objetoLista, char *id));
+bool lista_excluirPosic(Lista l, int i, void(*destruirObjeto)(Objeto objeto));
+Objeto lista_getObjeto(Lista l, char *id, bool (*objetoEquals)(Objeto objetoLista, char *id));
+Objeto lista_getObjPosic(Lista l, int i);
+void lista_imprimir(Lista l, void (*imprimirObjeto)(Objeto objeto));
 
-void imprimirLista(Lista l, void (*imprimirObjeto)(Objeto objeto));
-
-Node getLista_primeiro(Lista lista);
-Node getLista_prox(Node node);
-Node getLista_primeiro(Lista lista);
-Node getLista_ant(Node node);
-Objeto getLista_ObjNode(Node node);
-bool excluirLista_Node(Lista lista, Node node, void(*destruirObjeto)(Objeto objeto));
 
 #endif
