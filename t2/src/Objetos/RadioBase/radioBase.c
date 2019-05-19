@@ -22,32 +22,32 @@ void destruirRadioBase(RadioBase rb) {
     free(radioBase);
 }
 
-char* getRadioBase_id(RadioBase rb) {
+char* RadioBase_get_id(RadioBase rb) {
     pRadioBase radioBase = (pRadioBase) rb;
     return radioBase->id;
 }
 
-double getRadioBase_x(RadioBase rb) {
+double RadioBase_get_x(RadioBase rb) {
     pRadioBase radioBase = (pRadioBase) rb;
     return radioBase->x;
 }
 
-double getRadioBase_y(RadioBase rb) {
+double RadioBase_get_y(RadioBase rb) {
     pRadioBase radioBase = (pRadioBase) rb;
     return radioBase->y;
 }
 
-void setRadioBase_x(RadioBase rb, double x) {
+void RadioBase_set_x(RadioBase rb, double x) {
     pRadioBase radioBase = (pRadioBase) rb;
     radioBase->x = x;
 }
 
-void setRadioBase_y(RadioBase rb, double y) {
+void RadioBase_set_y(RadioBase rb, double y) {
     pRadioBase radioBase = (pRadioBase) rb;
     radioBase->y = y;
 }
 
-void escreverRadioBase_svg(RadioBase rb, FILE *svg) {
+void RadioBase_escreverSvg(RadioBase rb, FILE *svg) {
     pRadioBase radioBase = (pRadioBase) rb;
     fprintf(svg, "<circle cx=\"%lf\" cy=\"%lf\" r=\"5\" stroke=\"%s\" fill=\"%s\" stroke-width=\"%s\" />\n", 
             radioBase->x,
@@ -66,7 +66,7 @@ bool radioBaseEquals(RadioBase rb, char *id) {
     return strcmp(radioBase->id, id) == 0;
 }
 
-void imprimirRadioBase(RadioBase rb) {
+void RadioBase_imprimir(RadioBase rb) {
     pRadioBase radioBase = (pRadioBase) rb;
     printf("id %s\n", radioBase->id);
 }
