@@ -19,22 +19,22 @@ void destruirTexto(Texto t) {
     free(texto);
 }
 
-double getTexto_x(Texto t) {
+double Texto_get_x(Texto t) {
     pTexto texto = (pTexto) t;
     return texto->x;
 }
 
-double getTexto_y(Texto t) {
+double Texto_get_y(Texto t) {
     pTexto texto = (pTexto) t;
     return texto->y;
 }
 
-char* getTexto_text(Texto t) {
+char* Texto_get_text(Texto t) {
     pTexto texto = (pTexto) t;
     return texto->text;
 }
 
-void escreverTexto_svg(Texto t, FILE *svg) {
+void Texto_escreverSvg(Texto t, FILE *svg) {
     pTexto texto = (pTexto) t;
 	fprintf(svg, "<text x=\"%lf\" y=\"%lf\">%s</text>",
         texto->x, 

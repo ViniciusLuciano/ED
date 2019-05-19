@@ -10,12 +10,9 @@ typedef void* Texto;
 
 Texto criarTexto(double x, double y, char *text);
 void destruirTexto(Texto texto);
-double getTexto_x(Texto texto);
-double getTexto_y(Texto texto);
-char* getTexto_text(Texto texto);
-void escreverTexto_svg(Texto t, FILE *svg);
-
-// Funções relacionadas com a lista
-void imprimirTexto(Texto texto);
+double Texto_get_x(Texto texto);
+double Texto_get_y(Texto texto);
+char* Texto_get_text(Texto texto);
+void Texto_escreverSvg(Texto t, FILE *svg);
 
 #endif
