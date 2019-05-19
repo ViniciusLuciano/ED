@@ -10,15 +10,15 @@ typedef void* Hidrante;
 
 Hidrante criarHidrante(char *id, double x, double y, char *cfill, char *cstrok, char *sw);
 void destruirHidrante(Hidrante hidrante);
-char* getHidrante_id(Hidrante hidrante);
-double getHidrante_x(Hidrante hidrante);
-double getHidrante_y(Hidrante hidrante);
-void setHidrante_x(Hidrante hidrante, double x);
-void setHidrante_y(Hidrante hidrante, double y);
-void escreverHidrante_svg(Hidrante hidrante, FILE *SVG);
+char* Hidrante_get_id(Hidrante hidrante);
+double Hidrante_get_x(Hidrante hidrante);
+double Hidrante_get_y(Hidrante hidrante);
+void Hidrante_set_x(Hidrante hidrante, double x);
+void Hidrante_set_y(Hidrante hidrante, double y);
+void Hidrante_escreverSvg(Hidrante hidrante, FILE *SVG);
 
 // Funções relacionadas com a lista
 bool hidranteEquals(Hidrante hidrante, char *id);
-void imprimirHidrante(Hidrante hidrante);
+void Hidrante_imprimir(Hidrante hidrante);
 
 #endif

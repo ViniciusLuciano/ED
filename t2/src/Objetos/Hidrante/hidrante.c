@@ -22,32 +22,32 @@ void destruirHidrante(Hidrante h) {
     free(hidrante);
 }
 
-char* getHidrante_id(Hidrante h) {
+char* Hidrante_get_id(Hidrante h) {
     pHidrante hidrante = (pHidrante) h;
     return hidrante->id;
 }
 
-double getHidrante_x(Hidrante h) {
+double Hidrante_get_x(Hidrante h) {
     pHidrante hidrante = (pHidrante) h;
     return hidrante->x;
 }
 
-double getHidrante_y(Hidrante h) {
+double Hidrante_get_y(Hidrante h) {
     pHidrante hidrante = (pHidrante) h;
     return hidrante->y;
 }
 
-void setHidrante_x(Hidrante h, double x) {
+void Hidrante_set_x(Hidrante h, double x) {
     pHidrante hidrante = (pHidrante) h;
     hidrante->x = x;
 }
 
-void setHidrante_y(Hidrante h, double y) {
+void Hidrante_set_y(Hidrante h, double y) {
     pHidrante hidrante = (pHidrante) h;
     hidrante->y = y;
 }
 
-void escreverHidrante_svg(Hidrante h, FILE *svg) {
+void Hidrante_escreverSvg(Hidrante h, FILE *svg) {
     pHidrante hidrante = (pHidrante) h;
     fprintf(svg, "<circle cx=\"%lf\" cy=\"%lf\" r=\"5\" stroke=\"%s\" fill=\"%s\" stroke-width=\"%s\" />\n", 
             hidrante->x,
@@ -66,7 +66,7 @@ bool hidranteEquals(Hidrante h, char *id) {
     return strcmp(hidrante->id, id) == 0;
 }
 
-void imprimirHidrante(Hidrante h) {
+void Hidrante_imprimir(Hidrante h) {
     pHidrante hidrante = (pHidrante) h;
     printf("id %s | cfill %s\n", hidrante->id, hidrante->cfill);
 }
