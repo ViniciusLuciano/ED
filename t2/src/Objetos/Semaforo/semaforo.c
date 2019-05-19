@@ -22,32 +22,32 @@ void destruirSemaforo(Semaforo s) {
     free(semaforo);
 }
 
-char* getSemaforo_id(Semaforo s) {
+char* Semaforo_get_id(Semaforo s) {
     pSemaforo semaforo = (pSemaforo) s;
     return semaforo->id;
 }
 
-double getSemaforo_x(Semaforo s) {
+double Semaforo_get_x(Semaforo s) {
     pSemaforo semaforo = (pSemaforo) s;
     return semaforo->x;
 }
 
-double getSemaforo_y(Semaforo s) {
+double Semaforo_get_y(Semaforo s) {
     pSemaforo semaforo = (pSemaforo) s;
     return semaforo->y;
 }
 
-void setSemaforo_x(Semaforo s, double x) {
+void Semaforo_set_x(Semaforo s, double x) {
     pSemaforo semaforo = (pSemaforo) s;
     semaforo->x = x;
 }
 
-void setSemaforo_y(Semaforo s, double y) {
+void Semaforo_set_y(Semaforo s, double y) {
     pSemaforo semaforo = (pSemaforo) s;
     semaforo->y = y;
 }
 
-void escreverSemaforo_svg(Semaforo s, FILE *svg) {
+void Semaforo_escreverSvg(Semaforo s, FILE *svg) {
     pSemaforo semaforo = (pSemaforo) s;
     fprintf(svg, "<circle cx=\"%lf\" cy=\"%lf\" r=\"5\" stroke=\"%s\" fill=\"%s\" stroke-width=\"%s\" />\n", 
             semaforo->x,
@@ -66,7 +66,7 @@ bool semaforoEquals(Semaforo s, char *id) {
     return strcmp(semaforo->id, id) == 0;
 }
 
-void imprimirSemaforo(Semaforo s) {
+void Semaforo_imprimir(Semaforo s) {
     pSemaforo semaforo = (pSemaforo) s;
-    printf("id %semaforo\n", semaforo->id);
+    printf("id %s\n", semaforo->id);
 }
