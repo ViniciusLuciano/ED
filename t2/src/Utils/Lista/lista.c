@@ -138,6 +138,7 @@ bool lista_excluirObjeto(Lista l,
             return true;
         }
     }
+    return false;
 }
 
 bool lista_excluirPosic(Lista l, int i, void(*destruirObjeto)(Objeto objeto)) {

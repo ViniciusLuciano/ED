@@ -138,7 +138,9 @@ bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             *cidade = criarCidade(i, nq, nh, ns, nr);
             primeiraLinha = false;
 
-		} else if(strcmp(instrucao, "c") == 0){
+		}
+        
+        if(strcmp(instrucao, "c") == 0){
 
             char cfill[50], cstrok[50], id[20], bufferCW[20];
             double r, x, y;
@@ -403,9 +405,13 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
                 py = Hidrante_get_y(h);
                 
                 // Anel grosso de duas cores
-                Circulo c = criarCirculo(px, py, 5, "blue", "yellow", "2px");
-                Circulo_escreverSvg(c, arquivoSVG);
-                destruirCirculo(c);
+                Circulo c1 = criarCirculo(px, py, 7, "none", "orange", "3px");
+                Circulo_escreverSvg(c1, arquivoSVG);
+                destruirCirculo(c1);
+
+		        Circulo c2 = criarCirculo(px, py, 9, "none", "gold", "3px");
+                Circulo_escreverSvg(c2, arquivoSVG);
+                destruirCirculo(c2);
 
                 fprintf(arquivoTXT, "ID: %s\nEquipamento: Hidrante\n", id);
                 Cidade_removerQuadrasInternasEquipamento(*cidade, px, py, dist, metrica, arquivoTXT);
@@ -413,9 +419,13 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
                 px = RadioBase_get_x(rb);
                 py = RadioBase_get_y(rb);
 
-                Circulo c = criarCirculo(px, py, 5, "blue", "yellow", "2px");
-                Circulo_escreverSvg(c, arquivoSVG);
-                destruirCirculo(c);
+                Circulo c1 = criarCirculo(px, py, 7, "none", "orange", "3px");
+                Circulo_escreverSvg(c1, arquivoSVG);
+                destruirCirculo(c1);
+
+		        Circulo c2 = criarCirculo(px, py, 9, "none", "gold", "3px");
+                Circulo_escreverSvg(c2, arquivoSVG);
+                destruirCirculo(c2);
 
                 fprintf(arquivoTXT, "ID: %s\nEquipamento: Radio Base\n", id);
                 Cidade_removerQuadrasInternasEquipamento(*cidade, px, py, dist, metrica, arquivoTXT);
@@ -423,9 +433,13 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
                 px = Semaforo_get_x(s);
                 py = Semaforo_get_y(s);
 
-                Circulo c = criarCirculo(px, py, 5, "blue", "yellow", "2px");
-                Circulo_escreverSvg(c, arquivoSVG);
-                destruirCirculo(c);
+                Circulo c1 = criarCirculo(px, py, 7, "none", "orange", "3px");
+                Circulo_escreverSvg(c1, arquivoSVG);
+                destruirCirculo(c1);
+
+		        Circulo c2 = criarCirculo(px, py, 9, "none", "gold", "3px");
+                Circulo_escreverSvg(c2, arquivoSVG);
+                destruirCirculo(c2);
 
                 fprintf(arquivoTXT, "ID: %s\nEquipamento: Semaforo\n", id);
                 Cidade_removerQuadrasInternasEquipamento(*cidade, px, py, dist, metrica, arquivoTXT);
@@ -443,28 +457,28 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             Quadra q;
             
             if((h = Cidade_getHidrante(*cidade, id)) != NULL) {
-                fprintf(arquivoTXT, "ID: %s\nEquipamento: Hidrante\nCoordenadas: (%lf, %lf)\n\n",
+                fprintf(arquivoTXT, "REMOVIDO\nID: %s\nEquipamento: Hidrante\nCoordenadas: (%lf, %lf)\n\n",
                     id,
                     Hidrante_get_x(h),
                     Hidrante_get_y(h)
                 );
                 Cidade_removerObjeto(*cidade, id);
             } else if((rb = Cidade_getRadioBase(*cidade, id)) != NULL) {
-                fprintf(arquivoTXT, "ID: %s\nEquipamento: Radio Base\nCoordenadas: (%lf, %lf)\n\n",
+                fprintf(arquivoTXT, "REMOVIDO\nID: %s\nEquipamento: Radio Base\nCoordenadas: (%lf, %lf)\n\n",
                     id,
                     RadioBase_get_x(rb),
                     RadioBase_get_y(rb)
                 );
                 Cidade_removerObjeto(*cidade, id);
             } else if((s = Cidade_getSemaforo(*cidade, id)) != NULL) {
-                fprintf(arquivoTXT, "ID: %s\nEquipamento: Semaforo\nCoordenadas: (%lf, %lf)\n\n",
+                fprintf(arquivoTXT, "REMOVIDO\nID: %s\nEquipamento: Semaforo\nCoordenadas: (%lf, %lf)\n\n",
                     id,
                     Semaforo_get_x(s),
                     Semaforo_get_y(s)
                 );
                 Cidade_removerObjeto(*cidade, id);
             } else if((q = Cidade_getQuadra(*cidade, id)) != NULL) {
-                fprintf(arquivoTXT, "CEP: %s\nQuadra\nCoordenadas: (%lf, %lf)\n\n",
+                fprintf(arquivoTXT, "REMOVIDO\nCEP: %s\nQuadra\nCoordenadas: (%lf, %lf)\n\n",
                     id,
                     Quadra_get_x(q),
                     Quadra_get_y(q)
@@ -532,10 +546,8 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
         }
     }
     
-    
-    Cidade_escreverQuadrasEquipamentosSvg(*cidade, arquivoSVG);
+    Cidade_escreverSvg(*cidade, arquivoSVG);
     svg_finalizar(arquivoSVG);
-   
     fclose(arquivoTXT);
     fclose(arquivoSVG);
 }

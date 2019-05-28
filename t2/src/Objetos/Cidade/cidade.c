@@ -333,9 +333,9 @@ void Cidade_escreverFormasEnvoltas(Cidade c, FILE *svg, char *cor) {
 
 void imprimirCidade(Cidade c) {
     pCidade cidade = (pCidade) c;
-    int i = lista_getPrimeiro(cidade->listaHidrante);
-    for(i; i!= -1; i = lista_getProx(cidade->listaHidrante, i)) {
-        Hidrante h = lista_getObjPosic(cidade->listaHidrante, i);
-        Hidrante_imprimir(h);
+    int i = lista_getPrimeiro(cidade->listaForma);
+    for(i; i!= -1; i = lista_getProx(cidade->listaForma, i)) {
+        Forma f = lista_getObjPosic(cidade->listaForma, i);
+        Forma_imprimir(f);
     }
 }

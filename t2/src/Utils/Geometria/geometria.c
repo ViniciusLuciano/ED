@@ -41,7 +41,7 @@ double distanciaL2(double x1, double y1, double x2, double y2) {
 }
 
 bool pontoInternoCirculo(double px, double py, Circulo c) {
-	double cx = Circulo_get_x(c), cy = Circulo_get_x(c), r = Circulo_get_r(c);
+	double cx = Circulo_get_x(c), cy = Circulo_get_y(c), r = Circulo_get_r(c);
     return distanciaL2(px, py, cx, cy) <= r;
 }
 
@@ -64,5 +64,5 @@ bool retanguloInternoL1(double px, double py, Retangulo r, double dist) {
 	return distanciaL1(px, py, Retangulo_get_x(r), Retangulo_get_y(r)) <= dist &&
 	distanciaL1(px, py, Retangulo_get_max_x(r), Retangulo_get_y(r)) <= dist &&
 	distanciaL1(px, py, Retangulo_get_x(r), Retangulo_get_max_y(r)) <= dist &&
-	distanciaL1(px, py, Retangulo_get_max_x(r), Retangulo_get_max_y(r));
+	distanciaL1(px, py, Retangulo_get_max_x(r), Retangulo_get_max_y(r)) <= dist;
 }
