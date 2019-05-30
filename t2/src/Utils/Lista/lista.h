@@ -23,5 +23,8 @@ Objeto lista_getObjeto(Lista l, char *id, bool (*objetoEquals)(Objeto objetoList
 Objeto lista_getObjPosic(Lista l, int i);
 void lista_imprimir(Lista l, void (*imprimirObjeto)(Objeto objeto));
 
+int lista_length(Lista l);
+bool lista_inserirAntes(Lista l, int pos, Objeto objeto);
+bool lista_inserirDepois(Lista l, int pos, Objeto objeto);
 
 #endif

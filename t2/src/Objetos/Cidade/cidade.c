@@ -105,6 +105,7 @@ bool Cidade_removerObjeto(Cidade c, char *id) {
 void Cidade_removerQuadrasInternasEquipamento(Cidade c, double px, double py, double dist, char *op, FILE *txt) {
     pCidade cidade = (pCidade) c;
     fprintf(txt, "-- CEP(s) REMOVIDOS --\n");
+    
     int i = lista_getPrimeiro(cidade->listaQuadra);
     if(i == -1)
         return;
@@ -158,7 +159,7 @@ void Cidade_removerQuadrasInternasEquipamento(Cidade c, double px, double py, do
         }
         destruirCirculo(c);
     }
-    fprintf(txt, "\n");
+    fprintf(txt, "----------------------\n\n");
 }
 
 // cbq
@@ -176,6 +177,8 @@ void Cidade_setCstrkQuadrasInternasCirculo(Cidade cid, Circulo c, char *cstrk, F
         }
         destruirRetangulo(r);
     }
+
+    fprintf(txt, "-----------------------------\n\n");
 }
 
 // trns
@@ -190,7 +193,7 @@ void Cidade_deslocarEquipamentosInternosRetangulo(Cidade c, Retangulo r, double 
         Retangulo rq = criarRetangulo(Quadra_get_x(q), Quadra_get_y(q), Quadra_get_w(q), Quadra_get_h(q), "", "", "");
         if(retanguloInternoRetangulo(rq, r)) {
             fprintf(txt, "CEP -> %s\n", Quadra_get_cep(q));
-            fprintf(txt, "(%lf, %lf) -> (%lf, %lf)\n\n",
+            fprintf(txt, "(%.2lf, %.2lf) -> (%.2lf, %.2lf)\n\n",
                 Quadra_get_x(q),
                 Quadra_get_y(q),
                 Quadra_get_x(q) + dx,
@@ -207,7 +210,7 @@ void Cidade_deslocarEquipamentosInternosRetangulo(Cidade c, Retangulo r, double 
         Hidrante h = lista_getObjPosic(cidade->listaHidrante, i);
         if(pontoInternoRetangulo(Hidrante_get_x(h), Hidrante_get_y(h), r)) {
             fprintf(txt, "ID -> %s\n", Hidrante_get_id(h));
-            fprintf(txt, "(%lf, %lf) -> (%lf, %lf)\n\n",
+            fprintf(txt, "(%.2lf, %.2lf) -> (%.2lf, %.2lf)\n\n",
                 Hidrante_get_x(h),
                 Hidrante_get_y(h),
                 Hidrante_get_x(h) + dx,
@@ -223,7 +226,7 @@ void Cidade_deslocarEquipamentosInternosRetangulo(Cidade c, Retangulo r, double 
         Semaforo s = lista_getObjPosic(cidade->listaSemaforo, i);
         if(pontoInternoRetangulo(Semaforo_get_x(s), Semaforo_get_y(s), r)) {
             fprintf(txt, "ID -> %s\n", Semaforo_get_id(s));
-            fprintf(txt, "(%lf, %lf) -> (%lf, %lf)\n\n",
+            fprintf(txt, "(%.2lf, %.2lf) -> (%.2lf, %.2lf)\n\n",
                 Semaforo_get_x(s),
                 Semaforo_get_y(s),
                 Semaforo_get_x(s) + dx,
@@ -239,7 +242,7 @@ void Cidade_deslocarEquipamentosInternosRetangulo(Cidade c, Retangulo r, double 
         RadioBase rb = lista_getObjPosic(cidade->listaRadioBase, i);
         if(pontoInternoRetangulo(RadioBase_get_x(rb), RadioBase_get_y(rb), r)) {
             fprintf(txt, "ID -> %s\n", RadioBase_get_id(rb));
-            fprintf(txt, "(%lf, %lf) -> (%lf, %lf)\n\n",
+            fprintf(txt, "(%.2lf, %.2lf) -> (%.2lf, %.2lf)\n\n",
                 RadioBase_get_x(rb),
                 RadioBase_get_y(rb),
                 RadioBase_get_x(rb) + dx,
@@ -249,6 +252,7 @@ void Cidade_deslocarEquipamentosInternosRetangulo(Cidade c, Retangulo r, double 
             RadioBase_set_y(rb, RadioBase_get_y(rb) + dy);
         }
     }
+    fprintf(txt, "----------------------------------\n");
 }
 
 // Usado apenas para o .geo

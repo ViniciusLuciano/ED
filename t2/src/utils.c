@@ -313,7 +313,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 			break;
         
         if(strcmp(instrucao, "o?") == 0) {
-            fprintf(arquivoTXT, "%s", str);
+            fprintf(arquivoTXT, "\t%s", str);
             char j[20], k[20];
             sscanf(str, "%*s %s %s", j, k);
 
@@ -333,7 +333,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             }
             
         } else if(strcmp(instrucao, "i?") == 0) {
-            fprintf(arquivoTXT, "%s", str);
+            fprintf(arquivoTXT, "\t%s", str);
             char j[20];
             double x, y;
             sscanf(str, "%*s %s %lf %lf", j, &x, &y);
@@ -353,7 +353,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             }
 
         } else if (strcmp(instrucao, "d?") == 0) {
-            fprintf(arquivoTXT, "%s", str);
+            fprintf(arquivoTXT, "\t%s", str);
             char j[20], k[20];
             sscanf(str, "%*s %s %s", j, k);
             
@@ -389,7 +389,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             fclose(bbSVG);
 
         } else if(strcmp(instrucao, "dq") == 0) {
-            // Td certo a principio
+            fprintf(arquivoTXT, "\t%s", str);
 
             char metrica[5], id[20];
             double dist;
@@ -443,10 +443,12 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 
                 fprintf(arquivoTXT, "ID: %s\nEquipamento: Semaforo\n", id);
                 Cidade_removerQuadrasInternasEquipamento(*cidade, px, py, dist, metrica, arquivoTXT);
+            } else {
+                fprintf(arquivoTXT, "%s não encontrado.\n", id);
             }
 
         } else if(strcmp(instrucao, "del") == 0) {
-            // Td certo a principio
+            fprintf(arquivoTXT, "\t%s", str);
 
             char id[20];
             sscanf(str, "%*s %s", id);
@@ -457,37 +459,39 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             Quadra q;
             
             if((h = Cidade_getHidrante(*cidade, id)) != NULL) {
-                fprintf(arquivoTXT, "REMOVIDO\nID: %s\nEquipamento: Hidrante\nCoordenadas: (%lf, %lf)\n\n",
+                fprintf(arquivoTXT, "REMOVIDO\nID: %s\nEquipamento: Hidrante\nCoordenada: (%.2lf, %.2lf)\n\n",
                     id,
                     Hidrante_get_x(h),
                     Hidrante_get_y(h)
                 );
                 Cidade_removerObjeto(*cidade, id);
             } else if((rb = Cidade_getRadioBase(*cidade, id)) != NULL) {
-                fprintf(arquivoTXT, "REMOVIDO\nID: %s\nEquipamento: Radio Base\nCoordenadas: (%lf, %lf)\n\n",
+                fprintf(arquivoTXT, "REMOVIDO\nID: %s\nEquipamento: Radio Base\nCoordenada: (%.2lf, %.2lf)\n\n",
                     id,
                     RadioBase_get_x(rb),
                     RadioBase_get_y(rb)
                 );
                 Cidade_removerObjeto(*cidade, id);
             } else if((s = Cidade_getSemaforo(*cidade, id)) != NULL) {
-                fprintf(arquivoTXT, "REMOVIDO\nID: %s\nEquipamento: Semaforo\nCoordenadas: (%lf, %lf)\n\n",
+                fprintf(arquivoTXT, "REMOVIDO\nID: %s\nEquipamento: Semaforo\nCoordenada: (%.2lf, %.2lf)\n\n",
                     id,
                     Semaforo_get_x(s),
                     Semaforo_get_y(s)
                 );
                 Cidade_removerObjeto(*cidade, id);
             } else if((q = Cidade_getQuadra(*cidade, id)) != NULL) {
-                fprintf(arquivoTXT, "REMOVIDO\nCEP: %s\nQuadra\nCoordenadas: (%lf, %lf)\n\n",
+                fprintf(arquivoTXT, "REMOVIDO\nCEP: %s\nEquipamento: Quadra\nCoordenada: (%.2lf, %.2lf)\n\n",
                     id,
                     Quadra_get_x(q),
                     Quadra_get_y(q)
                 );
                 Cidade_removerObjeto(*cidade, id);
+            } else {
+                fprintf(arquivoTXT, "%s não encontrado.\n", id);
             }
             
         } else if(strcmp(instrucao, "cbq") == 0) {
-            // Td certo a principio 
+            fprintf(arquivoTXT, "\t%s", str);
             
             char cstrk[20];
             double x, y, r;
@@ -497,7 +501,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             destruirCirculo(c);
 
         } else if(strcmp(instrucao, "crd?") == 0) {
-            // Td certo a principio
+            fprintf(arquivoTXT, "\t%s", str);
             // id/cep
             
             char id[20];
@@ -509,34 +513,36 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             Quadra q;
             
             if((h = Cidade_getHidrante(*cidade, id)) != NULL) {
-                fprintf(arquivoTXT, "ID: %s\nEquipamento: Hidrante\nCoordenadas: (%lf, %lf)\n\n",
+                fprintf(arquivoTXT, "ID: %s\nEquipamento: Hidrante\nCoordenada: (%.2lf, %.2lf)\n\n",
                     id,
                     Hidrante_get_x(h),
                     Hidrante_get_y(h)
                 );
             } else if((rb = Cidade_getRadioBase(*cidade, id)) != NULL) {
-                fprintf(arquivoTXT, "ID: %s\nEquipamento: Radio Base\nCoordenadas: (%lf, %lf)\n\n",
+                fprintf(arquivoTXT, "ID: %s\nEquipamento: Radio Base\nCoordenada: (%.2lf, %.2lf)\n\n",
                     id,
                     RadioBase_get_x(rb),
                     RadioBase_get_y(rb)
                 );
             } else if((s = Cidade_getSemaforo(*cidade, id)) != NULL) {
-                fprintf(arquivoTXT, "ID: %s\nEquipamento: Semaforo\nCoordenadas: (%lf, %lf)\n\n",
+                fprintf(arquivoTXT, "ID: %s\nEquipamento: Semaforo\nCoordenada: (%.2lf, %.2lf)\n\n",
                     id,
                     Semaforo_get_x(s),
                     Semaforo_get_y(s)
                 );
             } else if((q = Cidade_getQuadra(*cidade, id)) != NULL) {
-                fprintf(arquivoTXT, "CEP: %s\nQuadra\nCoordenadas: (%lf, %lf)\n\n",
+                fprintf(arquivoTXT, "CEP: %s\nEquipamento: Quadra\nCoordenada: (%.2lf, %.2lf)\n\n",
                     id,
                     Quadra_get_x(q),
                     Quadra_get_y(q)
                 );
+            } else {
+                fprintf(arquivoTXT, "%s não encontrado.\n", id);
             }
             
 
         } else if(strcmp(instrucao, "trns") == 0) {
-            // Td certo a principio
+            fprintf(arquivoTXT, "\t%s", str);
 
             double x, y, w, h, dx, dy;
             sscanf(str, "%*s %lf %lf %lf %lf %lf %lf", &x, &y, &w, &h, &dx, &dy);

@@ -181,3 +181,50 @@ void lista_imprimir(Lista l, void (*imprimirObjeto)(Objeto objeto)) {
         imprimirObjeto(lista->node[i].objeto);
     }
 }
+
+int lista_length(Lista l) {
+    pLista lista = (pLista) l;
+    return lista->tamanho;
+}
+
+bool lista_inserirAntes(Lista l, int pos, Objeto objeto) {
+    pLista lista = (pLista) l;
+    int livre = lista_getLivre(l);
+
+    if(livre == -1) {
+        printf("Lista cheia\n");
+        return false;
+    }
+
+    if(lista->tamanho + 1 <= lista->tamanhoMax) {
+        lista->node[livre].prox = pos;
+        lista->node[livre].ant = lista->node[pos].ant;
+        lista->node[livre].objeto = objeto;
+        lista->node[lista->node[pos].ant].prox = livre;
+        lista->node[pos].ant = livre;
+        lista->tamanho++;
+        return true;
+    }
+    return false;
+}
+
+bool lista_inserirDepois(Lista l, int pos, Objeto objeto) {
+    pLista lista = (pLista) l;
+    int livre = lista_getLivre(l);
+
+    if(livre == -1) {
+        printf("Lista cheia\n");
+        return false;
+    }
+
+    if(lista->tamanho + 1 <= lista->tamanhoMax) {
+        lista->node[livre].prox = pos;
+        lista->node[livre].ant = lista->node[pos].ant;
+        lista->node[livre].objeto = objeto;
+        lista->node[lista->node[pos].prox].ant = livre;
+        lista->node[pos].prox = livre;
+        lista->tamanho++;
+        return true;
+    }
+    return false;
+}
