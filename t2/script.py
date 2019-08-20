@@ -27,21 +27,10 @@ for __, __, files in os.walk(dirInput):
 	except:
 		shutil.rmtree("saida")
 		os.mkdir("saida")
-	os.mkdir("saida/saidaGerada")
+	#os.mkdir("saida")
 
 	for nameFiles in files:
-
-		nameDir = nameFiles[:-4]
-		print("Executando {}...".format(nameFiles))
-		os.mkdir("saida/saidaGerada/{}".format(nameDir))
-		time.sleep(0.5)
-
-		try:
-			for filename in os.listdir("{}/{}".format(dirInput, nameDir)):
-				print(filename)
-				os.system("cd {} && ./siguel -e ../{} -f {} -q {}/{} -o ../saida/saidaGerada/{}".format(dirCode, dirInput, nameFiles, nameDir, filename, nameDir))
-		except Exception as e:
-			os.rmdir("saida/saidaGerada/{}".format(nameDir))
-			print(e)
-		print()
+		if nameFiles != "bairro.geo":
+			print(nameFiles)
+			os.system("cd {} && ./siguel -e ../{} -f bairro.geo -q {} -o ../saida/".format(dirCode, dirInput, nameFiles))
 	break
