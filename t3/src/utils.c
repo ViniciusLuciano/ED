@@ -129,13 +129,13 @@ bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
         
         if(primeiraLinha) {
 
-            int i, nq, nh, ns, nr;
+            int i, nq, nh, ns, nr, np, nm;
             if(strcmp(instrucao, "nx") == 0) {
-                sscanf(str, "%*s %d %d %d %d %d", &i, &nq, &nh, &ns, &nr);
+                sscanf(str, "%*s %d %d %d %d %d %d %d", &i, &nq, &nh, &ns, &nr, &np, &nm);
             } else {
-                i = 1000; nq = 1000; nh = 1000; ns = 1000; nr = 1000;
+                i = 1000; nq = 1000; nh = 1000; ns = 1000; nr = 1000; np = 1000; nm = 1000;
             }
-            *cidade = criarCidade(i, nq, nh, ns, nr);
+            *cidade = criarCidade(i, nq, nh, ns, nr, np, nm);
             primeiraLinha = false;
 
 		}
@@ -261,6 +261,24 @@ bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             sscanf(str, "%*s %s %s", bufferCW, bufferRW);
             strcpy(cw, bufferCW);
             strcpy(rw, bufferRW);
+
+        } else if(strcmp(instrucao, "prd") == 0) {
+
+            char cep[30], face;
+            double num, f, p, mrg;
+
+            sscanf(str, "%*s %s %c %lf %lf %lf %lf", cep, &face, &num, &f, &p, &mrg);
+            Predio prd = criarPredio(cep, face, num, f, p, mrg);
+            Cidade_setPredio(*cidade, prd);
+
+        } else if(strcmp(instrucao, "mur") == 0) {
+
+            double x1, y1, x2, y2;
+
+            sscanf(str, "%*s %lf %lf %lf %lf", &x1, &y1, &x2, &y2);
+            Muro m = criarMuro(x1, y1, x2, y2);
+            Cidade_setMuro(*cidade, m);
+
         }
 	}
     
@@ -569,3 +587,4 @@ void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeA
     if(dirSaida)
         free(dirSaida);
 }
+

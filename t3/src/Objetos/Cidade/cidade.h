@@ -12,6 +12,9 @@
 #include "../RadioBase/radioBase.h"
 #include "../Circulo/circulo.h"
 #include "../Retangulo/retangulo.h"
+#include "../Predio/predio.h"
+#include "../Muro/muro.h"
+
 
 /*
 Uma cidade contem todos os elementos.
@@ -19,7 +22,7 @@ Uma cidade contem todos os elementos.
 
 typedef void* Cidade;
 
-Cidade criarCidade(int i, int nq, int nh, int ns, int nr);
+Cidade criarCidade(int i, int nq, int nh, int ns, int nr, int np, int nm);
 void destruirCidade(Cidade cidade);
 void Cidade_setForma(Cidade cidade, Forma forma);
 void Cidade_setQuadra(Cidade cidade, Quadra quadra);
@@ -27,6 +30,8 @@ void Cidade_setHidrante(Cidade cidade, Hidrante hidrante);
 void Cidade_setSemaforo(Cidade cidade, Semaforo semaforo);
 void Cidade_setRadioBase(Cidade cidade, RadioBase radioBase);
 void Cidade_setTexto(Cidade cidade, Texto texto);
+void Cidade_setPredio(Cidade cidade, Predio predio);
+void Cidade_setMuro(Cidade cidade, Muro muro);
 Forma Cidade_getForma(Cidade cidade, char *id);
 Quadra Cidade_getQuadra(Cidade cidade, char *id);
 Hidrante Cidade_getHidrante(Cidade cidade, char *id);

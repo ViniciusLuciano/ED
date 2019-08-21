@@ -7,9 +7,11 @@ typedef struct cidade {
     Lista listaSemaforo;
     Lista listaRadioBase;
     Lista listaTexto;
+    Lista listaPredio;
+    Lista listaMuro;
 }*pCidade;
 
-Cidade criarCidade(int i, int nq, int nh, int ns, int nr) {
+Cidade criarCidade(int i, int nq, int nh, int ns, int nr, int np, int nm) {
     Cidade c = malloc(sizeof(struct cidade));
     pCidade cidade = (pCidade) c;
     cidade->listaForma = criarLista(i);
@@ -17,6 +19,8 @@ Cidade criarCidade(int i, int nq, int nh, int ns, int nr) {
     cidade->listaHidrante = criarLista(nh);
     cidade->listaSemaforo = criarLista(ns);
     cidade->listaRadioBase = criarLista(nr);
+    cidade->listaPredio = criarLista(np);
+    cidade->listaMuro = criarLista(nm);
     cidade->listaTexto = criarLista(1000);
     return cidade;
 }
@@ -29,6 +33,8 @@ void destruirCidade(Cidade c) {
     lista_destruir(cidade->listaSemaforo, destruirSemaforo);
     lista_destruir(cidade->listaRadioBase, destruirRadioBase);
     lista_destruir(cidade->listaTexto, destruirTexto);
+    lista_destruir(cidade->listaPredio, destruirPredio);
+    lista_destruir(cidade->listaMuro, destruirMuro);
     free(cidade);
 }
 
@@ -60,6 +66,16 @@ void Cidade_setRadioBase(Cidade c, RadioBase radioBase) {
 void Cidade_setTexto(Cidade c, Texto texto) {
     pCidade cidade = (pCidade) c;
     lista_inserirUltimo(cidade->listaTexto, texto);
+}
+
+void Cidade_setPredio(Cidade c, Predio predio) {
+    pCidade cidade = (pCidade) c;
+    lista_inserirUltimo(cidade->listaPredio, predio);
+}
+
+void Cidade_setMuro(Cidade c, Muro muro) {
+    pCidade cidade = (pCidade) c;
+    lista_inserirUltimo(cidade->listaMuro, muro);
 }
 
 Forma Cidade_getForma(Cidade c, char *id) {
@@ -100,8 +116,7 @@ bool Cidade_removerObjeto(Cidade c, char *id) {
     return false;
 }
 
-// Duvidas ainda??
-// dq
+
 void Cidade_removerQuadrasInternasEquipamento(Cidade c, double px, double py, double dist, char *op, FILE *txt) {
     pCidade cidade = (pCidade) c;
     fprintf(txt, "-- CEP(s) REMOVIDOS --\n");
@@ -295,6 +310,20 @@ void Cidade_escreverSvg(Cidade c, FILE *svg) {
         RadioBase rb = lista_getObjPosic(cidade->listaRadioBase, i);
         RadioBase_escreverSvg(rb, svg);
     }   
+
+    i = lista_getPrimeiro(cidade->listaPredio);
+    for(i; i!= -1; i = lista_getProx(cidade->listaPredio, i)) {
+        Predio prd = lista_getObjPosic(cidade->listaPredio, i);
+        Quadra q = lista_getObjeto(cidade->listaQuadra, Predio_getCep(prd), quadraEquals);
+        if(q != NULL)
+            Predio_escreverSvg(prd, Quadra_get_x(q), Quadra_get_y(q), Quadra_get_w(q), Quadra_get_h(q), svg);
+    }
+
+    i = lista_getPrimeiro(cidade->listaMuro);
+    for(i; i!= -1; i = lista_getProx(cidade->listaMuro, i)) {
+        Muro m = lista_getObjPosic(cidade->listaMuro, i);
+        Muro_escreverSvg(m, svg);
+    }
 }
 
 void Cidade_escreverQuadrasEquipamentosSvg(Cidade c, FILE *svg) {
@@ -323,7 +352,7 @@ void Cidade_escreverQuadrasEquipamentosSvg(Cidade c, FILE *svg) {
     for(i; i!= -1; i = lista_getProx(cidade->listaRadioBase, i)) {
         RadioBase rb = lista_getObjPosic(cidade->listaRadioBase, i);
         RadioBase_escreverSvg(rb, svg);
-    } 
+    }
 }
 
 void Cidade_escreverFormasEnvoltas(Cidade c, FILE *svg, char *cor) {

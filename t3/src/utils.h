@@ -12,6 +12,8 @@
 #include "./Objetos/Hidrante/hidrante.h"
 #include "./Objetos/Semaforo/semaforo.h"
 #include "./Objetos/RadioBase/radioBase.h"
+#include "./Objetos/Predio/predio.h"
+#include "./Objetos/Muro/muro.h"
 #include "./Utils/Lista/lista.h"
 #include "./Utils/Geometria/geometria.h"
 #include "./Utils/Colisao/colisao.h"
