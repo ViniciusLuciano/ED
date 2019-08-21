@@ -1,0 +1,11 @@
+<svg> 
+<circle cx="150.000000" cy="150.000000" r="141.000000" stroke="lightyellow" fill="gold" />
+<circle cx="114.750000" cy="114.750000" r="1" stroke="green" fill="green" />
+<line x1="150.000000" y1="150.000000" x2="114.750000" y2="114.750000" stroke="green" />
+<circle cx="326.250000" cy="326.250000" r="1" stroke="red" fill="red" />
+<line x1="150.000000" y1="150.000000" x2="326.250000" y2="326.250000" stroke="red" />
+<circle cx="114.750000" cy="326.250000" r="1" stroke="red" fill="red" />
+<line x1="150.000000" y1="150.000000" x2="114.750000" y2="326.250000" stroke="red" />
+<circle cx="326.250000" cy="114.750000" r="1" stroke="red" fill="red" />
+<line x1="150.000000" y1="150.000000" x2="326.250000" y2="114.750000" stroke="red" />
+</svg>

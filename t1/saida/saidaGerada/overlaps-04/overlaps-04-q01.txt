@@ -1,0 +1,72 @@
+o? 1 2
+NAO
+
+o? 1 3
+NAO
+
+o? 1 4
+NAO
+
+o? 1 5
+NAO
+
+o? 1 6
+NAO
+
+o? 1 7
+NAO
+
+o? 1 8
+NAO
+
+o? 1 9
+NAO
+
+o? 1 10
+NAO
+
+o? 1 11
+NAO
+
+o? 1 12
+NAO
+
+o? 1 13
+NAO
+
+o? 1 14
+NAO
+
+o? 1 15
+NAO
+
+o? 1 16
+NAO
+
+o? 1 17
+NAO
+
+o? 1 18
+SIM
+
+o? 1 19
+NAO
+
+o? 1 20
+NAO
+
+o? 1 21
+NAO
+
+o? 1 22
+NAO
+
+o? 1 23
+NAO
+
+o? 1 24
+NAO
+
+o? 1 25
+NAO
+

@@ -1,0 +1,25 @@
+<svg> 
+<circle cx="150.000000" cy="150.000000" r="50.000000" stroke="black" fill="blue" />
+<rect x="195.000000" y="150.000000" width="25.000000" height="25.000000" stroke="black" fill="yellow" />
+<rect x="186.861842" y="175.810940" width="25.000000" height="25.000000" stroke="black" fill="yellow" />
+<rect x="165.390906" y="192.286168" width="25.000000" height="25.000000" stroke="black" fill="yellow" />
+<rect x="138.353143" y="193.466662" width="25.000000" height="25.000000" stroke="black" fill="yellow" />
+<rect x="115.528000" y="178.925442" width="25.000000" height="25.000000" stroke="black" fill="yellow" />
+<rect x="105.171239" y="153.922008" width="25.000000" height="25.000000" stroke="black" fill="yellow" />
+<rect x="111.028857" y="127.500000" width="25.000000" height="25.000000" stroke="black" fill="yellow" />
+<rect x="130.982178" y="109.216150" width="25.000000" height="25.000000" stroke="black" fill="yellow" />
+<rect x="157.814168" y="105.683651" width="25.000000" height="25.000000" stroke="black" fill="yellow" />
+<rect x="181.819805" y="118.180195" width="25.000000" height="25.000000" stroke="black" fill="yellow" />
+<rect x="194.316349" y="142.185832" width="25.000000" height="25.000000" stroke="black" fill="yellow" />
+<rect x="100.000000" y="100.000000" width="120.000000" height="100.000000" stroke="red" fill-opacity="0" />
+<rect x="100.000000" y="100.000000" width="111.861842" height="100.810940" stroke="red" fill-opacity="0" />
+<rect x="100.000000" y="100.000000" width="100.000000" height="117.286168" stroke="red" fill-opacity="0" />
+<rect x="100.000000" y="100.000000" width="100.000000" height="118.466662" stroke="red" fill-opacity="0" />
+<rect x="100.000000" y="100.000000" width="100.000000" height="103.925442" stroke="red" fill-opacity="0" />
+<rect x="100.000000" y="100.000000" width="100.000000" height="100.000000" stroke="red" fill-opacity="0" />
+<rect x="100.000000" y="100.000000" width="100.000000" height="100.000000" stroke="red" fill-opacity="0" />
+<rect x="100.000000" y="100.000000" width="100.000000" height="100.000000" stroke="red" fill-opacity="0" />
+<rect x="100.000000" y="100.000000" width="100.000000" height="100.000000" stroke="red" fill-opacity="0" />
+<rect x="100.000000" y="100.000000" width="106.819805" height="100.000000" stroke="red" fill-opacity="0" />
+<rect x="100.000000" y="100.000000" width="119.316349" height="100.000000" stroke="red" fill-opacity="0" />
+</svg>

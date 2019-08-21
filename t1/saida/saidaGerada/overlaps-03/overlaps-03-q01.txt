@@ -1,0 +1,72 @@
+o? 1 2
+SIM
+
+o? 1 3
+SIM
+
+o? 1 4
+SIM
+
+o? 1 5
+SIM
+
+o? 1 6
+SIM
+
+o? 1 7
+SIM
+
+o? 1 8
+SIM
+
+o? 1 9
+SIM
+
+o? 1 10
+SIM
+
+o? 1 11
+SIM
+
+o? 1 12
+SIM
+
+o? 1 13
+SIM
+
+o? 1 14
+SIM
+
+o? 1 15
+SIM
+
+o? 1 16
+SIM
+
+o? 1 17
+SIM
+
+o? 1 18
+SIM
+
+o? 1 19
+SIM
+
+o? 1 20
+SIM
+
+o? 1 21
+SIM
+
+o? 1 22
+SIM
+
+o? 1 23
+SIM
+
+o? 1 24
+SIM
+
+o? 1 25
+SIM
+

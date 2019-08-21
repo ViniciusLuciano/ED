@@ -1,0 +1,24 @@
+o? 1 2
+SIM
+
+o? 1 3
+SIM
+
+o? 1 4
+SIM
+
+o? 1 5
+SIM
+
+o? 1 6
+SIM
+
+o? 1 7
+SIM
+
+o? 1 8
+SIM
+
+o? 1 9
+SIM
+

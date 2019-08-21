@@ -1,0 +1,24 @@
+o? 1 2
+NAO
+
+o? 1 3
+NAO
+
+o? 1 4
+NAO
+
+o? 1 5
+NAO
+
+o? 1 6
+NAO
+
+o? 1 7
+NAO
+
+o? 1 8
+NAO
+
+o? 1 9
+NAO
+

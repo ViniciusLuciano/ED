@@ -1,0 +1,450 @@
+o? 18 21
+NAO
+
+o? 39 4
+NAO
+
+o? 14 18
+NAO
+
+o? 8 0
+NAO
+
+o? 9 12
+NAO
+
+o? 21 9
+NAO
+
+o? 13 9
+NAO
+
+o? 13 8
+NAO
+
+o? 36 5
+NAO
+
+o? 31 13
+NAO
+
+o? 22 16
+NAO
+
+o? 11 0
+NAO
+
+o? 4 38
+NAO
+
+o? 14 15
+SIM
+
+o? 31 15
+NAO
+
+o? 0 36
+NAO
+
+o? 21 37
+NAO
+
+o? 0 13
+NAO
+
+o? 6 7
+SIM
+
+o? 24 29
+NAO
+
+o? 39 14
+NAO
+
+o? 0 5
+NAO
+
+o? 37 22
+NAO
+
+o? 13 15
+NAO
+
+o? 26 25
+NAO
+
+o? 21 39
+NAO
+
+o? 23 16
+NAO
+
+o? 29 25
+NAO
+
+o? 29 28
+SIM
+
+o? 26 33
+NAO
+
+o? 18 31
+NAO
+
+o? 9 17
+NAO
+
+o? 32 31
+NAO
+
+o? 8 12
+NAO
+
+o? 0 11
+NAO
+
+o? 20 15
+NAO
+
+o? 11 8
+NAO
+
+o? 37 39
+NAO
+
+o? 36 27
+NAO
+
+o? 33 1
+NAO
+
+o? 15 17
+NAO
+
+o? 10 5
+NAO
+
+o? 38 16
+NAO
+
+o? 38 13
+NAO
+
+o? 25 13
+NAO
+
+o? 3 10
+NAO
+
+o? 37 39
+NAO
+
+o? 21 29
+NAO
+
+o? 2 38
+NAO
+
+o? 22 11
+NAO
+
+o? 15 6
+NAO
+
+o? 22 2
+NAO
+
+o? 2 17
+NAO
+
+o? 15 28
+NAO
+
+o? 5 11
+NAO
+
+o? 23 38
+NAO
+
+o? 21 15
+NAO
+
+o? 34 15
+NAO
+
+o? 33 10
+NAO
+
+o? 26 9
+NAO
+
+o? 15 21
+NAO
+
+o? 28 36
+NAO
+
+o? 2 32
+NAO
+
+o? 22 34
+NAO
+
+o? 32 30
+NAO
+
+o? 0 10
+NAO
+
+o? 4 13
+NAO
+
+o? 35 24
+NAO
+
+o? 11 3
+NAO
+
+o? 12 17
+NAO
+
+o? 37 6
+NAO
+
+o? 20 34
+NAO
+
+o? 29 2
+NAO
+
+o? 7 35
+NAO
+
+o? 11 6
+NAO
+
+o? 34 31
+NAO
+
+o? 21 32
+NAO
+
+o? 36 28
+NAO
+
+o? 17 8
+NAO
+
+o? 1 34
+NAO
+
+o? 27 17
+NAO
+
+o? 19 39
+NAO
+
+o? 12 34
+NAO
+
+o? 15 7
+NAO
+
+o? 10 34
+NAO
+
+o? 36 32
+NAO
+
+o? 9 39
+NAO
+
+o? 31 1
+NAO
+
+o? 29 30
+NAO
+
+o? 39 15
+NAO
+
+o? 25 35
+NAO
+
+o? 19 15
+NAO
+
+o? 0 2
+NAO
+
+o? 7 32
+NAO
+
+o? 5 6
+NAO
+
+o? 3 5
+NAO
+
+o? 33 34
+NAO
+
+o? 20 36
+NAO
+
+o? 23 9
+NAO
+
+o? 15 10
+NAO
+
+o? 37 9
+NAO
+
+o? 23 24
+NAO
+
+o? 33 18
+NAO
+
+o? 29 39
+NAO
+
+o? 12 17
+NAO
+
+o? 14 38
+NAO
+
+o? 27 3
+NAO
+
+o? 1 22
+NAO
+
+o? 5 29
+NAO
+
+o? 10 36
+NAO
+
+o? 6 21
+NAO
+
+o? 4 36
+NAO
+
+o? 29 12
+NAO
+
+o? 3 16
+NAO
+
+o? 10 24
+NAO
+
+o? 39 10
+NAO
+
+o? 29 5
+NAO
+
+o? 26 18
+NAO
+
+o? 21 36
+NAO
+
+o? 4 14
+NAO
+
+o? 18 31
+NAO
+
+o? 25 3
+NAO
+
+o? 37 17
+NAO
+
+o? 13 10
+NAO
+
+o? 30 29
+NAO
+
+o? 18 28
+NAO
+
+o? 2 4
+NAO
+
+o? 26 12
+NAO
+
+o? 17 15
+NAO
+
+o? 1 37
+NAO
+
+o? 6 21
+NAO
+
+o? 38 30
+NAO
+
+o? 12 0
+NAO
+
+o? 9 34
+NAO
+
+o? 6 14
+NAO
+
+o? 26 25
+NAO
+
+o? 39 20
+NAO
+
+o? 3 22
+NAO
+
+o? 17 28
+NAO
+
+o? 39 29
+NAO
+
+o? 38 35
+NAO
+
+o? 20 14
+NAO
+
+o? 21 6
+NAO
+
+o? 1 25
+NAO
+
+o? 16 2
+NAO
+
+o? 2 37
+NAO
+
+o? 35 37
+NAO
+
+o? 7 14
+NAO
+
+o? 39 21
+NAO
+
+o? 22 13
+NAO
+

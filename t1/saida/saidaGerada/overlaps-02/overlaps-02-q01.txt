@@ -1,0 +1,120 @@
+o? 0 1
+SIM
+
+o? 2 3
+SIM
+
+o? 4 5
+SIM
+
+o? 6 7
+SIM
+
+o? 8 9
+SIM
+
+o? 10 11
+SIM
+
+o? 12 13
+SIM
+
+o? 14 15
+SIM
+
+o? 16 17
+SIM
+
+o? 18 19
+NAO
+
+o? 19 20
+SIM
+
+o? 21 22
+NAO
+
+o? 23 24
+NAO
+
+o? 25 26
+SIM
+
+o? 27 28
+NAO
+
+o? 29 30
+NAO
+
+o? 31 32
+SIM
+
+o? 33 34
+NAO
+
+o? 35 36
+NAO
+
+o? 37 38
+SIM
+
+o? 39 40
+NAO
+
+o? 41 42
+NAO
+
+o? 43 44
+SIM
+
+o? 45 46
+NAO
+
+o? 47 48
+NAO
+
+o? 49 50
+SIM
+
+o? 51 52
+NAO
+
+o? 53 54
+NAO
+
+o? 55 56
+SIM
+
+o? 57 58
+NAO
+
+o? 59 60
+NAO
+
+o? 61 62
+SIM
+
+o? 63 64
+NAO
+
+o? 65 66
+NAO
+
+o? 67 68
+SIM
+
+o? 69 70
+SIM
+
+o? 71 72
+NAO
+
+o? 73 74
+SIM
+
+o? 75 76
+NAO
+
+o? 77 78
+NAO
+
