@@ -582,6 +582,13 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 
         } else if(strcmp(instrucao, "fh") == 0) {
 
+            int k;
+            double num;
+            char cep[50], face, sinal;
+            sscanf(str, "%*s %c%d %s %c %lf", &sinal, &k, cep, &face, &num);
+            Cidade_processarHidratesProximos(*cidade, sinal, k, cep, face, num, arquivoTXT, arquivoSVG);
+            
+
         } else if(strcmp(instrucao, "fs") == 0) {
 
         }

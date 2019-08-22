@@ -44,6 +44,7 @@ void Cidade_deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, do
 void Cidade_escreverSvg(Cidade cidade, FILE *svg);
 void Cidade_escreverFormasEnvoltas(Cidade cidade, FILE *svg, char *cor);
 void Cidade_processarFocoIncendio(Cidade c, double x, double y, int ns, double r, FILE *txt, FILE *svg);
+void Cidade_processarHidratesProximos(Cidade c, char sinal, int k, char cep[], char face, double num, FILE* txt, FILE *svg);
 
 void imprimirCidade(Cidade c);
 #endif
