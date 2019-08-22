@@ -42,8 +42,8 @@ void Cidade_removerQuadrasInternasEquipamento(Cidade cidade, double px, double p
 void Cidade_setCstrkQuadrasInternasCirculo(Cidade cidade, Circulo c, char *cstrk, FILE *txt);
 void Cidade_deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, double dx, double dy, FILE *txt);
 void Cidade_escreverSvg(Cidade cidade, FILE *svg);
-void Cidade_escreverQuadrasEquipamentosSvg(Cidade cidade, FILE *svg);
 void Cidade_escreverFormasEnvoltas(Cidade cidade, FILE *svg, char *cor);
+void Cidade_processarFocoIncendio(Cidade c, double x, double y, int ns, double r, FILE *txt, FILE *svg);
 
 void imprimirCidade(Cidade c);
 #endif

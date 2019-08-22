@@ -559,6 +559,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             
 
         } else if(strcmp(instrucao, "trns") == 0) {
+
             fprintf(arquivoTXT, "\t%s", str);
 
             double x, y, w, h, dx, dy;
@@ -566,6 +567,23 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             Retangulo r = criarRetangulo(x, y, w, h, "", "", "");
             Cidade_deslocarEquipamentosInternosRetangulo(*cidade, r, dx, dy, arquivoTXT);
             destruirRetangulo(r);
+
+        } else if(strcmp(instrucao, "brl") == 0) {
+            // ver dps
+            double x, y;
+            sscanf(str, "%*s %lf %lf", &x, &y);
+
+        } else if(strcmp(instrucao, "fi") == 0) {
+
+            double x, y, r;
+            int ns;
+            sscanf(str, "%*s %lf %lf %d %lf", &x, &y, &ns, &r);
+            Cidade_processarFocoIncendio(*cidade, x, y, ns, r, arquivoTXT, arquivoSVG);
+
+        } else if(strcmp(instrucao, "fh") == 0) {
+
+        } else if(strcmp(instrucao, "fs") == 0) {
+
         }
     }
     

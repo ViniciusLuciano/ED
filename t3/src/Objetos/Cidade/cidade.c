@@ -326,35 +326,6 @@ void Cidade_escreverSvg(Cidade c, FILE *svg) {
     }
 }
 
-void Cidade_escreverQuadrasEquipamentosSvg(Cidade c, FILE *svg) {
-    pCidade cidade = (pCidade) c;
-    int i;
-
-    i = lista_getPrimeiro(cidade->listaQuadra);
-    for(i; i!= -1; i = lista_getProx(cidade->listaQuadra, i)) {
-        Quadra q = lista_getObjPosic(cidade->listaQuadra, i);
-        Quadra_escreverSvg(q, svg);
-    }
-
-    i = lista_getPrimeiro(cidade->listaHidrante);
-    for(i; i!= -1; i = lista_getProx(cidade->listaHidrante, i)) {
-        Hidrante h = lista_getObjPosic(cidade->listaHidrante, i);
-        Hidrante_escreverSvg(h, svg);
-    }
-
-    i = lista_getPrimeiro(cidade->listaSemaforo);
-    for(i; i!= -1; i = lista_getProx(cidade->listaSemaforo, i)) {
-        Semaforo s = lista_getObjPosic(cidade->listaSemaforo, i);
-        Semaforo_escreverSvg(s, svg);
-    }
-
-    i = lista_getPrimeiro(cidade->listaRadioBase);
-    for(i; i!= -1; i = lista_getProx(cidade->listaRadioBase, i)) {
-        RadioBase rb = lista_getObjPosic(cidade->listaRadioBase, i);
-        RadioBase_escreverSvg(rb, svg);
-    }
-}
-
 void Cidade_escreverFormasEnvoltas(Cidade c, FILE *svg, char *cor) {
     pCidade cidade = (pCidade) c;
     int i = lista_getPrimeiro(cidade->listaForma);
@@ -371,4 +342,83 @@ void imprimirCidade(Cidade c) {
         Forma f = lista_getObjPosic(cidade->listaForma, i);
         Forma_imprimir(f);
     }
+}
+
+
+// Struct e função utilizadas apenas para processar foco de incendio
+typedef struct sem {
+        double distancia;
+        void *Semaforo;
+} *pSem;
+
+int comp(const void *a, const void *b) {
+    pSem s1 = (pSem) a;
+    pSem s2 = (pSem) b;
+    return (s1->distancia < s2->distancia) ? -1 : 1;
+}
+
+void Cidade_processarFocoIncendio(Cidade c, double x, double y, int ns, double r, FILE *txt, FILE *svg) {
+    pCidade cidade = (pCidade) c;
+    int i;
+
+    // Semaforos mais proximos do foco de incendio
+    pSem semaforos_comparar = malloc(lista_length(cidade->listaSemaforo)*sizeof(struct sem));
+
+    i = lista_getPrimeiro(cidade->listaSemaforo);
+    int index = 0;
+    for(i; i != -1; i = lista_getProx(cidade->listaSemaforo, i)) {
+        Semaforo s = lista_getObjPosic(cidade->listaSemaforo, i);
+
+        double distancia = distanciaL2(x, y, Semaforo_get_x(s), Semaforo_get_y(s));
+
+        semaforos_comparar[index].distancia = distancia;
+        semaforos_comparar[index].Semaforo = s;
+        index++;
+    }
+
+    qsort(semaforos_comparar, lista_length(cidade->listaSemaforo), sizeof(struct sem), comp);
+    fprintf(txt, "-- SEMAFOROS PRÓXIMOS AO FOCO DE INCENDIO --\n");
+    for(int i = 0; i < ns; i++) {
+        Semaforo s = semaforos_comparar[i].Semaforo;
+        fprintf(txt, "ID -> %s\n", Semaforo_get_id(s));
+
+        Circulo c1 = criarCirculo(Semaforo_get_x(s), Semaforo_get_y(s), 7, "none", "orange", "3px");
+        Circulo_escreverSvg(c1, svg);
+        destruirCirculo(c1);
+
+        Circulo c2 = criarCirculo(Semaforo_get_x(s), Semaforo_get_y(s), 9, "none", "gold", "3px");
+        Circulo_escreverSvg(c2, svg);
+        destruirCirculo(c2);
+
+        Muro m = criarMuro(x, y, Semaforo_get_x(s), Semaforo_get_y(s));
+        Muro_escreverSvg(m, svg);
+        destruirMuro(m);
+    }
+    free(semaforos_comparar);
+    fprintf(txt, "-------------------------------------------\n");
+
+    // Hidrantes dentro de uma distancia r do foco de incendio
+    Circulo circ = criarCirculo(x, y, r, "", "", "");
+    i = lista_getPrimeiro(cidade->listaHidrante);
+    fprintf(txt, "-- HIDRANTES PRÓXIMOS AO FOCO DE INCENDIO --\n");
+    for(i; i != -1; i = lista_getProx(cidade->listaHidrante, i)) {
+        Hidrante h = lista_getObjPosic(cidade->listaHidrante, i);
+        if(pontoInternoCirculo(Hidrante_get_x(h), Hidrante_get_y(h), circ)) {
+            fprintf(txt, "ID -> %s\n", Hidrante_get_id(h));
+
+            Circulo c1 = criarCirculo(Hidrante_get_x(h), Hidrante_get_y(h), 7, "none", "orange", "3px");
+            Circulo_escreverSvg(c1, svg);
+            destruirCirculo(c1);
+
+            Circulo c2 = criarCirculo(Hidrante_get_x(h), Hidrante_get_y(h), 9, "none", "gold", "3px");
+            Circulo_escreverSvg(c2, svg);
+            destruirCirculo(c2);
+
+            Muro m = criarMuro(x, y, Hidrante_get_x(h), Hidrante_get_y(h));
+            Muro_escreverSvg(m, svg);
+            destruirMuro(m);
+        }
+    }
+    destruirCirculo(circ);
+    fprintf(txt, "-------------------------------------------\n");
 }
