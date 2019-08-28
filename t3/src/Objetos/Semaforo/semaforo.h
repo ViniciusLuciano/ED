@@ -21,4 +21,6 @@ void Semaforo_escreverSvg(Semaforo s, FILE *svg);
 bool semaforoEquals(Semaforo semaforo, char *id);
 void Semaforo_imprimir(Semaforo semaforo);
 
+double Semaforo_get_comparador(Semaforo s);
+
 #endif

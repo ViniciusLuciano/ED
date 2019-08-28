@@ -4,6 +4,7 @@
 #include "../../headers.h"
 #include "../../Utils/Lista/lista.h"
 #include "../../Utils/Geometria/geometria.h"
+#include "../../Utils/Sort/sort.h"
 #include "../Forma/forma.h"
 #include "../Texto/texto.h"
 #include "../Quadra/quadra.h"
@@ -44,7 +45,10 @@ void Cidade_deslocarEquipamentosInternosRetangulo(Cidade cidade, Retangulo r, do
 void Cidade_escreverSvg(Cidade cidade, FILE *svg);
 void Cidade_escreverFormasEnvoltas(Cidade cidade, FILE *svg, char *cor);
 void Cidade_processarFocoIncendio(Cidade c, double x, double y, int ns, double r, FILE *txt, FILE *svg);
-void Cidade_processarHidratesProximos(Cidade c, char sinal, int k, char cep[], char face, double num, FILE* txt, FILE *svg);
+void Cidade_processarObjetosProximos(Cidade c, char sinal, int k, char cep[], char face, double num, FILE* txt, FILE *svg, char tipo[]);
 
 void imprimirCidade(Cidade c);
+
+double obj_getComparador(Objeto objeto);
+Objeto obj_getObjeto(Objeto objeto);
 #endif

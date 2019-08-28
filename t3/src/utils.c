@@ -586,10 +586,16 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             double num;
             char cep[50], face, sinal;
             sscanf(str, "%*s %c%d %s %c %lf", &sinal, &k, cep, &face, &num);
-            Cidade_processarHidratesProximos(*cidade, sinal, k, cep, face, num, arquivoTXT, arquivoSVG);
+            Cidade_processarObjetosProximos(*cidade, sinal, k, cep, face, num, arquivoTXT, arquivoSVG, "hidrante");
             
 
         } else if(strcmp(instrucao, "fs") == 0) {
+
+            int k;
+            double num;
+            char cep[50], face, sinal;
+            sscanf(str, "%*s %d %s %c %lf", &k, cep, &face, &num);
+            Cidade_processarObjetosProximos(*cidade, '+', k, cep, face, num, arquivoTXT, arquivoSVG, "semaforo");
 
         }
     }

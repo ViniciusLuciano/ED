@@ -1,6 +1,7 @@
 #include "semaforo.h"
 
 typedef struct semaforo {
+    double comparador;
     char id[100], cfill[100], cstrok[100], sw[20];
     double x, y;
 }*pSemaforo;
@@ -69,4 +70,9 @@ bool semaforoEquals(Semaforo s, char *id) {
 void Semaforo_imprimir(Semaforo s) {
     pSemaforo semaforo = (pSemaforo) s;
     printf("id %s\n", semaforo->id);
+}
+
+double Semaforo_get_comparador(Semaforo s) {
+    pSemaforo semaforo = (pSemaforo) s;
+    return semaforo->comparador;
 }

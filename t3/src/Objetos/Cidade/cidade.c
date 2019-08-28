@@ -351,24 +351,17 @@ typedef struct obj {
         void *Objeto;
 } *pObj;
 
-int compCrescente(const void *a, const void *b) {
-    pObj s1 = (pObj) a;
-    pObj s2 = (pObj) b;
-    return (s1->distancia < s2->distancia) ? -1 : 1;
-}
-
-int compDecrescente(const void *a, const void *b) {
-    pObj s1 = (pObj) a;
-    pObj s2 = (pObj) b;
-    return (s1->distancia > s2->distancia) ? -1 : 1;
+double get_obj_comparador(Objeto o) {
+    pObj objeto = (pObj) o;
+    return objeto->distancia;
 }
 
 void Cidade_processarFocoIncendio(Cidade c, double x, double y, int ns, double r, FILE *txt, FILE *svg) {
     pCidade cidade = (pCidade) c;
-    int i;
+    int i, tamanhoLista = lista_length(cidade->listaSemaforo);
 
     // Semaforos mais proximos do foco de incendio
-    pObj semaforos_comparar = malloc(lista_length(cidade->listaSemaforo)*sizeof(struct obj));
+    pObj* semaforos_comparar = (pObj*)malloc(tamanhoLista*sizeof(pObj));
 
     i = lista_getPrimeiro(cidade->listaSemaforo);
     int index = 0;
@@ -377,15 +370,19 @@ void Cidade_processarFocoIncendio(Cidade c, double x, double y, int ns, double r
 
         double distancia = distanciaL2(x, y, Semaforo_get_x(s), Semaforo_get_y(s));
 
-        semaforos_comparar[index].distancia = distancia;
-        semaforos_comparar[index].Objeto = s;
+        pObj o = malloc(sizeof(struct obj));
+        o->distancia = distancia;
+        o->Objeto = s;
+
+        semaforos_comparar[index] = o;
         index++;
     }
 
-    qsort(semaforos_comparar, lista_length(cidade->listaSemaforo), sizeof(struct obj), compCrescente);
+    //qsort(semaforos_comparar, tamanhoLista, sizeof(struct obj), compCrescente);
+    heapsortMenor((Objeto*)semaforos_comparar, tamanhoLista, ns, get_obj_comparador);
     fprintf(txt, "-- SEMAFOROS PRÓXIMOS AO FOCO DE INCENDIO --\n");
-    for(int i = 0; i < ns; i++) {
-        Semaforo s = semaforos_comparar[i].Objeto;
+    for(int i = tamanhoLista - ns; i < tamanhoLista; i++) {
+        Semaforo s = ((pObj)semaforos_comparar[i])->Objeto;
         fprintf(txt, "ID -> %s\n", Semaforo_get_id(s));
 
         Circulo c1 = criarCirculo(Semaforo_get_x(s), Semaforo_get_y(s), 7, "none", "orange", "3px");
@@ -400,6 +397,7 @@ void Cidade_processarFocoIncendio(Cidade c, double x, double y, int ns, double r
         Muro_escreverSvg(m, svg);
         destruirMuro(m);
     }
+    for(int i = 0; i < tamanhoLista; i++) free(semaforos_comparar[i]);
     free(semaforos_comparar);
     fprintf(txt, "-------------------------------------------\n");
 
@@ -429,10 +427,19 @@ void Cidade_processarFocoIncendio(Cidade c, double x, double y, int ns, double r
     fprintf(txt, "-------------------------------------------\n");
 }
 
-void Cidade_processarHidratesProximos(Cidade c, char sinal, int k, char cep[], char face, double num, FILE* txt, FILE *svg) {
+void Cidade_processarObjetosProximos(Cidade c, char sinal, int k, char cep[], char face, double num, FILE* txt, FILE *svg, char tipo[]) {
     pCidade cidade = (pCidade) c;
     int i;
     double x, y;
+    Lista lista;
+
+    if(strcmp(tipo, "hidrante") == 0) {
+        lista = cidade->listaHidrante;
+    } else if(strcmp(tipo, "semaforo") == 0) {
+        lista = cidade->listaSemaforo;
+    }
+
+    int tamanhoLista = lista_length(lista);
 
     Quadra q = Cidade_getQuadra(c, cep);
     if(q == NULL) return;
@@ -450,42 +457,62 @@ void Cidade_processarHidratesProximos(Cidade c, char sinal, int k, char cep[], c
         y = Quadra_get_y(q) + num;
     }
 
-    pObj hidrantes_comparar = malloc(lista_length(cidade->listaHidrante)*sizeof(struct obj));
+    pObj* objetos_comparar = (pObj*)malloc(tamanhoLista*sizeof(pObj));
 
-    i = lista_getPrimeiro(cidade->listaHidrante);
+    i = lista_getPrimeiro(lista);
     int index = 0;
-    for(i; i != -1; i = lista_getProx(cidade->listaHidrante, i)) {
-        Hidrante h = lista_getObjPosic(cidade->listaHidrante, i);
+    for(i; i != -1; i = lista_getProx(lista, i)) {
+        Objeto o = lista_getObjPosic(lista, i);
 
-        double distancia = distanciaL2(x, y, Hidrante_get_x(h), Hidrante_get_y(h));
+        double distancia;
+        if(strcmp(tipo, "hidrante") == 0) {
+            distancia = distanciaL2(x, y, Hidrante_get_x(o), Hidrante_get_y(o));
+        } else if(strcmp(tipo, "semaforo") == 0) {
+            distancia = distanciaL2(x, y, Semaforo_get_x(o), Semaforo_get_y(o));
+        }
 
-        hidrantes_comparar[index].distancia = distancia;
-        hidrantes_comparar[index].Objeto = h;
+        pObj ob = malloc(sizeof(struct obj));
+        ob->distancia = distancia;
+        ob->Objeto = o;
+
+        objetos_comparar[index] = ob;
         index++;
     }
 
     if(sinal == '+')
-        qsort(hidrantes_comparar, lista_length(cidade->listaHidrante), sizeof(struct obj), compCrescente);
-    else 
-        qsort(hidrantes_comparar, lista_length(cidade->listaHidrante), sizeof(struct obj), compDecrescente);
+        heapsortMenor((Objeto*)objetos_comparar, tamanhoLista, k, get_obj_comparador);
+        //qsort(objetos_comparar, lista_length(lista), sizeof(struct obj), compCrescente);
+    else
+        heapsortMaior((Objeto*)objetos_comparar, tamanhoLista, k, get_obj_comparador);
+        //qsort(objetos_comparar, lista_length(lista), sizeof(struct obj), compDecrescente);
+    fprintf(txt, "-- %d %s MAIS %s DO CEP %s --\n", k, ((strcmp(tipo, "hidrante") == 0) ? "HIDRANTES" : "SEMAFOROS"), (sinal == '+' ? "PRÓXIMOS" : "DISTANTES"), cep);
+    for(int i = tamanhoLista - k; i < tamanhoLista; i++) {
+        Objeto o = ((pObj)objetos_comparar[i])->Objeto;
+        Circulo c1, c2;
+        Muro m;
 
-    fprintf(txt, "-- %d HIDRANTES MAIS %s DO CEP %s --\n", k, (sinal == '+' ? "PRÓXIMOS" : "DISTANTES"), cep);
-    for(int i = 0; i < k; i++) {
-        Hidrante h = hidrantes_comparar[i].Objeto;
-        fprintf(txt, "ID -> %s\n", Hidrante_get_id(h));
+        if(strcmp(tipo, "hidrante") == 0) {
+            fprintf(txt, "ID -> %s\n", Hidrante_get_id(o));
+            c1 = criarCirculo(Hidrante_get_x(o), Hidrante_get_y(o), 7, "none", "orange", "3px");
+            c2 = criarCirculo(Hidrante_get_x(o), Hidrante_get_y(o), 9, "none", "gold", "3px");
+            m = criarMuro(x, y, Hidrante_get_x(o), Hidrante_get_y(o));
+        } else if(strcmp(tipo, "semaforo") == 0) {
+            fprintf(txt, "ID -> %s\n", Semaforo_get_id(o));
+            c1 = criarCirculo(Semaforo_get_x(o), Semaforo_get_y(o), 7, "none", "orange", "3px");
+            c2 = criarCirculo(Semaforo_get_x(o), Semaforo_get_y(o), 9, "none", "gold", "3px");
+            m = criarMuro(x, y, Semaforo_get_x(o), Semaforo_get_y(o));
+        }
 
-        Circulo c1 = criarCirculo(Hidrante_get_x(h), Hidrante_get_y(h), 7, "none", "orange", "3px");
         Circulo_escreverSvg(c1, svg);
         destruirCirculo(c1);
 
-        Circulo c2 = criarCirculo(Hidrante_get_x(h), Hidrante_get_y(h), 9, "none", "gold", "3px");
         Circulo_escreverSvg(c2, svg);
         destruirCirculo(c2);
 
-        Muro m = criarMuro(x, y, Hidrante_get_x(h), Hidrante_get_y(h));
         Muro_escreverSvg(m, svg);
         destruirMuro(m);
     }
-    free(hidrantes_comparar);
+    for(int i = 0; i < tamanhoLista; i++) free(objetos_comparar[i]);
+    free(objetos_comparar);
     fprintf(txt, "-------------------------------------------\n");
 }

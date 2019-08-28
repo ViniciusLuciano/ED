@@ -52,7 +52,7 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
         fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"blue\" stroke-width=\"2\" />\n",
             predio_x,
             predio_y, 
-            predio->f, 
+            predio->f,
             predio->p);
 
     } else if(predio->face == 'L') {
