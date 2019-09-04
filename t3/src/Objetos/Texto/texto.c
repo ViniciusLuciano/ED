@@ -36,7 +36,7 @@ char* Texto_get_text(Texto t) {
 
 void Texto_escreverSvg(Texto t, FILE *svg) {
     pTexto texto = (pTexto) t;
-	fprintf(svg, "<text x=\"%lf\" y=\"%lf\">%s</text>",
+	fprintf(svg, "<text x=\"%lf\" y=\"%lf\" font-size=\"5\">%s</text>",
         texto->x, 
         texto->y, 
         texto->text);

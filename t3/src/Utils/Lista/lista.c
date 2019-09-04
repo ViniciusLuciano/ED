@@ -160,6 +160,28 @@ bool lista_excluirPosic(Lista l, int i, void(*destruirObjeto)(Objeto objeto)) {
     return true;
 }
 
+bool lista_excluirObjetoMemoria(Lista l, Objeto objeto) {
+    pLista lista = (pLista) l;
+    for(int i = lista->primeiro; i != -1; i = lista->node[i].prox) {
+        if(lista->node[i].objeto == objeto) {
+            if(i == lista->primeiro) {
+                lista->primeiro = lista->node[i].prox;
+            } else if(lista->node[i].prox == -1) {
+                lista->node[lista->node[i].ant].prox = -1;
+                lista->ultimo = lista->node[i].ant;
+            } else {
+                lista->node[lista->node[i].ant].prox = lista->node[i].prox;
+                lista->node[lista->node[i].prox].ant = lista->node[i].ant;
+            }
+            lista->tamanho--;
+            lista->node[i].prox = lista->livre;
+            lista->livre = i;
+            return true;
+        }
+    }
+    return false;
+}
+
 Objeto lista_getObjeto(Lista l, char *id, bool (*objetoEquals)(Objeto objetoLista, char *id)) {
     pLista lista = (pLista) l;
     for(int i = lista->primeiro; i != -1; i = lista->node[i].prox) {
@@ -229,3 +251,4 @@ bool lista_inserirDepois(Lista l, int pos, Objeto objeto) {
     }
     return false;
 }
+

@@ -5,6 +5,9 @@
 #include "../../Utils/Lista/lista.h"
 #include "../../Utils/Geometria/geometria.h"
 #include "../../Utils/Sort/sort.h"
+#include "../../Utils/Ponto/ponto.h"
+#include "../../Utils/Segmento/segmento.h"
+#include "../../Utils/Vertice/vertice.h"
 #include "../Forma/forma.h"
 #include "../Texto/texto.h"
 #include "../Quadra/quadra.h"
@@ -15,6 +18,10 @@
 #include "../Retangulo/retangulo.h"
 #include "../Predio/predio.h"
 #include "../Muro/muro.h"
+
+#include <string.h>
+#include <stdlib.h>
+#include <limits.h>
 
 
 /*
@@ -46,6 +53,7 @@ void Cidade_escreverSvg(Cidade cidade, FILE *svg);
 void Cidade_escreverFormasEnvoltas(Cidade cidade, FILE *svg, char *cor);
 void Cidade_processarFocoIncendio(Cidade c, double x, double y, int ns, double r, FILE *txt, FILE *svg);
 void Cidade_processarObjetosProximos(Cidade c, char sinal, int k, char cep[], char face, double num, FILE* txt, FILE *svg, char tipo[]);
+void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg);
 
 void imprimirCidade(Cidade c);
 

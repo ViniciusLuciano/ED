@@ -3,6 +3,7 @@
 typedef struct predio {
     char cep[50], face;
     double num, f, p, mrg;
+    double x, x_max, y, y_max;
 }*pPredio;
 
 Predio criarPredio(char *cep, char face, double num, double f, double p, double mrg) {
@@ -25,6 +26,31 @@ void destruirPredio(Predio prd) {
 char* Predio_getCep(Predio prd) {
     pPredio predio = (pPredio) prd;
     return predio->cep;
+}
+
+double Predio_get_x(Predio prd) {
+    pPredio predio = (pPredio) prd;
+    return predio->x;
+}
+
+double Predio_get_y(Predio prd) {
+    pPredio predio = (pPredio) prd;
+    return predio->y;
+}
+
+double Predio_get_x_max(Predio prd) {
+    pPredio predio = (pPredio) prd;
+    return predio->x_max;
+}
+
+double Predio_get_y_max(Predio prd) {
+    pPredio predio = (pPredio) prd;
+    return predio->y_max;
+}
+
+double Predio_get_num(Predio prd) {
+    pPredio predio = (pPredio) prd;
+    return predio->num;
 }
 
 void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double quadra_w, double quadra_h, FILE *svg) {
@@ -85,4 +111,14 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
             texto_x,
             texto_y,
             predio->num);
+    
+    predio->x = predio_x;
+    predio->y = predio_y;
+    if(predio->face == 'N' || predio->face == 'S') {
+        predio->x_max = predio_x + predio->f;
+        predio->y_max = predio_y + predio->p;
+    } else {
+        predio->x_max = predio_x + predio->p;
+        predio->y_max = predio_y + predio->f;
+    }
 }

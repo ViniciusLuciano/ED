@@ -479,7 +479,7 @@ void Cidade_processarObjetosProximos(Cidade c, char sinal, int k, char cep[], ch
         index++;
     }
 
-    if(sinal == '+')
+    if(sinal == '-')
         heapsortMenor((Objeto*)objetos_comparar, tamanhoLista, k, get_obj_comparador);
         //qsort(objetos_comparar, lista_length(lista), sizeof(struct obj), compCrescente);
     else
@@ -515,4 +515,333 @@ void Cidade_processarObjetosProximos(Cidade c, char sinal, int k, char cep[], ch
     for(int i = 0; i < tamanhoLista; i++) free(objetos_comparar[i]);
     free(objetos_comparar);
     fprintf(txt, "-------------------------------------------\n");
+}
+
+int comparador(const void *x, const void *y) {
+    Vertice a = *((Vertice*) x);
+    Vertice b = *((Vertice*) y);
+    if(Vertice_get_angulo(a) < Vertice_get_angulo(b))
+        return -1;
+    else if(Vertice_get_angulo(a) > Vertice_get_angulo(b))
+        return 1;
+    else if(Vertice_get_distancia(a) < Vertice_get_distancia(b))
+        return -1;
+    else if(Vertice_get_distancia(a) > Vertice_get_distancia(b))
+        return 1;
+    else if(!Vertice_get_inicio(a) && Vertice_get_inicio(b))
+        return -1;
+    else if(Vertice_get_inicio(a) && !Vertice_get_inicio(b))
+        return 1;
+    return 0;
+}
+
+void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) {
+    pCidade cidade = (pCidade) c;
+    Ponto pontoMin = criarPonto(x, y);
+    Ponto pontoMax = criarPonto(x, y);
+    int i, tamListaSegmentos = (lista_length(cidade->listaPredio)*4) + lista_length(cidade->listaMuro) + 4;
+
+    Segmento* lista_segmentos = (Segmento*)malloc(tamListaSegmentos*sizeof(Segmento));
+
+    // Aqui será definida a lista de segmentos
+    i = lista_getPrimeiro(cidade->listaPredio);
+    int index = 0;
+    for(i; i != -1; i = lista_getProx(cidade->listaPredio, i)) {
+        Predio p = lista_getObjPosic(cidade->listaPredio, i);
+
+        Ponto_setMin(pontoMin, Predio_get_x(p), Predio_get_y(p));
+        Ponto_setMax(pontoMax, Predio_get_x_max(p), Predio_get_y_max(p));
+
+        Vertice v_x1 = criarVertice(Predio_get_x(p), Predio_get_y(p), x, y);
+        Vertice v_x2 = criarVertice(Predio_get_x(p), Predio_get_y(p), x, y);
+        Vertice v_x_max1 = criarVertice(Predio_get_x_max(p), Predio_get_y(p), x, y);
+        Vertice v_x_max2 = criarVertice(Predio_get_x_max(p), Predio_get_y(p), x, y);
+        Vertice v_y_max1 = criarVertice(Predio_get_x(p), Predio_get_y_max(p), x, y);
+        Vertice v_y_max2 = criarVertice(Predio_get_x(p), Predio_get_y_max(p), x, y);
+        Vertice v_xy_max1 = criarVertice(Predio_get_x_max(p), Predio_get_y_max(p), x, y);
+        Vertice v_xy_max2 = criarVertice(Predio_get_x_max(p), Predio_get_y_max(p), x, y);
+
+        Segmento s1 = criarSegmento(v_x1, v_x_max1);
+        Segmento s2 = criarSegmento(v_x2, v_y_max1);
+        Segmento s3 = criarSegmento(v_x_max2, v_xy_max1);
+        Segmento s4 = criarSegmento(v_y_max2, v_xy_max2);
+        
+        Segmento_set_inicio_vertices(s1);
+        Segmento_set_inicio_vertices(s2);
+        Segmento_set_inicio_vertices(s3);
+        Segmento_set_inicio_vertices(s4);
+
+        lista_segmentos[index] = s1; index++;
+        lista_segmentos[index] = s2; index++;
+        lista_segmentos[index] = s3; index++;
+        lista_segmentos[index] = s4; index++;
+    }
+
+    i = lista_getPrimeiro(cidade->listaMuro);
+    for(i; i != -1; i = lista_getProx(cidade->listaMuro, i)) {
+        Muro m = lista_getObjPosic(cidade->listaMuro, i);
+
+        // Eu nao sei onde esta os pontos do muro, portanto tenho que testar os dois ;/
+        Ponto p1 = Muro_get_p1(m);
+        Ponto p2 = Muro_get_p2(m);
+
+        Ponto_setMin(pontoMin, Ponto_get_x(p1), Ponto_get_y(p1));
+        Ponto_setMin(pontoMin, Ponto_get_x(p2), Ponto_get_y(p2));
+        Ponto_setMax(pontoMax, Ponto_get_x(p1), Ponto_get_y(p1));
+        Ponto_setMax(pontoMax, Ponto_get_x(p2), Ponto_get_y(p2));
+
+        if(Ponto_get_x(p1) == x && Ponto_get_x(p2) == x || Ponto_get_y(p1) == y && Ponto_get_y(p2) == y) 
+            continue;
+
+        Vertice v1 = criarVertice(Ponto_get_x(p1), Ponto_get_y(p1), x, y);
+        Vertice v2 = criarVertice(Ponto_get_x(p2), Ponto_get_y(p2), x, y);
+
+        Segmento s = criarSegmento(v1, v2);
+
+        Segmento_set_inicio_vertices(s);
+        
+        lista_segmentos[index] = s; index++;
+    }
+
+    tamListaSegmentos = index + 4;
+
+    // Até aqui foi definida a lista de segmentos,
+    // com os vertices marcados de inicio ou fim e seus respectivos angulos em relação à x,y
+
+    // Aqui é definido o ponto max+100 do maior ponto e ponto min-100 do menor ponto
+    // Alem disso sao adicionados à lista de segmentos os segmentos de borda
+    Ponto_set_x(pontoMin, Ponto_get_x(pontoMin) - 100);
+    Ponto_set_y(pontoMin, Ponto_get_y(pontoMin) - 100);
+    Ponto_set_x(pontoMax, Ponto_get_x(pontoMax) + 100);
+    Ponto_set_y(pontoMax, Ponto_get_y(pontoMax) + 100);
+
+    double x_min = Ponto_get_x(pontoMin);
+    double x_max = Ponto_get_x(pontoMax);
+    double y_min = Ponto_get_y(pontoMin);
+    double y_max = Ponto_get_y(pontoMax);
+
+    Vertice v_ce = criarVertice(x_min, y_min, x, y);
+    Vertice v_ce1 = criarVertice(x_min, y_min, x, y);
+    Vertice v_cd = criarVertice(x_max, y_min, x, y);
+    Vertice v_cd1 = criarVertice(x_max, y_min, x, y);
+    Vertice v_be = criarVertice(x_min, y_max, x, y);
+    Vertice v_be1 = criarVertice(x_min, y_max, x, y);
+    Vertice v_bd = criarVertice(x_max, y_max, x, y);
+    Vertice v_bd1 = criarVertice(x_max, y_max, x, y);
+
+    Segmento sc = criarSegmento(v_ce1, v_cd);
+    Segmento sd = criarSegmento(v_cd1, v_bd);
+    Segmento sb = criarSegmento(v_bd1, v_be);
+    Segmento se = criarSegmento(v_be1, v_ce);
+
+    Segmento_set_inicio_vertices(sc);
+    Segmento_set_inicio_vertices(sd);
+    Segmento_set_inicio_vertices(sb);
+    Segmento_set_inicio_vertices(se);
+
+    Vertice_set_s(v_ce1, sc);
+    Vertice_set_s(v_cd, sc);
+    Vertice_set_s(v_cd1, sd);
+    Vertice_set_s(v_bd, sd);
+    Vertice_set_s(v_bd1, sb);
+    Vertice_set_s(v_be, sb);
+    Vertice_set_s(v_be1, se);
+    Vertice_set_s(v_ce, se);
+
+    lista_segmentos[index] = sc; index++;
+    lista_segmentos[index] = sd; index++;
+    lista_segmentos[index] = sb; index++;
+    lista_segmentos[index] = se; index++;
+
+    // Aqui será feito o segmento para o corte inicial dos segmentos que interceptam
+    Vertice v_inicial = criarVertice(x, y, 0, 0);
+    Vertice v_final = criarVertice(Ponto_get_x(pontoMin) - 1, y, 0, 0);
+    Segmento s_inicial = criarSegmento(v_inicial, v_final); // Semi reta do ponto inicial até x_min
+    Vertice_set_s(v_inicial, s_inicial);
+    Vertice_set_s(v_final, s_inicial);
+
+    Vertice_set_inicio(v_inicial, true);
+    Vertice_set_inicio(v_final, false);
+
+    // Para verificar a linha de corte inicial, descomentar:
+    // Muro mur = criarMuro(x, y, Ponto_get_x(pontoMin) - 1, y);
+    // Muro_escreverSvg(mur, svg);
+    
+    svg_escreverBomba(svg, x, y);
+
+    int tamListaVertices = tamListaSegmentos*2;
+    Vertice* lista_vertices = (Vertice*)malloc(tamListaVertices*sizeof(Vertice));
+    index = 0;
+    for(int i = 0; i < tamListaSegmentos; i++) {
+        // Verificar se os segmentos interceptam
+        if(verificarSegmentosInterceptam(s_inicial, lista_segmentos[i])) {
+
+            tamListaVertices+=2;
+            lista_vertices = (Vertice*)realloc(lista_vertices, tamListaVertices*sizeof(Vertice));
+            Segmento s = lista_segmentos[i];
+
+            // x onde s_inicial e segmento interceptam
+            double x_inter = buscarXInterseccaoSegmento(s, y);
+
+            Vertice v_inicio = Vertice_get_inicio(Segmento_get_v1(s)) ? Segmento_get_v1(s) : Segmento_get_v2(s);
+            Vertice v_final = Vertice_get_inicio(Segmento_get_v1(s)) ? Segmento_get_v2(s) : Segmento_get_v1(s);
+            
+            Vertice v_final_meio = criarVertice(x_inter, y, x, y);
+            Vertice_set_inicio(v_final_meio, false);
+            Vertice_set_angulo(v_final_meio, M_PI);
+            Vertice v_inicial_meio = criarVertice(x_inter, y, x, y);
+            Vertice_set_inicio(v_inicial_meio, true);
+            Vertice_set_angulo(v_inicial_meio, -M_PI);
+
+            Segmento s1 = criarSegmento(v_inicio, v_final_meio);
+            Segmento s2 = criarSegmento(v_inicial_meio, v_final);
+
+            Vertice_set_s(v_inicio, s1);
+            Vertice_set_s(v_final_meio, s1);
+            Vertice_set_s(v_inicial_meio, s2);
+            Vertice_set_s(v_final, s2);
+
+            lista_vertices[index] = v_inicio; index++;
+            lista_vertices[index] = v_final_meio; index++;
+            lista_vertices[index] = v_inicial_meio; index++;
+            lista_vertices[index] = v_final; index++;
+
+            // Dar free no segmento q foi repartido, pois nao tera mais acesso a ele
+            destruirSegmento(s);
+        } else {
+            Segmento s = lista_segmentos[i];
+            Vertice v1 = Segmento_get_v1(s);
+            Vertice v2 = Segmento_get_v2(s);    
+            Vertice_set_s(v1, s);
+            Vertice_set_s(v2, s);
+
+            lista_vertices[index] = v1; index++;
+            lista_vertices[index] = v2; index++;
+        }
+    }
+
+    qsort(lista_vertices, tamListaVertices, sizeof(Vertice), comparador);
+    // heapsortMaior(lista_vertices, tamListaVertices, tamListaVertices, Vertice_get_angulo);
+    
+    // A partir daqui será varrido todos os vertices no sentido horario começando pela esquerda
+    Lista segmentos_ativos = criarLista((int)tamListaVertices/2);
+    Lista segmentos_resposta = criarLista(tamListaVertices*3);
+    Vertice biombo = criarVertice(Vertice_get_x(lista_vertices[0]), Vertice_get_y(lista_vertices[0]), x, y);
+    Vertice_set_s(biombo, Vertice_get_s(lista_vertices[0]));
+
+    for(int i = 0; i < tamListaVertices; i++) {
+
+        Vertice v = lista_vertices[i];
+        Segmento sv = Vertice_get_s(v);
+        Segmento s_formado_v = buscarSegmentoFormadoComVertice(x, y, v, pontoMin, pontoMax);
+        Segmento seg_mais_prox = NULL;
+
+        int j = lista_getPrimeiro(segmentos_ativos);
+        // Definindo a menor distancia entre centro e o vertice como MAX
+        double menor_dist = INT_MAX;
+        for(j; j != -1; j = lista_getProx(segmentos_ativos, j)) {
+            Segmento s = lista_getObjPosic(segmentos_ativos, j);
+            if(s == sv) continue;
+
+            // Verificar se segmento formado e o da lista interceptam
+            if(verificarSegmentosInterceptam(s_formado_v, s)) {
+                // Buscar ponto de intersecção
+                Ponto intersec = buscarPontoInterseccao(s_formado_v, s);
+                double dist_centro_intersec = distanciaL2(x, y, Ponto_get_x(intersec), Ponto_get_y(intersec));
+                if(dist_centro_intersec < menor_dist) {
+                    menor_dist = dist_centro_intersec;
+                    seg_mais_prox = s;
+                }
+                destruirPonto(intersec);
+            }
+        }
+
+        if(Vertice_get_inicio(v)) {
+            // Circulo c1 = criarCirculo(Vertice_get_x(v), Vertice_get_y(v), 2, "green", "green", "2px");
+            // Circulo_escreverSvg(c1, svg);
+
+            bool segEhOMaisProx;
+            if(distanciaL2(x, y, Vertice_get_x(v), Vertice_get_y(v)) < menor_dist)
+                segEhOMaisProx = true;
+            else
+                segEhOMaisProx = false;
+
+            if(segEhOMaisProx) {
+                Ponto intersec_biombo = buscarPontoInterseccao(s_formado_v, Vertice_get_s(biombo));
+                Vertice v_intersec = criarVertice(Ponto_get_x(intersec_biombo), Ponto_get_y(intersec_biombo), x, y);
+                Segmento s1 = criarSegmento(biombo, v_intersec);
+                Segmento s2 = criarSegmento(v_intersec, v);
+
+                svg_escreverTriangulo(svg, x, y, biombo, v_intersec);
+                //svg_escreverTriangulo(svg, x, y, v_intersec, v);
+
+                lista_inserirUltimo(segmentos_resposta, s1);
+                lista_inserirUltimo(segmentos_resposta, s2);
+                biombo = v;
+                destruirPonto(intersec_biombo);
+            }
+
+            lista_inserirUltimo(segmentos_ativos, sv);
+
+        } else {
+            // Circulo c1 = criarCirculo(Vertice_get_x(v)-5, Vertice_get_y(v)-5, 2, "red", "red", "2px");
+            // Circulo_escreverSvg(c1, svg);
+
+            bool segEhOMaisProx;
+            if(distanciaL2(x, y, Vertice_get_x(v), Vertice_get_y(v)) <= menor_dist)
+                segEhOMaisProx = true;
+            else
+                segEhOMaisProx = false;
+
+            if(segEhOMaisProx) {
+                if(seg_mais_prox != NULL) {
+                    Ponto intersec_biombo = buscarPontoInterseccao(s_formado_v, seg_mais_prox);
+                    Vertice v_intersec = criarVertice(Ponto_get_x(intersec_biombo), Ponto_get_y(intersec_biombo), x, y);
+
+                    Segmento s1 = criarSegmento(biombo, v);
+                    Segmento s2 = criarSegmento(v, v_intersec);
+
+                    svg_escreverTriangulo(svg, x, y, v, v_intersec);
+                    svg_escreverTriangulo(svg, x, y, biombo, v);
+
+                    lista_inserirUltimo(segmentos_resposta, s1);
+                    lista_inserirUltimo(segmentos_resposta, s2);
+
+                    biombo = v_intersec;
+                    Vertice_set_s(biombo, seg_mais_prox);
+                    destruirPonto(intersec_biombo);
+                 } else {
+                     Segmento s = criarSegmento(biombo, v);
+                     svg_escreverTriangulo(svg, x, y, biombo, v);
+                     lista_inserirUltimo(segmentos_resposta, s);
+                     biombo = v;
+                 }
+            }
+
+            lista_excluirObjetoMemoria(segmentos_ativos, sv);
+        }
+    }
+
+    // int j = lista_getPrimeiro(segmentos_resposta);
+    // for(j; j != -1; j = lista_getProx(segmentos_resposta, j)) {
+            
+    //     Segmento s = lista_getObjPosic(segmentos_resposta, j);
+    //     double x1 = Vertice_get_x(Segmento_get_v1(s)), y1 = Vertice_get_y(Segmento_get_v1(s));
+    //     double x2 = Vertice_get_x(Segmento_get_v2(s)), y2 = Vertice_get_y(Segmento_get_v2(s));
+    //     fprintf(svg, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" style=\"stroke:rgb(255,255,0);stroke-width:2\" />\n", 
+    //        x1,
+    //        y1,
+    //        x2,
+    //        y2);
+    // }
+    
+    for(int i = 0; i < tamListaVertices; i++) destruirVertice(lista_vertices[i]);
+    // lista_destruir(segmentos_ativos, destruirSegmento);
+    // lista_destruir(segmentos_resposta, destruirSegmento);
+    destruirPonto(pontoMin);
+    destruirPonto(pontoMax);
+    destruirVertice(v_final);
+    destruirVertice(v_inicial);
+    free(lista_segmentos);
+    free(lista_vertices);
 }

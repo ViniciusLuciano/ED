@@ -19,6 +19,7 @@ bool lista_excluirObjeto(Lista l,
                     bool(*objetoEquals)(Objeto objetoLista, char *id), 
                     void(*destruirObjeto)(Objeto objeto));
 bool lista_excluirPosic(Lista l, int i, void(*destruirObjeto)(Objeto objeto));
+bool lista_excluirObjetoMemoria(Lista l, Objeto objeto);
 Objeto lista_getObjeto(Lista l, char *id, bool (*objetoEquals)(Objeto objetoLista, char *id));
 Objeto lista_getObjPosic(Lista l, int i);
 void lista_imprimir(Lista l, void (*imprimirObjeto)(Objeto objeto));

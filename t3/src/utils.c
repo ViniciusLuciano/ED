@@ -278,7 +278,6 @@ bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
             sscanf(str, "%*s %lf %lf %lf %lf", &x1, &y1, &x2, &y2);
             Muro m = criarMuro(x1, y1, x2, y2);
             Cidade_setMuro(*cidade, m);
-
         }
 	}
     
@@ -321,6 +320,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
         return false;
 
     svg_iniciar(arquivoSVG);
+    Cidade_escreverSvg(*cidade, arquivoSVG);
     char str[150], instrucao[10];
     while(true) {
         
@@ -572,6 +572,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             // ver dps
             double x, y;
             sscanf(str, "%*s %lf %lf", &x, &y);
+            Cidade_processarBombaRaioLuminoso(*cidade, x, y, arquivoSVG);
 
         } else if(strcmp(instrucao, "fi") == 0) {
 
@@ -595,12 +596,11 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             double num;
             char cep[50], face, sinal;
             sscanf(str, "%*s %d %s %c %lf", &k, cep, &face, &num);
-            Cidade_processarObjetosProximos(*cidade, '+', k, cep, face, num, arquivoTXT, arquivoSVG, "semaforo");
+            Cidade_processarObjetosProximos(*cidade, '-', k, cep, face, num, arquivoTXT, arquivoSVG, "semaforo");
 
         }
     }
-    
-    Cidade_escreverSvg(*cidade, arquivoSVG);
+
     svg_finalizar(arquivoSVG);
     fclose(arquivoTXT);
     fclose(arquivoSVG);
