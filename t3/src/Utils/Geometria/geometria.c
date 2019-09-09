@@ -89,7 +89,7 @@ bool verficarViradoAEsquerda(Ponto a, Ponto b, Ponto c) {
 bool verificarSegmentosInterceptam(Segmento s1, Segmento s2) {
 
 	if(s1 == NULL || s2 == NULL) return false;
-	
+
 	Ponto a = Vertice_get_p(Segmento_get_v1(s1));
 	Ponto b = Vertice_get_p(Segmento_get_v2(s1));
 

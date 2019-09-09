@@ -725,7 +725,6 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
     
     // A partir daqui será varrido todos os vertices no sentido horario começando pela esquerda
     Lista segmentos_ativos = criarLista((int)tamListaVertices/2);
-    Lista segmentos_resposta = criarLista(tamListaVertices*3);
     Vertice biombo = criarVertice(Vertice_get_x(lista_vertices[0]), Vertice_get_y(lista_vertices[0]), x, y);
     Vertice_set_s(biombo, Vertice_get_s(lista_vertices[0]));
 
@@ -737,6 +736,7 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
         Segmento seg_mais_prox = NULL;
 
         int j = lista_getPrimeiro(segmentos_ativos);
+
         // Definindo a menor distancia entre centro e o vertice como MAX
         double menor_dist = INT_MAX;
         for(j; j != -1; j = lista_getProx(segmentos_ativos, j)) {
@@ -775,8 +775,6 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
                 svg_escreverTriangulo(svg, x, y, biombo, v_intersec);
                 //svg_escreverTriangulo(svg, x, y, v_intersec, v);
 
-                lista_inserirUltimo(segmentos_resposta, s1);
-                lista_inserirUltimo(segmentos_resposta, s2);
                 biombo = v;
                 destruirPonto(intersec_biombo);
             }
@@ -804,40 +802,23 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
                     svg_escreverTriangulo(svg, x, y, v, v_intersec);
                     svg_escreverTriangulo(svg, x, y, biombo, v);
 
-                    lista_inserirUltimo(segmentos_resposta, s1);
-                    lista_inserirUltimo(segmentos_resposta, s2);
-
                     biombo = v_intersec;
                     Vertice_set_s(biombo, seg_mais_prox);
                     destruirPonto(intersec_biombo);
                  } else {
                      Segmento s = criarSegmento(biombo, v);
                      svg_escreverTriangulo(svg, x, y, biombo, v);
-                     lista_inserirUltimo(segmentos_resposta, s);
                      biombo = v;
                  }
             }
 
             lista_excluirObjetoMemoria(segmentos_ativos, sv);
         }
-    }
 
-    // int j = lista_getPrimeiro(segmentos_resposta);
-    // for(j; j != -1; j = lista_getProx(segmentos_resposta, j)) {
-            
-    //     Segmento s = lista_getObjPosic(segmentos_resposta, j);
-    //     double x1 = Vertice_get_x(Segmento_get_v1(s)), y1 = Vertice_get_y(Segmento_get_v1(s));
-    //     double x2 = Vertice_get_x(Segmento_get_v2(s)), y2 = Vertice_get_y(Segmento_get_v2(s));
-    //     fprintf(svg, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" style=\"stroke:rgb(255,255,0);stroke-width:2\" />\n", 
-    //        x1,
-    //        y1,
-    //        x2,
-    //        y2);
-    // }
+    }
     
     for(int i = 0; i < tamListaVertices; i++) destruirVertice(lista_vertices[i]);
     // lista_destruir(segmentos_ativos, destruirSegmento);
-    // lista_destruir(segmentos_resposta, destruirSegmento);
     destruirPonto(pontoMin);
     destruirPonto(pontoMax);
     destruirVertice(v_final);

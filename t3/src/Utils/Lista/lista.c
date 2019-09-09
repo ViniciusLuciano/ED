@@ -125,6 +125,10 @@ bool lista_excluirObjeto(Lista l,
         if(objetoEquals(lista->node[i].objeto, id)) {
             if(i == lista->primeiro) {
                 lista->primeiro = lista->node[i].prox;
+                if(lista->node[i].prox == -1) {
+                    lista->node[lista->node[i].ant].prox = -1;
+                    lista->ultimo = lista->node[i].ant;
+                }
             } else if(lista->node[i].prox == -1) {
                 lista->node[lista->node[i].ant].prox = -1;
                 lista->ultimo = lista->node[i].ant;
@@ -146,6 +150,10 @@ bool lista_excluirPosic(Lista l, int i, void(*destruirObjeto)(Objeto objeto)) {
     pLista lista = (pLista) l;
     if(i == lista->primeiro) {
         lista->primeiro = lista->node[i].prox;
+        if(lista->node[i].prox == -1) {
+            lista->node[lista->node[i].ant].prox = -1;
+            lista->ultimo = lista->node[i].ant;
+        }
     } else if(lista->node[i].prox == -1) {
         lista->node[lista->node[i].ant].prox = -1;
         lista->ultimo = lista->node[i].ant;
@@ -166,6 +174,10 @@ bool lista_excluirObjetoMemoria(Lista l, Objeto objeto) {
         if(lista->node[i].objeto == objeto) {
             if(i == lista->primeiro) {
                 lista->primeiro = lista->node[i].prox;
+                if(lista->node[i].prox == -1) {
+                    lista->node[lista->node[i].ant].prox = -1;
+                    lista->ultimo = lista->node[i].ant;
+                }
             } else if(lista->node[i].prox == -1) {
                 lista->node[lista->node[i].ant].prox = -1;
                 lista->ultimo = lista->node[i].ant;

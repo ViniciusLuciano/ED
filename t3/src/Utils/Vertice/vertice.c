@@ -7,25 +7,6 @@ typedef struct vertice {
     double angulo, distancia; //
 } *pVertice;
 
-// Vertice criarVertice(Ponto p, double angulo, double distancia) {
-//     Vertice v = malloc(sizeof(struct vertice));
-//     pVertice vertice = (pVertice) v;
-//     vertice->p = p;
-//     vertice->angulo = angulo;
-//     vertice->distancia = distancia;
-//     return vertice;
-// }
-
-// Vertice criarVerticep(double x1, double y1, double angulo, double distancia) {
-//     Vertice v = malloc(sizeof(struct vertice));
-//     Ponto p = criarPonto(x1, y1);
-//     pVertice vertice = (pVertice) v;
-//     vertice->p = p;
-//     vertice->angulo = angulo;
-//     vertice->distancia = distancia;
-//     return vertice;
-// }
-
 Vertice criarVertice(double x, double y, double x_centro, double y_centro) {
     Vertice v = malloc(sizeof(struct vertice));
     pVertice vertice = (pVertice) v;

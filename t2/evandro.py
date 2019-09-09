@@ -28,7 +28,7 @@ for __, __, files in os.walk(dirInput):
 		try:
 			for filename in os.listdir("{}/{}".format(dirInput, nameDir)):
 				print(filename)
-				os.system("cd {} && valgrind ./siguel -e ../{} -f {} -q {}/{} -o ../saida/saidaGerada/{}".format(dirCode, dirInput, nameFiles, nameDir, filename, nameDir))
+				os.system("cd {} && ./siguel -e ../{} -f {} -q {}/{} -o ../saida/saidaGerada/{}".format(dirCode, dirInput, nameFiles, nameDir, filename, nameDir))
 		except Exception as e:
 			os.rmdir("saida/saidaGerada/{}".format(nameDir))
 			print(e)
