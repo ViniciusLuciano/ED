@@ -7,7 +7,8 @@ double clamp(double valor, double a, double b) {
     return clmp;
 }
 
-bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], char *nomeArquivoConsulta[], char *dirSaida[]) {
+bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], 
+                    char *nomeArquivoConsulta[], char *dirSaida[], char *nomeArquivoEC[], char *nomeArquivoPM[]) {
     for(int i = 1; i < argc; i++) {
         if(strcmp(argv[i], "-e") == 0) {
             if( i+1 >= argc ) {
@@ -44,6 +45,24 @@ bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquiv
 
             *dirSaida = malloc(128*sizeof(char));
             strcpy(*dirSaida, argv[i+1]);
+
+        } else if(strcmp(argv[i], "-ec") == 0) {
+            if( i+1 >= argc ) {
+                printf("'-ec' requer um argumento\n");
+                return false;
+            }
+
+            *nomeArquivoEC = malloc(128*sizeof(char));
+            strcpy(*nomeArquivoEC, argv[i+1]);
+
+        } else if(strcmp(argv[i], "-pm") == 0) {
+            if( i+1 >= argc ) {
+                printf("'-pm' requer um argumento\n");
+                return false;
+            }
+
+            *nomeArquivoPM = malloc(128*sizeof(char));
+            strcpy(*nomeArquivoPM, argv[i+1]);
         }
     }
 
@@ -597,6 +616,107 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             sscanf(str, "%*s %d %s %c %lf", &k, cep, &face, &num);
             Cidade_processarObjetosProximos(*cidade, '-', k, cep, face, num, arquivoTXT, arquivoSVG, "semaforo");
 
+        } else if(strcmp(instrucao, "brn") == 0) {
+            // vix
+            char arq_pol[50];
+            double x, y;
+            sscanf(str, "%*s %lf %lf %s", &x, &y, arq_pol);
+            Cidade_processarBombaRaioLuminoso(*cidade, x, y, arquivoSVG);
+
+        } else if(strcmp(instrucao, "m?") == 0) {
+
+            char cep[50];
+            sscanf(str, "%*s %s", cep);
+            Quadra quadra = Cidade_getQuadra(*cidade, cep);
+            if (quadra == NULL) {
+                printf("Quadra com cep %s não encontrada.", cep);
+                continue;
+            }
+
+            Arvore moradores = Quadra_getMoradores(quadra);
+            
+            fprintf(arquivoTXT, "----------- Moradores da quadra %s -----------\n", cep);
+            char dados[150];
+            forEach(morador, moradores) {
+                if (Node_getAux(morador) == 0) {
+                    Morador m = Node_getObjeto(morador);
+                    fprintf(arquivoTXT, "%s", Morador_getDados(m, dados));
+                }
+            }
+            fprintf(arquivoTXT, "-------------------------------------------------\n\n");
+
+        } else if(strcmp(instrucao, "mplg?") == 0) {
+
+        } else if(strcmp(instrucao, "dm?") == 0) {
+
+            char cpf[50];
+            sscanf(str, "%*s %s", cpf);
+            Morador morador = Cidade_getMorador(*cidade, cpf);
+            if (morador == NULL) {
+                printf("Morador com CPF %s não encontrado.", cpf);
+                continue;
+            }
+
+            char dados[150];
+            fprintf(arquivoTXT, "----------- Dados do morador com CPF: %s -----------\n", cpf);
+            fprintf(arquivoTXT, "%s", Morador_getDados(morador, dados));
+            fprintf(arquivoTXT, "----------------------------------------------------\n\n");
+            printf("%s", Morador_getDados(morador, dados));
+
+        } else if(strcmp(instrucao, "de?") == 0) {
+
+            char cnpj[50];
+            sscanf(str, "%*s %s", cnpj);
+            Estabelecimento estabelecimento = Cidade_getEstabelecimento(*cidade, cnpj);
+            if (estabelecimento == NULL) {
+                printf("Estabelecimento com CNPJ %s não encontrado.", cnpj);
+                continue;
+            }
+
+            char dados[150];
+            fprintf(arquivoTXT, "----------- Dados do estabelecimento com CNPJ: %s -----------\n", cnpj);
+            fprintf(arquivoTXT, "%s", Estabelecimento_getDados(estabelecimento, dados));
+            fprintf(arquivoTXT, "----------------------------------------------------\n\n");
+            printf("%s", Morador_getDados(estabelecimento, dados));
+
+        } else if(strcmp(instrucao, "mud") == 0) {
+
+            char cpf[30], cep[30], face, complemento[50];
+            double num;
+            sscanf(str, "%*s %s %s %c %lf %s", cpf, cep, &face, &num, complemento);
+            Morador morador = Cidade_getMorador(*cidade, cpf);
+            if (morador == NULL) {
+                printf("Morador com CPF %s não encontrado.", cpf);
+                continue;
+            }
+
+            Quadra quadraAntiga = Cidade_getQuadra(*cidade, Morador_getCep(morador));
+            if (quadraAntiga == NULL) {
+                printf("Quadra com cep %s não encontrada.", Morador_getCep(morador));
+                continue;
+            }
+            Quadra_removerMorador(quadraAntiga, cpf);
+
+            char dados[150];
+            fprintf(arquivoTXT, "-> Morador mudou-se: \n");
+            fprintf(arquivoTXT, "%s", Morador_getDados(morador, dados));
+            fprintf(arquivoTXT, " CEP (%s) -> CEP (%s)\n\n", Morador_getCep(morador), cep);
+
+            Morador_mudarEndereco(morador, cep, face, num, complemento);
+            Quadra quadraNova = Cidade_getQuadra(*cidade, cep);
+            if (quadraAntiga == NULL) {
+                printf("Quadra com cep %s não encontrada.", cep);
+                continue;
+            }
+            Quadra_setMorador(quadraNova, morador);
+
+
+        } else if(strcmp(instrucao, "eplg?") == 0) {
+
+        } else if(strcmp(instrucao, "catac") == 0) {
+
+        } else if(strcmp(instrucao, "dmprbt") == 0) {
+
         }
     }
 
@@ -606,9 +726,74 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
     fclose(arquivoSVG);
 }
 
+bool processarArquivoEC(FILE *arquivoEC, char *dirSVG, char *nomeArquivoSVG, Cidade *cidade) {
+    char str[150], instrucao[10];
+
+	while(true) {
+
+		fgets(str, sizeof(str), arquivoEC);
+        sscanf(str, "%s", instrucao);
+		if(feof(arquivoEC))
+			break;
+        
+        if(strcmp(instrucao, "t") == 0){
+
+            char codt[50], descricao[50];
+
+			sscanf(str, "%*s %s %s", codt, descricao);
+            TipoEstabelecimento te = criarTipoEstabelecimento(codt, descricao);
+            Cidade_setTipoEstabelecimento(*cidade, te);
+        
+		} else if(strcmp(instrucao, "e") == 0){
+
+            char cnpj[50], cpf[20], codt[50], cep[50], face, nome[50];
+            double num;
+
+			sscanf(str, "%*s %s %s %s %s %c %lf %s", cnpj, cpf, codt, cep, &face, &num, nome);
+            Estabelecimento e = criarEstabelecimento(cnpj, cpf, codt, cep, face, num, nome);
+            Cidade_setEstabelecimento(*cidade, e);
+        }
+    }
+}
+
+bool processarArquivoPM(FILE *arquivoPM, char *dirSVG, char *nomeArquivoSVG, Cidade *cidade) {
+    char str[150], instrucao[10];
+
+	while(true) {
+
+		fgets(str, sizeof(str), arquivoPM);
+        sscanf(str, "%s", instrucao);
+		if(feof(arquivoPM))
+			break;
+        
+        if(strcmp(instrucao, "p") == 0){
+
+            char cpf[50], nome[50], sobrenome[50], sexo, nasc[50];
+
+			sscanf(str, "%*s %s %s %s %c %s", cpf, nome, sobrenome, &sexo, nasc);
+            Pessoa p = criarPessoa(cpf, nome, sobrenome, sexo, nasc);   
+            Cidade_setPessoa(*cidade, p);
+        
+		} else if(strcmp(instrucao, "m") == 0){
+
+            char cpf[20], cep[50], face, complemento[50];
+            double num;
+
+			sscanf(str, "%*s %s %s %c %lf %s", cpf, cep, &face, &num, complemento);
+            Morador m = criarMorador(cpf, cep, face, num, complemento);
+            Cidade_setMorador(*cidade, m);
+
+            Quadra quadra = Cidade_getQuadra(*cidade, cep);
+            if (quadra != NULL) {
+                Quadra_setMorador(quadra, m);
+            }
+        }
+    }
+}
 
 
-void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, char *dirSaida) {
+void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeArquivoConsulta, 
+                                char *dirSaida, char *nomeArquivoEC, char *nomeArquivoPM) {
     if(dirEntrada)
         free(dirEntrada);
     if(nomeArquivoEntrada)
@@ -617,5 +802,9 @@ void desalocarArgumentos(char *dirEntrada, char *nomeArquivoEntrada, char *nomeA
         free(nomeArquivoConsulta);
     if(dirSaida)
         free(dirSaida);
+    if(nomeArquivoEC)
+        free(nomeArquivoEC);
+    if(nomeArquivoPM)
+        free(nomeArquivoPM);
 }
 

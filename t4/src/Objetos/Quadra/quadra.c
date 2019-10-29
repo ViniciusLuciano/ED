@@ -3,6 +3,7 @@
 typedef struct quadra {
     char cep[100], cfill[100], cstrok[100], sw[20];
     double x, y, w, h;
+    Arvore arvoreMoradores;
 }*pQuadra;
 
 Quadra criarQuadra(char *cep, double x, double y, double w, double h, char *cfill, char *cstrok, char *sw) {
@@ -16,12 +17,17 @@ Quadra criarQuadra(char *cep, double x, double y, double w, double h, char *cfil
     strcpy(quadra->cfill, cfill);
     strcpy(quadra->cstrok, cstrok);
     strcpy(quadra->sw, sw);
+    quadra->arvoreMoradores = criarArvore(Morador_compararChave, Morador_getSize(), destruirMorador);
     return quadra;
 }
 
 void destruirQuadra(Quadra q) {
     pQuadra quadra = (pQuadra) q;
-    free(quadra);
+    destruirArvore(quadra->arvoreMoradores);
+    if (quadra != NULL) {
+        quadra = NULL;
+        free(quadra);
+    }
 }
 
 char* Quadra_get_cep(Quadra q) {
@@ -91,4 +97,42 @@ bool quadraEquals(Quadra q, char *cep) {
 void Quadra_imprimir(Quadra q) {
     pQuadra quadra = (pQuadra) q;
     printf("cep %s\n", quadra->cep);
+}
+
+int Quadra_compararChave(Quadra a, Quadra b) {
+    pQuadra quadra_a = (pQuadra) a;
+    pQuadra quadra_b = (pQuadra) b;
+
+    if (quadra_a->x > quadra_b->x) return 1;
+    else if (quadra_a->x < quadra_b->x) return -1;
+    else {
+        if (quadra_a->y > quadra_b->y) return 1;
+        else if (quadra_a->y < quadra_b->y) return -1;
+        else return 0;
+    }
+}
+
+int Quadra_getSize() {
+    return sizeof(struct quadra);
+}
+
+char* Quadra_getChave(Quadra q) {
+    pQuadra quadra = (pQuadra) q;
+    return quadra->cep;
+}
+
+void Quadra_setMorador(Quadra q, Morador m) {
+    pQuadra quadra = (pQuadra) q;
+    Arvore_inserir(quadra->arvoreMoradores, m);
+}
+
+Arvore Quadra_getMoradores(Quadra q) {
+    pQuadra quadra = (pQuadra) q;
+    return Arvore_getRaiz(quadra->arvoreMoradores);
+}
+
+bool Quadra_removerMorador(Quadra q, char* cpf) {
+    pQuadra quadra = (pQuadra) q;
+    Morador m = criarMorador(cpf, "", 'N', 1, "");
+    return Arvore_removerObjeto(quadra->arvoreMoradores, m);
 }

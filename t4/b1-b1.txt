@@ -1,0 +1,45 @@
+----------- Moradores da quadra b02.2 -----------
+CPF: 000.001.191-64
+CEP: b02.2
+Complemento: -
+Numero: 60
+
+CPF: 000.001.431-11
+CEP: b02.2
+Complemento: ap-206
+Numero: 20
+
+-------------------------------------------------
+
+-> Morador mudou-se: 
+CPF: 000.001.191-64
+CEP: b02.2
+Complemento: -
+Numero: 60
+
+ CEP (b02.2) -> CEP (b01.3)
+
+-> Morador mudou-se: 
+CPF: 000.001.431-11
+CEP: b02.2
+Complemento: ap-206
+Numero: 20
+
+ CEP (b02.2) -> CEP (b01.3)
+
+----------- Moradores da quadra b02.2 -----------
+-------------------------------------------------
+
+----------- Moradores da quadra b01.3 -----------
+CPF: 000.001.191-64
+CEP: b01.3
+Complemento: 3o_Andar
+Numero: 10
+
+CPF: 000.001.431-11
+CEP: b01.3
+Complemento: 3o_Andar
+Numero: 10
+
+-------------------------------------------------
+

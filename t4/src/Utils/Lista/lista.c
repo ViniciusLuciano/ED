@@ -45,13 +45,13 @@ void lista_destruir(Lista l, void(*destruirObjeto)(Objeto objeto)) {
     int i = lista->primeiro;
     while(true) {
         if(lista->node[i].prox == -1) {
-            destruirObjeto(lista->node[i].objeto);
+            //destruirObjeto(lista->node[i].objeto);
             free(lista->node);
             free(lista);
             break;
         } else {
             i = lista->node[i].prox;
-            destruirObjeto(lista->node[lista->node[i].ant].objeto);
+            //destruirObjeto(lista->node[lista->node[i].ant].objeto);
         }
     }
 }
