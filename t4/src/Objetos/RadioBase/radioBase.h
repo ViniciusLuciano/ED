@@ -16,6 +16,7 @@ double RadioBase_get_y(RadioBase radioBase);
 void RadioBase_set_x(RadioBase radioBase, double x);
 void RadioBase_set_y(RadioBase radioBase, double y);
 void RadioBase_escreverSvg(RadioBase radioBase, FILE *svg);
+char* RadioBase_getDados(RadioBase rb, char* dados);
 
 // Funções relacionadas com a lista
 bool radioBaseEquals(RadioBase radioBase, char *id);

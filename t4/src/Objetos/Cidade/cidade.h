@@ -70,6 +70,8 @@ void Cidade_escreverFormasEnvoltas(Cidade cidade, FILE *svg, char *cor);
 void Cidade_processarFocoIncendio(Cidade c, double x, double y, int ns, double r, FILE *txt, FILE *svg);
 void Cidade_processarObjetosProximos(Cidade c, char sinal, int k, char cep[], char face, double num, FILE* txt, FILE *svg, char tipo[]);
 void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg);
+void Cidade_escreverArvoreSvg(Cidade c, char t, char* arq);
+void Cidade_navegarArvore(Cidade c, char t);
 
 void imprimirCidade(Cidade c);
 

@@ -98,3 +98,9 @@ char* Semaforo_getChave(Semaforo s) {
     pSemaforo semaforo = (pSemaforo) s;
     return semaforo->id;
 }
+
+char* Semaforo_getDados(Semaforo h, char* dados) {
+    pSemaforo semaforo = (pSemaforo) h;
+    sprintf(dados, "%0.1lf %0.1lf\n %s\n", semaforo->x, semaforo->y, semaforo->id);
+    return dados;
+}

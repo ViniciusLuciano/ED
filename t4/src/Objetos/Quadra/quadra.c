@@ -136,3 +136,9 @@ bool Quadra_removerMorador(Quadra q, char* cpf) {
     Morador m = criarMorador(cpf, "", 'N', 1, "");
     return Arvore_removerObjeto(quadra->arvoreMoradores, m);
 }
+
+char* Quadra_getDados(Quadra q, char* dados) {
+    pQuadra quadra = (pQuadra) q;
+    sprintf(dados, "%0.1lf %0.1lf\n %s\n", quadra->x, quadra->y, quadra->cep);
+    return dados;
+}

@@ -31,6 +31,15 @@ pNode getTNULL() {
 	return TNULL;
 }
 
+Node Arvore_getTNULL() {
+	return getTNULL();
+}
+
+char* Node_getCor(Node n) {
+	pNode node = (pNode) n;
+	return node->cor == VERMELHO ? "Vermelho" : "Preto";
+}
+
 void desalocarNode(pArvore a, pNode node) {
     if(node == getTNULL())
         return;
@@ -365,38 +374,40 @@ Objeto Arvore_getObjeto(Arvore arvore, Objeto objeto) {
     }
 }
 
-// Tirar isso dps
-#include "../../Objetos/Hidrante/hidrante.h"
-
 int Y_PRINT_ARVORE = 15;
-void Arvore_escreverSvg_util(pNode node, int x, FILE* svg) {
+void Arvore_escreverSvg_util(pNode node, int x, FILE* svg, char*(*Objeto_getDados)(Objeto objeto, char* dados)) {
 
 	if(node == getTNULL()) return;
 
 	x+=20;
-	Arvore_escreverSvg_util(node->esq, x, svg);
+	Arvore_escreverSvg_util(node->esq, x, svg, Objeto_getDados);
 
 	fprintf(svg, "<circle cx=\"%d\" cy=\"%d\" r=\"5\" stroke=\"black\" fill=\"%s\" stroke-width=\"2\" />\n", 
             Y_PRINT_ARVORE,
             x,
             node->cor == VERMELHO ? "red" : "black");
-	fprintf(svg, "<text x=\"%d\" y=\"%d\" fill=\"white\" font-size=\"5\">%.0lf</text>",
+	// fprintf(svg, "<text x=\"%d\" y=\"%d\" fill=\"white\" font-size=\"5\">%.0lf</text>",
+    //     Y_PRINT_ARVORE, 
+    //     x, 
+    //     Hidrante_get_x(node->objeto));
+
+	char dados[150];
+	fprintf(svg, "<text x=\"%d\" y=\"%d\" fill=\"blue\" font-size=\"5\">%s</text>",
         Y_PRINT_ARVORE, 
         x, 
-        Hidrante_get_x(node->objeto));
-
-	fprintf(svg, "<text x=\"%d\" y=\"%d\" fill=\"yellow\" font-size=\"5\">%.0lf</text>",
-        Y_PRINT_ARVORE, 
-        x + 7, 
-        Hidrante_get_y(node->objeto));
+        Objeto_getDados(node->objeto, dados));
 	Y_PRINT_ARVORE+=13;
 
-	Arvore_escreverSvg_util(node->dir, x, svg);
+	Arvore_escreverSvg_util(node->dir, x, svg, Objeto_getDados);
 }
 
-void Arvore_escreverSvg(Arvore arvore, FILE* svg) {
+void Arvore_escreverSvg(Arvore arvore, char* nomeArquivo, char*(*Objeto_getDados)(Objeto objeto, char* dados)) {
     pArvore a = (pArvore) arvore;
-	Arvore_escreverSvg_util((*a->raiz), 0, svg);
+	FILE* svg = fopen(nomeArquivo, "w");
+	fprintf(svg, "<svg>\n");
+	Arvore_escreverSvg_util((*a->raiz), 0, svg, Objeto_getDados);
+	fprintf(svg, "</svg>\n");
+	fclose(svg);
 }
 
 
@@ -447,4 +458,22 @@ Node Node_getDir(Node n) {
 Node Node_getEsq(Node n) {
 	pNode node = (pNode) n;
 	return node->esq;
+}
+
+Node Node_getPai(Node n) {
+	pNode node = (pNode) n;
+	return node->pai;
+}
+
+void resetarAux(pNode node) {
+	if(node == getTNULL())
+        return;
+	resetarAux(node->dir);
+	resetarAux(node->esq);
+	node->aux = 0;
+}
+
+void Arvore_resetarAux(Arvore arvore) {
+	pArvore a = (pArvore) arvore;
+	resetarAux(*a->raiz);
 }

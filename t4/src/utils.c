@@ -8,7 +8,8 @@ double clamp(double valor, double a, double b) {
 }
 
 bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], 
-                    char *nomeArquivoConsulta[], char *dirSaida[], char *nomeArquivoEC[], char *nomeArquivoPM[]) {
+                    char *nomeArquivoConsulta[], char *dirSaida[],
+                     char *nomeArquivoEC[], char *nomeArquivoPM[], bool* modoInterativo) {
     for(int i = 1; i < argc; i++) {
         if(strcmp(argv[i], "-e") == 0) {
             if( i+1 >= argc ) {
@@ -63,6 +64,9 @@ bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquiv
 
             *nomeArquivoPM = malloc(128*sizeof(char));
             strcpy(*nomeArquivoPM, argv[i+1]);
+
+        } else if(strcmp(argv[i], "-i") == 0) {
+            *modoInterativo = true;
         }
     }
 
@@ -346,7 +350,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
         sscanf(str, "%s", instrucao);
 		if(feof(arquivoConsulta))
 			break;
-
+        
         if(strcmp(instrucao, "o?") == 0) {
             fprintf(arquivoTXT, "\t%s", str);
             char j[20], k[20];
@@ -617,7 +621,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             Cidade_processarObjetosProximos(*cidade, '-', k, cep, face, num, arquivoTXT, arquivoSVG, "semaforo");
 
         } else if(strcmp(instrucao, "brn") == 0) {
-            // vix
+            // Ver ainda?
             char arq_pol[50];
             double x, y;
             sscanf(str, "%*s %lf %lf %s", &x, &y, arq_pol);
@@ -629,7 +633,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             sscanf(str, "%*s %s", cep);
             Quadra quadra = Cidade_getQuadra(*cidade, cep);
             if (quadra == NULL) {
-                printf("Quadra com cep %s não encontrada.", cep);
+                printf("Quadra com cep %s não encontrada.\n", cep);
                 continue;
             }
 
@@ -653,7 +657,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             sscanf(str, "%*s %s", cpf);
             Morador morador = Cidade_getMorador(*cidade, cpf);
             if (morador == NULL) {
-                printf("Morador com CPF %s não encontrado.", cpf);
+                printf("Morador com CPF %s não encontrado.\n", cpf);
                 continue;
             }
 
@@ -669,7 +673,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             sscanf(str, "%*s %s", cnpj);
             Estabelecimento estabelecimento = Cidade_getEstabelecimento(*cidade, cnpj);
             if (estabelecimento == NULL) {
-                printf("Estabelecimento com CNPJ %s não encontrado.", cnpj);
+                printf("Estabelecimento com CNPJ %s não encontrado.\n", cnpj);
                 continue;
             }
 
@@ -677,7 +681,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             fprintf(arquivoTXT, "----------- Dados do estabelecimento com CNPJ: %s -----------\n", cnpj);
             fprintf(arquivoTXT, "%s", Estabelecimento_getDados(estabelecimento, dados));
             fprintf(arquivoTXT, "----------------------------------------------------\n\n");
-            printf("%s", Morador_getDados(estabelecimento, dados));
+            printf("%s", Estabelecimento_getDados(estabelecimento, dados));
 
         } else if(strcmp(instrucao, "mud") == 0) {
 
@@ -717,6 +721,10 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 
         } else if(strcmp(instrucao, "dmprbt") == 0) {
 
+            char t, arq[30];
+            sscanf(str, "%*s %c %s", &t, arq);
+            Cidade_escreverArvoreSvg(*cidade, t, arq);
+            
         }
     }
 
@@ -724,6 +732,41 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
     svg_finalizar(arquivoSVG);
     fclose(arquivoTXT);
     fclose(arquivoSVG);
+}
+
+void executarModoInterativo(Cidade *cidade, char* dirSaida, char* dirEntrada, char* nomeArquivoEntrada) {
+    char str[150], instrucao[10];
+
+    while (true) {
+        printf("MODO INTERATIVO\n");
+        printf("comando-> ");
+        fgets(str, 150, stdin);
+        sscanf(str, "%s", instrucao);
+
+        if (strcmp(instrucao, "sai") == 0) return;
+        else if (strcmp(instrucao, "q") == 0) {
+            
+            char arq[30];
+            sscanf(str, "%*s %s", arq);
+            FILE* f = abrirArquivo( dirEntrada, arq, "r" );
+            if (f == NULL)
+                exit(1);
+            processarArquivoConsulta(f, nomeArquivoEntrada, dirSaida, arq, cidade);
+            fclose(f);
+
+        } else if (strcmp(instrucao, "dmprbt") == 0) {
+
+            char t, arq[30];
+            sscanf(str, "%*s %c %s", &t, arq);
+            Cidade_escreverArvoreSvg(*cidade, t, arq);
+            
+        } else if (strcmp(instrucao, "nav") == 0) {
+
+            char t;
+            sscanf(str, "%*s %c", &t);
+            Cidade_navegarArvore(*cidade, t);
+        } 
+    }
 }
 
 bool processarArquivoEC(FILE *arquivoEC, char *dirSVG, char *nomeArquivoSVG, Cidade *cidade) {

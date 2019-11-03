@@ -92,3 +92,9 @@ char* RadioBase_getChave(RadioBase rb) {
     pRadioBase radioBase = (pRadioBase) rb;
     return radioBase->id;
 }
+
+char* RadioBase_getDados(RadioBase rb, char* dados) {
+    pRadioBase radioBase = (pRadioBase) rb;
+    sprintf(dados, "%0.1lf %0.1lf\n %s\n", radioBase->x, radioBase->y, radioBase->id);
+    return dados;
+}

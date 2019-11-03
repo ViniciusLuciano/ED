@@ -149,3 +149,9 @@ bool predioEquals(Predio p, char *cep) {
     pPredio predio = (pPredio) p;
     return strcmp(predio->cep, cep) == 0;
 }
+
+char* Predio_getDados(Predio p, char* dados) {
+    pPredio predio = (pPredio) p;
+    sprintf(dados, "%0.1lf %0.1lf\n %s\n", predio->x, predio->y, predio->cep);
+    return dados;
+}

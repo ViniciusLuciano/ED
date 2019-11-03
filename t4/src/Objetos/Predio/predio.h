@@ -21,6 +21,7 @@ void destruirPredio(Predio prd);
 bool predioEquals(Predio p, char *cep);
 int Predio_compararChave(Predio a, Predio b);
 int Predio_getSize();
+char* Predio_getDados(Predio p, char* dados);
 
 char* Predio_getChave(Predio p);
 

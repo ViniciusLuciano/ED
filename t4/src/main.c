@@ -9,9 +9,10 @@ int main(int argc, char* argv[]) {
     char *dirSaida = NULL;
     char *nomeArquivoEC = NULL;
     char *nomeArquivoPM = NULL;
+    bool modoInterativo = false;
 
     bool argumentosCorretos = lerArgumentos(argc, argv, &dirEntrada, &nomeArquivoEntrada, 
-                                    &nomeArquivoConsulta, &dirSaida, &nomeArquivoEC, &nomeArquivoPM);
+                                    &nomeArquivoConsulta, &dirSaida, &nomeArquivoEC, &nomeArquivoPM, &modoInterativo);
     if (!argumentosCorretos)
         return 1;
 
@@ -43,6 +44,10 @@ int main(int argc, char* argv[]) {
             return 1;
         processarArquivoConsulta(arquivoConsulta, nomeArquivoEntrada, dirSaida, nomeArquivoConsulta, &cidade);
         fclose(arquivoConsulta);
+    }
+
+    if (modoInterativo) {
+        executarModoInterativo(&cidade, dirSaida, dirEntrada, nomeArquivoEntrada);
     }
 
     desalocarArgumentos(dirEntrada, nomeArquivoEntrada, nomeArquivoConsulta, dirSaida, nomeArquivoEC, nomeArquivoPM);

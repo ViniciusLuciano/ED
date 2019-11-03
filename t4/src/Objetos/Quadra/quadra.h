@@ -24,6 +24,7 @@ void Quadra_escreverSvg(Quadra q, FILE *svg);
 void Quadra_setMorador(Quadra q, Morador m);
 Arvore Quadra_getMoradores(Quadra q);
 bool Quadra_removerMorador(Quadra q, char* cpf);
+char* Quadra_getDados(Quadra q, char* dados);
 
 // Funções relacionadas com a lista
 bool quadraEquals(Quadra quadra, char *cep);

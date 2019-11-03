@@ -26,7 +26,8 @@ double clamp(double valor, double a, double b);
 void obterNomeArquivo(char *dirArquivo);
 FILE* abrirArquivo(char *diretorio, char *nomeArquivo, char *modoAbertura);
 bool lerArgumentos(int argc , char *argv[], char *dirEntrada[], char *nomeArquivoEntrada[], 
-                    char *nomeArquivoConsulta[], char *dirSaida[], char *nomeArquivoEC[], char *nomeArquivoPM[]);
+                    char *nomeArquivoConsulta[], char *dirSaida[],
+                    char *nomeArquivoEC[], char *nomeArquivoPM[], bool* modoInterativo);
 void tratarDiretorio(char *diretorio, char *nomeArquivo, char *diretorioFinal);
 bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, Cidade *cidade);
 void obterSemExtensao(char *arquivo);
@@ -38,5 +39,6 @@ FILE *abrirTXT(char *dirSaida, char *nomeArquivo);
 void concatenarNomes(char *nome1, char *nome2, char *nomeSaida);
 bool processarArquivoEC(FILE *arquivoEC, char *dirSVG, char *nomeArquivoSVG, Cidade *cidade);
 bool processarArquivoPM(FILE *arquivoPM, char *dirSVG, char *nomeArquivoSVG, Cidade *cidade);
+void executarModoInterativo(Cidade *cidade, char* dirSaida, char* dirEntrada, char* nomeArquivoEntrada);
 
 #endif

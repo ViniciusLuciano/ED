@@ -166,6 +166,8 @@ void Cidade_setPessoa(Cidade c, Pessoa pessoa) {
 
 void Cidade_setMorador(Cidade c, Morador morador) {
     pCidade cidade = (pCidade) c;
+    char dados[150];
+    printf("a %s\n", Morador_getDados(morador, dados));
     TabelaHash_inserir(cidade->tabelaHashMoradores, morador);
 }
 
@@ -283,7 +285,7 @@ void removerQuadrasInternasEquipamentoAux(pCidade c, Node n, double px, double p
         destruirRetangulo(r);
     }
 
-}
+}   
 
 void Cidade_removerQuadrasInternasEquipamento(Cidade c, double px, double py, double dist, char *op, FILE *txt) {
     pCidade cidade = (pCidade) c;
@@ -468,6 +470,7 @@ void Cidade_escreverSvg(Cidade c, FILE *svg) {
             Quadra_escreverSvg(q, svg);
         }
     }
+    //Arvore_resetarAux(cidade->arvoreQuadras);
 
     Node hidrantes = Arvore_getRaiz(cidade->arvoreHidrantes);
     forEach(hidrante, hidrantes) {
@@ -498,6 +501,16 @@ void Cidade_escreverSvg(Cidade c, FILE *svg) {
         if (Node_getAux(muro) == 0) {
             Muro m = Node_getObjeto(muro);
             Muro_escreverSvg(m, svg);
+        }
+    }
+
+    Node predios = Arvore_getRaiz(cidade->arvorePredios);
+    forEach(predio, predios) {
+        if (Node_getAux(predio) == 0) {
+            Predio p = Node_getObjeto(predio);
+            Quadra q = Cidade_getQuadra(c, Predio_getCep(p));
+            if(q != NULL)
+                Predio_escreverSvg(p, Quadra_get_x(q), Quadra_get_y(q), Quadra_get_w(q), Quadra_get_h(q), svg);
         }
     }
     
@@ -1021,4 +1034,87 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
     destruirVertice(v_inicial);
     free(lista_segmentos);
     free(lista_vertices);
+}
+
+void Cidade_escreverArvoreSvg(Cidade c, char t, char* arq) {
+    pCidade cidade = (pCidade) c;
+
+    if (t == 'q')
+        Arvore_escreverSvg(cidade->arvoreQuadras, arq, Quadra_getDados);
+    else if (t == 'h')
+        Arvore_escreverSvg(cidade->arvoreHidrantes, arq, Hidrante_getDados);
+    else if (t == 's')
+        Arvore_escreverSvg(cidade->arvoreSemaforos, arq, Semaforo_getDados);
+    else if (t == 't')
+        Arvore_escreverSvg(cidade->arvoreRadioBases, arq, RadioBase_getDados);
+    else if (t == 'p')
+        Arvore_escreverSvg(cidade->arvorePredios, arq, Predio_getDados);
+    else if (t == 'm')
+        Arvore_escreverSvg(cidade->arvoreMuros, arq, Muro_getDados);
+}
+
+void Cidade_navegarArvore(Cidade c, char t) {
+    pCidade cidade = (pCidade) c;
+
+    char str[150], instrucao[10];
+    Node node;
+    char dados[150];
+    char*(*Objeto_getDados)(Objeto objeto, char* dados);
+
+    if (t == 'q') {
+        node = Arvore_getRaiz(cidade->arvoreQuadras);
+        Objeto_getDados = Quadra_getDados;
+    } else if (t == 'h') {
+        node = Arvore_getRaiz(cidade->arvoreHidrantes);
+        Objeto_getDados = Hidrante_getDados;
+    } else if (t == 's') {
+        node = Arvore_getRaiz(cidade->arvoreSemaforos);
+        Objeto_getDados = Semaforo_getDados;
+    } else if (t == 't') {
+        node = Arvore_getRaiz(cidade->arvoreRadioBases);
+        Objeto_getDados = RadioBase_getDados;
+    } else if (t == 'p') { 
+        node = Arvore_getRaiz(cidade->arvorePredios);
+        Objeto_getDados = Predio_getDados;
+    } else if (t == 'm') {
+        node = Arvore_getRaiz(cidade->arvoreMuros);
+        Objeto_getDados = Muro_getDados;
+    }
+
+    while (true) {
+        printf("- Navegar arvore\n");
+        printf("- comando-> ");
+        fgets(str, 150, stdin);
+        sscanf(str, "%s", instrucao);
+
+        if (strcmp(instrucao, "x") == 0) return;
+        else if (strcmp(instrucao, "e") == 0) {
+            if (Node_getEsq(node) != Arvore_getTNULL())
+                node = Node_getEsq(node);
+            else {
+                printf("NULL\n");
+                continue;
+            }
+        } else if (strcmp(instrucao, "d") == 0) {
+            if (Node_getDir(node) != Arvore_getTNULL())
+                node = Node_getDir(node);
+            else {
+                printf("NULL\n");
+                continue;
+            }
+        } else if (strcmp(instrucao, "p") == 0) {
+            if (Node_getPai(node) != NULL)
+                node = Node_getPai(node);
+            else {
+                printf("NULL\n");
+                continue;
+            }
+        } 
+
+        if (node == Arvore_getTNULL()) {
+            printf("NULL\n");
+            continue;
+        }
+        printf("\nDADOS:\nCor: %s\n%s\n", Node_getCor(node), Objeto_getDados(Node_getObjeto(node), dados));
+    }
 }

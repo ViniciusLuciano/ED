@@ -16,6 +16,7 @@ double Semaforo_get_y(Semaforo semaforo);
 void Semaforo_set_x(Semaforo semaforo, double x);
 void Semaforo_set_y(Semaforo semaforo, double y);
 void Semaforo_escreverSvg(Semaforo s, FILE *svg);
+char* Semaforo_getDados(Semaforo h, char* dados);
 
 // Funções relacionadas com a lista
 bool semaforoEquals(Semaforo semaforo, char *id);

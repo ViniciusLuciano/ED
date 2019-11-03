@@ -92,3 +92,9 @@ char* Hidrante_getChave(Hidrante h) {
     pHidrante hidrante = (pHidrante) h;
     return hidrante->id;
 }
+
+char* Hidrante_getDados(Hidrante h, char* dados) {
+    pHidrante hidrante = (pHidrante) h;
+    sprintf(dados, "%0.1lf %0.1lf\n %s\n", hidrante->x, hidrante->y, hidrante->id);
+    return dados;
+}
