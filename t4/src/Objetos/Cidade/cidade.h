@@ -52,6 +52,7 @@ void Cidade_setEstabelecimento(Cidade c, Estabelecimento estabelecimento);
 void Cidade_setTipoEstabelecimento(Cidade c, TipoEstabelecimento tipoEstabelecimento);
 void Cidade_setPessoa(Cidade c, Pessoa pessoa);
 void Cidade_setMorador(Cidade c, Morador morador);
+Predio Cidade_getPredio(Cidade c, char* cep, char face, double num);
 Forma Cidade_getForma(Cidade cidade, char *id);
 Quadra Cidade_getQuadra(Cidade cidade, char *id);
 Hidrante Cidade_getHidrante(Cidade cidade, char *id);
@@ -72,6 +73,9 @@ void Cidade_processarObjetosProximos(Cidade c, char sinal, int k, char cep[], ch
 void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg);
 void Cidade_escreverArvoreSvg(Cidade c, char t, char* arq);
 void Cidade_navegarArvore(Cidade c, char t);
+void Cidade_processarMPLG(Cidade c, Poligono poligono);
+void Cidade_processarCATAC(Cidade c, Poligono poligono);
+void Cidade_processarEPLG(Cidade c, Poligono poligono, char* tipo);
 
 void imprimirCidade(Cidade c);
 

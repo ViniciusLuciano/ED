@@ -15,6 +15,8 @@ Segmento criarSegmento(Vertice v1, Vertice v2) {
 
 void destruirSegmento(Segmento s) {
     pSegmento segmento = (pSegmento) s;
+    destruirVertice(segmento->v1);
+    destruirVertice(segmento->v2);
     free(segmento);
 }
 
@@ -47,4 +49,21 @@ void Segmento_set_distancia(Segmento s, double distancia) {
 double Segmento_get_distancia(Segmento s) {
     pSegmento segmento = (pSegmento) s;
     return segmento->distancia;
+}
+
+int Segmento_compararChave(Segmento a, Segmento b) {
+    pSegmento segmento_a = (pSegmento) a;
+    pSegmento segmento_b = (pSegmento) b;
+
+    if (Vertice_get_x(segmento_a->v1) > Vertice_get_x(segmento_b->v1)) return 1;
+    else if (Vertice_get_x(segmento_a->v1) < Vertice_get_x(segmento_b->v1)) return -1;
+    else {
+        if (Vertice_get_y(segmento_a->v1) > Vertice_get_y(segmento_b->v1)) return 1;
+        else if (Vertice_get_y(segmento_a->v1) < Vertice_get_y(segmento_b->v1)) return -1;
+        else return 0;
+    }
+}
+
+int Segmento_getSize() {
+    return 2*Vertice_getSize() + sizeof(double);
 }

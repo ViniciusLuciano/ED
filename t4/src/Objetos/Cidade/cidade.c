@@ -31,6 +31,8 @@ typedef struct cidade {
     Arvore arvoreTextos;
     Arvore arvorePredios;
     Arvore arvoreMuros;
+    Arvore arvoreMoradores;
+    Arvore arvoreEstabelecimentos;
 }*pCidade;
 
 Cidade criarCidade(int i, int nq, int nh, int ns, int nr, int np, int nm) {
@@ -52,18 +54,19 @@ Cidade criarCidade(int i, int nq, int nh, int ns, int nr, int np, int nm) {
     cidade->tabelaHashRadiosBase = criarTabelaHash(nr, radioBaseEquals, RadioBase_getChave, destruirRadioBase);
     cidade->tabelaHashPredios = criarTabelaHash(np, predioEquals, Predio_getChave, destruirPredio);
 
-    // Separar?
     cidade->tabelaHashEstabelecimentos = criarTabelaHash(1000, estabelecimentoEquals, Estabelecimento_getChave, destruirEstabelecimento);
     cidade->tabelaHashTiposEstabelecimento = criarTabelaHash(1000, tipoEstabelecimentoEquals, TipoEstabelecimento_getChave, destruirTipoEstabelecimento);
     cidade->tabelaHashPessoas = criarTabelaHash(1000, pessoaEquals, Pessoa_getChave, destruirPessoa);
     cidade->tabelaHashMoradores = criarTabelaHash(1000, moradorEquals, Morador_getChave, destruirMorador);
+    cidade->arvoreMoradores = criarArvore(Morador_compararChave, Morador_getSize(), NULL);
+    cidade->arvoreEstabelecimentos = criarArvore(Estabelecimento_compararChave, Estabelecimento_getSize(), NULL);
 
-    cidade->arvoreFormas = criarArvore(Forma_compararChave, Forma_getSize(), destruirForma);
-    cidade->arvoreQuadras = criarArvore(Quadra_compararChave, Quadra_getSize(), destruirQuadra);
-    cidade->arvoreHidrantes = criarArvore(Hidrante_compararChave, Hidrante_getSize(), destruirHidrante);
-    cidade->arvoreSemaforos = criarArvore(Semaforo_compararChave, Semaforo_getSize(), destruirSemaforo);
-    cidade->arvoreRadioBases = criarArvore(RadioBase_compararChave, RadioBase_getSize(), destruirRadioBase);
-    cidade->arvorePredios = criarArvore(Predio_compararChave, Predio_getSize(), destruirPredio);
+    cidade->arvoreFormas = criarArvore(Forma_compararChave, Forma_getSize(), NULL);
+    cidade->arvoreQuadras = criarArvore(Quadra_compararChave, Quadra_getSize(), NULL);
+    cidade->arvoreHidrantes = criarArvore(Hidrante_compararChave, Hidrante_getSize(), NULL);
+    cidade->arvoreSemaforos = criarArvore(Semaforo_compararChave, Semaforo_getSize(), NULL);
+    cidade->arvoreRadioBases = criarArvore(RadioBase_compararChave, RadioBase_getSize(), NULL);
+    cidade->arvorePredios = criarArvore(Predio_compararChave, Predio_getSize(), NULL);
     cidade->arvoreMuros = criarArvore(Muro_compararChave, Muro_getSize(), destruirMuro);
     cidade->arvoreTextos = criarArvore(Texto_compararChave, Texto_getSize(), destruirTexto);
     return cidade;
@@ -80,17 +83,19 @@ void destruirCidade(Cidade c) {
     // lista_destruir(cidade->listaPredio, destruirPredio);
     // lista_destruir(cidade->listaMuro, destruirMuro);
 
+    destruirTabelaHash(cidade->tabelaHashPredios);
     destruirTabelaHash(cidade->tabelaHashFormas);
     destruirTabelaHash(cidade->tabelaHashQuadras);
     destruirTabelaHash(cidade->tabelaHashHidrantes);
     destruirTabelaHash(cidade->tabelaHashSemaforos);
     destruirTabelaHash(cidade->tabelaHashRadiosBase);
-    destruirTabelaHash(cidade->tabelaHashPredios);
 
     destruirTabelaHash(cidade->tabelaHashEstabelecimentos);
     destruirTabelaHash(cidade->tabelaHashTiposEstabelecimento);
     destruirTabelaHash(cidade->tabelaHashPessoas);
     destruirTabelaHash(cidade->tabelaHashMoradores);
+    destruirArvore(cidade->arvoreMoradores);
+    destruirArvore(cidade->arvoreEstabelecimentos);
 
     destruirArvore(cidade->arvoreFormas);
     destruirArvore(cidade->arvoreQuadras);
@@ -142,6 +147,7 @@ void Cidade_setTexto(Cidade c, Texto texto) {
 void Cidade_setPredio(Cidade c, Predio predio) {
     pCidade cidade = (pCidade) c;
     Arvore_inserir(cidade->arvorePredios, predio);
+    TabelaHash_inserir(cidade->tabelaHashPredios, predio);
 }
 
 void Cidade_setMuro(Cidade c, Muro muro) {
@@ -152,6 +158,7 @@ void Cidade_setMuro(Cidade c, Muro muro) {
 void Cidade_setEstabelecimento(Cidade c, Estabelecimento estabelecimento) {
     pCidade cidade = (pCidade) c;
     TabelaHash_inserir(cidade->tabelaHashEstabelecimentos, estabelecimento);
+    Arvore_inserir(cidade->arvoreEstabelecimentos, estabelecimento);
 }
 
 void Cidade_setTipoEstabelecimento(Cidade c, TipoEstabelecimento tipoEstabelecimento) {
@@ -166,9 +173,20 @@ void Cidade_setPessoa(Cidade c, Pessoa pessoa) {
 
 void Cidade_setMorador(Cidade c, Morador morador) {
     pCidade cidade = (pCidade) c;
-    char dados[150];
-    printf("a %s\n", Morador_getDados(morador, dados));
     TabelaHash_inserir(cidade->tabelaHashMoradores, morador);
+    Arvore_inserir(cidade->arvoreMoradores, morador);
+}
+
+Predio Cidade_getPredio(Cidade c, char* cep, char face, double num) {
+    pCidade cidade = (pCidade) c;
+    char id[100];
+    sprintf(id, "%s%c%.0lf", cep, face, num);
+    return TabelaHash_getObjeto(cidade->tabelaHashPredios, id);
+}
+
+Predio _Cidade_getPredioId(Cidade c, char* id) {
+    pCidade cidade = (pCidade) c;
+    return TabelaHash_getObjeto(cidade->tabelaHashPredios, id);
 }
 
 Forma Cidade_getForma(Cidade c, char *id) {
@@ -216,35 +234,71 @@ Morador Cidade_getMorador(Cidade c, char* id) {
     return TabelaHash_getObjeto(cidade->tabelaHashMoradores, id);
 }
 
+bool _Cidade_removerPredio(Cidade c, char* cep, char face, double num) {
+    pCidade cidade = (pCidade) c;
+    Predio prd;
+
+    char id[150];
+    sprintf(id, "%s%c%.0lf", cep, face, num);
+
+    if((prd = Cidade_getPredio(c, cep, face, num)) != NULL) {
+
+        Arvore_removerObjeto(cidade->arvorePredios, prd);
+        TabelaHash_removerObjeto(cidade->tabelaHashPredios, id);
+        return true;
+    }
+    return false;
+}
+
+bool _Cidade_removerPredioId(Cidade c, char* id) {
+    pCidade cidade = (pCidade) c;
+    Predio prd;
+
+    if((prd = _Cidade_getPredioId(c, id)) != NULL) {
+    
+        Arvore_removerObjeto(cidade->arvorePredios, prd);
+        //TabelaHash_removerObjeto(cidade->tabelaHashPredios, id);
+        return true;
+    }
+    return false;
+}
+
+
 bool Cidade_removerObjeto(Cidade c, char *id) {
     pCidade cidade = (pCidade) c;
     Hidrante h;
     RadioBase rb;
     Semaforo s;
     Quadra q;
+    Morador m;
     
     if((h = Cidade_getHidrante(c, id)) != NULL) {
 
-        TabelaHash_removerObjeto(cidade->tabelaHashHidrantes, id);
         Arvore_removerObjeto(cidade->arvoreHidrantes, h);
+        TabelaHash_removerObjeto(cidade->tabelaHashHidrantes, id);
         return true;
 
     } else if((rb = Cidade_getRadioBase(c, id)) != NULL) {
 
-        TabelaHash_removerObjeto(cidade->tabelaHashRadiosBase, id);
         Arvore_removerObjeto(cidade->arvoreRadioBases, rb);
+        TabelaHash_removerObjeto(cidade->tabelaHashRadiosBase, id);
         return true;
 
     } else if((s = Cidade_getSemaforo(c, id)) != NULL) {
 
-        TabelaHash_removerObjeto(cidade->tabelaHashSemaforos, id);
         Arvore_removerObjeto(cidade->arvoreSemaforos, s);
+        TabelaHash_removerObjeto(cidade->tabelaHashSemaforos, id);
         return true;
 
     } else if((q = Cidade_getQuadra(c, id)) != NULL) {
 
-        TabelaHash_removerObjeto(cidade->tabelaHashQuadras, id);
         Arvore_removerObjeto(cidade->arvoreQuadras, q);
+        TabelaHash_removerObjeto(cidade->tabelaHashQuadras, id);
+        return true;
+
+    } else if((m = Cidade_getMorador(c, id)) != NULL) {
+
+        TabelaHash_removerObjeto(cidade->tabelaHashMoradores, m);
         return true;
     } 
 
@@ -513,15 +567,6 @@ void Cidade_escreverSvg(Cidade c, FILE *svg) {
                 Predio_escreverSvg(p, Quadra_get_x(q), Quadra_get_y(q), Quadra_get_w(q), Quadra_get_h(q), svg);
         }
     }
-    
-    // Mudar isso dps zzzzzzzzzzzzzz
-    // i = lista_getPrimeiro(cidade->listaPredio);
-    // for(i; i!= -1; i = lista_getProx(cidade->listaPredio, i)) {
-    //     Predio prd = lista_getObjPosic(cidade->listaPredio, i);
-    //     Quadra q = lista_getObjeto(cidade->listaQuadra, Predio_getCep(prd), quadraEquals);
-    //     if(q != NULL)
-    //         Predio_escreverSvg(prd, Quadra_get_x(q), Quadra_get_y(q), Quadra_get_w(q), Quadra_get_h(q), svg);
-    // }
 }
 
 void Cidade_escreverFormasEnvoltas(Cidade c, FILE *svg, char *cor) {
@@ -1117,4 +1162,248 @@ void Cidade_navegarArvore(Cidade c, char t) {
         }
         printf("\nDADOS:\nCor: %s\n%s\n", Node_getCor(node), Objeto_getDados(Node_getObjeto(node), dados));
     }
+}
+
+/*
+Moradores dos prédios inteiramente contidos na
+região delimitada pelo polígono e as quadras que
+estão ao menos parcialmente dentro da delimitada
+pelo polígono.    
+*/  
+void Cidade_processarMPLG(Cidade c, Poligono poligono) { // TERMINAR DPS DE PRINTAR E ESCREVER NO ARQUIVO E SVG
+    pCidade cidade = (pCidade) c;
+    char dados[150];
+
+    Node predios = Arvore_getRaiz(cidade->arvorePredios);
+    forEach(predio, predios) {
+        if (Node_getAux(predio) == 0) {
+            Predio p = Node_getObjeto(predio);
+            Retangulo r = criarRetangulo_Predio(p);
+            if (RetanguloInternoPoligono(r, poligono)) {
+                Node moradores = Predio_getMoradores(p);
+                forEach(morador, moradores) {
+                    if (Node_getAux(morador) == 0) {
+                        Morador m = Node_getObjeto(morador);
+                        printf("%s\n", Morador_getDados(m, dados));
+                    }
+                }
+            }
+            destruirRetangulo(r);
+        }
+    }
+
+    Node quadras = Arvore_getRaiz(cidade->arvoreQuadras);
+    forEach(quadra, quadras) {
+        if (Node_getAux(quadra) == 0) {
+            Quadra q = Node_getObjeto(quadra);
+            Retangulo r = criarRetangulo_Quadra(q);
+            if (RetanguloParcialmenteInternoPoligono(r, poligono)) {
+                Node moradores = Quadra_getMoradores(q);
+                forEach(morador, moradores) {
+                    if (Node_getAux(morador) == 0) {
+                        Morador m = Node_getObjeto(morador);
+                        printf("%s\n", Morador_getDados(m, dados));
+                    }
+                }
+            }
+            destruirRetangulo(r);
+        }
+    }
+}
+
+// Fazer txt e svg
+/*
+Considere a região delimitada pelo polígono.
+Remover as quadras que estejam inteiramente
+contidas no poligono. Remover prédios
+(inteiramente contidos no poligono) e respectivos
+moradores, hidrantes, semáforos, rádios-bases.
+*/
+void Cidade_processarCATAC(Cidade c, Poligono poligono) {
+    pCidade cidade = (pCidade) c;
+    int index;
+    
+    typedef struct string {
+        char data[100];
+    }*pString;
+
+    pString* quadras_del = (pString*)malloc(Arvore_length(cidade->arvoreQuadras)*sizeof(pString));
+
+    index = 0;
+    Node quadras = Arvore_getRaiz(cidade->arvoreQuadras);
+    forEach(quadra, quadras) {
+        if (Node_getAux(quadra) == 0) {
+            Quadra q = Node_getObjeto(quadra);
+            Retangulo r = criarRetangulo_Quadra(q);
+            if (RetanguloInternoPoligono(r, poligono)) {
+                pString str = malloc(sizeof(struct string));
+                strcpy(str->data, Quadra_get_cep(q));
+                quadras_del[index] = str; index++;
+            }
+            destruirRetangulo(r);
+        }
+    }
+
+    for (int i = 0; i < index; i++) {
+        //printf("REMOVEU %s\n", quadras_del[i]->data);
+        Cidade_removerObjeto(c, quadras_del[i]->data);
+        free(quadras_del[i]);
+    }
+    free(quadras_del);
+
+
+
+    pString* moradores_del = (pString*)malloc(Arvore_length(cidade->arvoreMoradores)*sizeof(pString));
+    pString* predios_del = (pString*)malloc(Arvore_length(cidade->arvorePredios)*sizeof(pString));
+    Objeto* quadrass = (Objeto*)malloc(Arvore_length(cidade->arvoreQuadras)*sizeof(Objeto));
+
+    index = 0;
+    int indexQ = 0;
+    int indexM = 0;
+    Node predios = Arvore_getRaiz(cidade->arvorePredios);
+    forEach(predio, predios) {
+        if (Node_getAux(predio) == 0) {
+            Predio p = Node_getObjeto(predio);
+            Quadra q = Predio_getQuadra(p);
+            Retangulo r = criarRetangulo_Predio(p);
+            if (RetanguloInternoPoligono(r, poligono)) {
+                Node moradores = Predio_getMoradores(p);
+                forEach(morador, moradores) {
+                    if (Node_getAux(morador) == 0) {
+                        Morador m = Node_getObjeto(morador);
+                        pString str = malloc(sizeof(struct string));
+                        strcpy(str->data, Morador_get_cpf(m));
+                        moradores_del[indexM] = str; indexM++;
+                    }
+                }
+
+                quadrass[indexQ] = q; indexQ++;
+                pString str = malloc(sizeof(struct string));
+                strcpy(str->data, Predio_getId(p));
+                predios_del[index] = str; index++;
+            }
+            destruirRetangulo(r);
+        }
+    }
+
+    for (int i = 0; i < index; i++) {
+        if (quadrass[i] != NULL) {
+            Predio prd = _Cidade_getPredioId(c, predios_del[i]->data);
+            Quadra_removerPredio(quadrass[i], prd);
+            //free(quadrass[i]);
+        }
+        _Cidade_removerPredioId(c, predios_del[i]->data);
+        free(predios_del[i]);
+    }
+    free(predios_del);
+    free(quadrass);
+
+    for (int i = 0; i < indexM; i++) {
+        Cidade_removerObjeto(c, moradores_del[i]->data);
+        free(moradores_del[i]);
+    }
+    free(moradores_del);
+
+    pString* hidrantes_del = (pString*)malloc(Arvore_length(cidade->arvoreHidrantes)*sizeof(pString));
+
+    index = 0;
+    Node hidrantes = Arvore_getRaiz(cidade->arvoreHidrantes);
+    forEach(hidrante, hidrantes) {
+        if (Node_getAux(hidrante) == 0) {
+            Hidrante h = Node_getObjeto(hidrante);
+            Ponto p = criarPonto(Hidrante_get_x(h), Hidrante_get_y(h));
+            if (PontoInternoPoligono(p, poligono)) {
+                pString str = malloc(sizeof(struct string));
+                strcpy(str->data, Hidrante_get_id(h));
+                hidrantes_del[index] = str; index++;
+            }
+            destruirPonto(p);
+        }
+    }
+    
+    for (int i = 0; i < index; i++) {
+        // printf("SKAOSAK %s\n", hidrantes_del[i]->data);
+        Cidade_removerObjeto(c, hidrantes_del[i]->data);
+        free(hidrantes_del[i]);
+    }
+    free(hidrantes_del);
+
+
+
+    pString* semaforos_del = (pString*)malloc(Arvore_length(cidade->arvoreSemaforos)*sizeof(pString));
+
+    index = 0;
+    Node semaforos = Arvore_getRaiz(cidade->arvoreSemaforos);
+    forEach(semaforo, semaforos) {
+        if (Node_getAux(semaforo) == 0) {
+            Semaforo s = Node_getObjeto(semaforo);
+            Ponto p = criarPonto(Semaforo_get_x(s), Semaforo_get_y(s));
+            if (PontoInternoPoligono(p, poligono)) {
+                pString str = malloc(sizeof(struct string));
+                strcpy(str->data, Semaforo_get_id(s));
+                semaforos_del[index] = str; index++;
+            }
+            destruirPonto(p);
+        }
+    }
+    for (int i = 0; i < index; i++) {
+        Cidade_removerObjeto(c, semaforos_del[i]->data);
+        free(semaforos_del[i]);
+    }
+    free(semaforos_del);
+
+
+
+    pString* radios_del = (pString*)malloc(Arvore_length(cidade->arvoreRadioBases)*sizeof(pString));
+
+    index = 0;
+    Node radiosBase = Arvore_getRaiz(cidade->arvoreRadioBases);
+    forEach(radioBase, radiosBase) {
+        if (Node_getAux(radioBase) == 0) {
+            RadioBase rb = Node_getObjeto(radioBase);
+            Ponto p = criarPonto(RadioBase_get_x(rb), RadioBase_get_y(rb));
+            if (PontoInternoPoligono(p, poligono)) {
+                pString str = malloc(sizeof(struct string));
+                strcpy(str->data, RadioBase_get_id(rb));
+                radios_del[index] = str; index++;
+            }
+            destruirPonto(p);
+        }
+    }
+    for (int i = 0; i < index; i++) {
+        //printf("REMOVEU %s\n",radios_del[i]->data);
+        Cidade_removerObjeto(c, radios_del[i]->data);
+        free(radios_del[i]);
+    }
+    free(radios_del);
+}
+
+
+// Terminar txt e svg
+/*
+Estabelecimentos comerciais do tipo tp (ou de
+qualquer tipo, caso *) que estão inteiramente
+dentro da região delimitada pelo polígono.
+*/
+void Cidade_processarEPLG(Cidade c, Poligono poligono, char* tipo) {
+    pCidade cidade = (pCidade) c;
+
+    int index = 0;
+    Node estabelecimentos = Arvore_getRaiz(cidade->arvoreEstabelecimentos);
+    forEach(estabelecimento, estabelecimentos) {
+        if (Node_getAux(estabelecimento) == 0) {
+            Estabelecimento e = Node_getObjeto(estabelecimento);
+            if (strcmp(Estabelecimento_getCodt(e), tipo) == 0 || strcmp("*", tipo) == 0) {
+                Predio prd = Cidade_getPredio(c, Estabelecimento_getCep(e), Estabelecimento_getFace(e), Estabelecimento_getNum(e));
+                if (prd != NULL) {
+                    Retangulo r = criarRetangulo_Predio(prd);
+                    if (RetanguloInternoPoligono(r, poligono)) {
+                        printf("ESTABELECIMENTO %s\n", Estabelecimento_getCep(e));
+                    }
+                    destruirRetangulo(r);
+                }
+            }
+        }
+    }
+
 }

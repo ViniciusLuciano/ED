@@ -1,7 +1,7 @@
 #include "tipoEstabelecimento.h"
 
 typedef struct tipoEstabelecimento {
-    char codt[50], descricao[50];
+    char codt[50], descricao[256];
 }*pTipoEstabelecimento;
 
 TipoEstabelecimento criarTipoEstabelecimento(char* codt, char* descricao) {

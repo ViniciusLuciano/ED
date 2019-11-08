@@ -10,7 +10,7 @@ typedef void* Morador;
 
 Morador criarMorador(char* cpf, char* cep, char face, double num, char* complemento);
 void destruirMorador(Morador morador);
-char* Morador_get_cnpj(Morador morador);
+char* Morador_get_cpf(Morador morador);
 void Morador_escreverSvg(Morador morador, FILE *SVG);
 char* Morador_getDados(Morador morador, char* dados);
 char* Morador_getCep(Morador morador);

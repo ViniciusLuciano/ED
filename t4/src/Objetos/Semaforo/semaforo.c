@@ -82,12 +82,12 @@ int Semaforo_compararChave(Semaforo a, Semaforo b) {
     pSemaforo semaforo_b = (pSemaforo) b;
 
     if (semaforo_a->x > semaforo_b->x) return 1;
-        else if (semaforo_a->x < semaforo_b->x) return -1;
-        else {
-            if (semaforo_a->y > semaforo_b->y) return 1;
-            else if (semaforo_a->y < semaforo_b->y) return -1;
-            else return 0;
-        }
+    else if (semaforo_a->x < semaforo_b->x) return -1;
+    else {
+        if (semaforo_a->y > semaforo_b->y) return 1;
+        else if (semaforo_a->y < semaforo_b->y) return -1;
+        else return 0;
+    }
 }
 
 int Semaforo_getSize() {

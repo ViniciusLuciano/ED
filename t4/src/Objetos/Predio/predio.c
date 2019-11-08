@@ -1,9 +1,11 @@
 #include "predio.h"
 
 typedef struct predio {
-    char cep[50], face;
+    char cep[50], face, id[100];
     double num, f, p, mrg;
     double x, x_max, y, y_max;
+    Arvore arvoreMoradores;
+    Objeto quadra; // Endereço de memoria da quadra associada
 }*pPredio;
 
 Predio criarPredio(char *cep, char face, double num, double f, double p, double mrg) {
@@ -15,12 +17,25 @@ Predio criarPredio(char *cep, char face, double num, double f, double p, double 
     predio->f = f;
     predio->p = p;
     predio->mrg = mrg;
+    predio->arvoreMoradores = criarArvore(Predio_compararChave, Predio_getSize(), NULL);
+    sprintf(predio->id, "%s%c%.0lf", cep, face, num);
     return predio;
 }
 
 void destruirPredio(Predio prd) {
     pPredio predio = (pPredio) prd;
+    destruirArvore(predio->arvoreMoradores);
     free(predio);
+}
+
+char* Predio_getId(Predio prd) {
+    pPredio predio = (pPredio) prd;
+    return predio->id;
+}
+
+char Predio_get_face(Predio prd) {
+    pPredio predio = (pPredio) prd;
+    return predio->face;
 }
 
 char* Predio_getCep(Predio prd) {
@@ -51,6 +66,31 @@ double Predio_get_y_max(Predio prd) {
 double Predio_get_num(Predio prd) {
     pPredio predio = (pPredio) prd;
     return predio->num;
+}
+
+void Predio_setPosicoes(Predio prd, double quadra_x, double quadra_y, double quadra_w, double quadra_h) {
+    pPredio predio = (pPredio) prd;
+    if(predio->face == 'N') {
+        predio->x = quadra_x + predio->num - (predio->f/2);
+        predio->y = quadra_y + quadra_h - predio->mrg - predio->p;
+    } else if (predio->face == 'S') {
+        predio->x = quadra_x + predio->num - (predio->f/2);
+        predio->y = quadra_y + predio->mrg;
+    } else if(predio->face == 'L') {
+        predio->x = quadra_x + predio->mrg;
+        predio->y = quadra_y + predio->num - (predio->f/2);
+    } else if(predio->face == 'O') {
+        predio->x = quadra_x + quadra_w - predio->mrg - predio->p;
+        predio->y = quadra_y + predio->num - (predio->f/2);
+    }
+
+    if(predio->face == 'N' || predio->face == 'S') {
+        predio->x_max = predio->x + predio->f;
+        predio->y_max = predio->y + predio->p;
+    } else {
+        predio->x_max = predio->x + predio->p;
+        predio->y_max = predio->y + predio->f;
+    }
 }
 
 void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double quadra_w, double quadra_h, FILE *svg) {
@@ -126,32 +166,59 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
 int Predio_compararChave(Predio a, Predio b) {
     pPredio predio_a = (pPredio) a;
     pPredio predio_b = (pPredio) b;
-    return strcmp(predio_a->cep, predio_b->cep);
-    // if (predio_a->x > predio_b->x) return 1;
-    // else if (predio_a->x < predio_b->x) return -1;
-    // else {
-    //     if (predio_a->y > predio_b->y) return 1;
-    //     else if (predio_a->y < predio_b->y) return -1;
-    //     else return 0;
-    // }
+    if (predio_a->x > predio_b->x) return 1;
+    else if (predio_a->x < predio_b->x) return -1;
+    else {
+        if (predio_a->y > predio_b->y) return 1;
+        else if (predio_a->y < predio_b->y) return -1;
+        else {
+            return 0;
+        }
+    }
 }
 
 int Predio_getSize() {
-    return sizeof(struct predio);
+    return sizeof(struct predio) - 1;
 }
 
 char* Predio_getChave(Predio p) {
     pPredio predio = (pPredio) p;
-    return predio->cep;
+    return predio->id;
 }
 
-bool predioEquals(Predio p, char *cep) {
+bool predioEquals(Predio p, char *id) {
     pPredio predio = (pPredio) p;
-    return strcmp(predio->cep, cep) == 0;
+    return strcmp(predio->id, id) == 0;
 }
 
 char* Predio_getDados(Predio p, char* dados) {
     pPredio predio = (pPredio) p;
     sprintf(dados, "%0.1lf %0.1lf\n %s\n", predio->x, predio->y, predio->cep);
     return dados;
+}
+
+void Predio_setMorador(Predio q, Morador m) {
+    pPredio predio = (pPredio) q;
+    Arvore_inserir(predio->arvoreMoradores, m);
+}
+
+Node Predio_getMoradores(Predio q) {
+    pPredio predio = (pPredio) q;
+    return Arvore_getRaiz(predio->arvoreMoradores);
+}
+
+bool Predio_removerMorador(Predio q, char* cpf) {
+    pPredio predio = (pPredio) q;
+    Morador m = criarMorador(cpf, "", 'N', 1, "");
+    return Arvore_removerObjeto(predio->arvoreMoradores, m);
+}
+
+void Predio_setQuadra(Predio prd, Objeto quadra) {
+    pPredio predio = (pPredio) prd;
+    predio->quadra = quadra;
+}
+
+Objeto Predio_getQuadra(Predio prd) {
+    pPredio predio = (pPredio) prd;
+    return predio->quadra;
 }

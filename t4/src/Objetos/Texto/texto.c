@@ -45,7 +45,14 @@ void Texto_escreverSvg(Texto t, FILE *svg) {
 int Texto_compararChave(Texto a, Texto b) {
     pTexto texto_a = (pTexto) a;
     pTexto texto_b = (pTexto) b;
-    return strcmp(texto_a->text, texto_b->text);
+
+    if (texto_a->x > texto_b->x) return 1;
+    else if (texto_a->x < texto_b->x) return -1;
+    else {
+        if (texto_a->y > texto_b->y) return 1;
+        else if (texto_a->y < texto_b->y) return -1;
+        else return 0;
+    }
 }
 
 int Texto_getSize() {

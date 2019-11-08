@@ -49,3 +49,29 @@ char* Estabelecimento_getDados(Estabelecimento estabelecimento, char* dados) {
                  e->cnpj, e->codt, e->cep, e->nome);
     return dados;
 }
+
+int Estabelecimento_compararChave(Estabelecimento a, Estabelecimento b) {
+    pEstabelecimento estabelecimento_a = (pEstabelecimento) a;
+    pEstabelecimento estabelecimento_b = (pEstabelecimento) b;
+    strcmp(estabelecimento_a->cnpj, estabelecimento_b->cnpj);
+}
+
+char* Estabelecimento_getCep(Estabelecimento e) {
+    pEstabelecimento estabelecimento = (pEstabelecimento) e;
+    return estabelecimento->cep;
+}
+
+char* Estabelecimento_getCodt(Estabelecimento e) {
+    pEstabelecimento estabelecimento = (pEstabelecimento) e;
+    return estabelecimento->codt;
+}
+
+char Estabelecimento_getFace(Estabelecimento e) {
+    pEstabelecimento estabelecimento = (pEstabelecimento) e;
+    return estabelecimento->face;
+}
+
+double Estabelecimento_getNum(Estabelecimento e) {
+    pEstabelecimento estabelecimento = (pEstabelecimento) e;
+    return estabelecimento->num;
+}

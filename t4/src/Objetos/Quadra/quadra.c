@@ -4,6 +4,7 @@ typedef struct quadra {
     char cep[100], cfill[100], cstrok[100], sw[20];
     double x, y, w, h;
     Arvore arvoreMoradores;
+    Arvore arvorePredios;
 }*pQuadra;
 
 Quadra criarQuadra(char *cep, double x, double y, double w, double h, char *cfill, char *cstrok, char *sw) {
@@ -17,17 +18,16 @@ Quadra criarQuadra(char *cep, double x, double y, double w, double h, char *cfil
     strcpy(quadra->cfill, cfill);
     strcpy(quadra->cstrok, cstrok);
     strcpy(quadra->sw, sw);
-    quadra->arvoreMoradores = criarArvore(Morador_compararChave, Morador_getSize(), destruirMorador);
+    quadra->arvoreMoradores = criarArvore(Morador_compararChave, Morador_getSize(), NULL);
+    quadra->arvorePredios = criarArvore(Predio_compararChave, Predio_getSize(), NULL);
     return quadra;
 }
 
 void destruirQuadra(Quadra q) {
     pQuadra quadra = (pQuadra) q;
+    destruirArvore(quadra->arvorePredios);
     destruirArvore(quadra->arvoreMoradores);
-    if (quadra != NULL) {
-        quadra = NULL;
-        free(quadra);
-    }
+    free(quadra);
 }
 
 char* Quadra_get_cep(Quadra q) {
@@ -126,7 +126,7 @@ void Quadra_setMorador(Quadra q, Morador m) {
     Arvore_inserir(quadra->arvoreMoradores, m);
 }
 
-Arvore Quadra_getMoradores(Quadra q) {
+Node Quadra_getMoradores(Quadra q) {
     pQuadra quadra = (pQuadra) q;
     return Arvore_getRaiz(quadra->arvoreMoradores);
 }
@@ -141,4 +141,19 @@ char* Quadra_getDados(Quadra q, char* dados) {
     pQuadra quadra = (pQuadra) q;
     sprintf(dados, "%0.1lf %0.1lf\n %s\n", quadra->x, quadra->y, quadra->cep);
     return dados;
+}
+
+void Quadra_setPredio(Quadra q, Predio prd) {
+    pQuadra quadra = (pQuadra) q;
+    Arvore_inserir(quadra->arvorePredios, prd);
+}
+
+Node Quadra_getPredios(Quadra q) {
+    pQuadra quadra = (pQuadra) q;
+    return Arvore_getRaiz(quadra->arvorePredios);
+}
+
+bool Quadra_removerPredio(Quadra q, Predio prd) {
+    pQuadra quadra = (pQuadra) q;
+    return Arvore_removerObjeto(quadra->arvorePredios, prd);
 }

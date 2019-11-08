@@ -76,12 +76,13 @@ int Hidrante_compararChave(Hidrante a, Hidrante b) {
     pHidrante hidrante_b = (pHidrante) b;
 
     if (hidrante_a->x > hidrante_b->x) return 1;
-        else if (hidrante_a->x < hidrante_b->x) return -1;
-        else {
-            if (hidrante_a->y > hidrante_b->y) return 1;
-            else if (hidrante_a->y < hidrante_b->y) return -1;
-            else return 0;
-        }
+    else if (hidrante_a->x < hidrante_b->x) return -1;
+    else {
+        // printf("ENTROU AQUI %lf %lf,   %lf %lf\n", hidrante_a->x,  hidrante_b->x, hidrante_a->y,  hidrante_b->y);
+        if (hidrante_a->y > hidrante_b->y) return 1;
+        else if (hidrante_a->y < hidrante_b->y) return -1;
+        else return 0;
+    }
 }
 
 int Hidrante_getSize() {

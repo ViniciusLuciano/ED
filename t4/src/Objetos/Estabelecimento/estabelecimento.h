@@ -12,9 +12,14 @@ Estabelecimento criarEstabelecimento(char* cnpj, char* cpf, char* codt, char* ce
 void destruirEstabelecimento(Estabelecimento estabelecimento);
 char* Estabelecimento_get_cnpj(Estabelecimento estabelecimento);
 char* Estabelecimento_getDados(Estabelecimento estabelecimento, char* dados);
+char* Estabelecimento_getCep(Estabelecimento estabelecimento);
+char* Estabelecimento_getCodt(Estabelecimento estabelecimento);
+char Estabelecimento_getFace(Estabelecimento estabelecimento);
+double Estabelecimento_getNum(Estabelecimento estabelecimento);
 
 bool estabelecimentoEquals(Estabelecimento estabelecimento, char *id);
 int Estabelecimento_getSize();
+int Estabelecimento_compararChave(Estabelecimento a, Estabelecimento b);
 
 char* Estabelecimento_getChave(Estabelecimento estabelecimento);
 

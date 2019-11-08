@@ -220,3 +220,154 @@ Ponto buscarPontoInterseccao(Segmento a, Segmento b) {
 
 	return criarPonto(x_intersec, y_intersec);
 }
+
+bool PontoInternoPoligono(Ponto ponto, Poligono poligono) {
+	Vertice v1 = criarVertice(Ponto_get_x(ponto), Ponto_get_y(ponto), 0, 0);
+	Vertice v2 = criarVertice(Poligono_get_max_x(poligono) + 1, Ponto_get_y(ponto), 0, 0);
+	Segmento s_ponto = criarSegmento(v1, v2);
+
+	Node segmentos = Arvore_getRaiz(Poligono_getSegmentos(poligono));
+	int numIntersec = 0;
+	forEach(segmento, segmentos) {
+		if (Node_getAux(segmento) == 0) {
+            Segmento s = Node_getObjeto(segmento);
+			if (verificarSegmentosInterceptam(s_ponto, s)) {
+				numIntersec++;
+			}
+        }
+	}
+	destruirSegmento(s_ponto);
+	//printf("KSAOPASDKOSDAKDSAOPKASD %d\n", numIntersec);
+	if (numIntersec%2 == 0) return false;
+	return true;
+}
+
+bool _VerticeInternoPoligono(Vertice vertice, Poligono poligono) {
+	Vertice v1 = criarVertice(Vertice_get_x(vertice), Vertice_get_y(vertice), 0, 0);
+	Vertice v2 = criarVertice(Poligono_get_max_x(poligono) + 1, Vertice_get_y(vertice), 0, 0);
+	Segmento s_ponto = criarSegmento(v1, v2);
+
+	Node segmentos = Arvore_getRaiz(Poligono_getSegmentos(poligono));
+	int numIntersec = 0;
+	forEach(segmento, segmentos) {
+		if (Node_getAux(segmento) == 0) {
+            Segmento s = Node_getObjeto(segmento);
+			if (verificarSegmentosInterceptam(s_ponto, s)) {
+				numIntersec++;
+			}
+        }
+	}
+	destruirSegmento(s_ponto);
+
+	if (numIntersec%2 == 0) return false;
+	return true;
+}
+
+bool RetanguloInternoPoligono(Retangulo r, Poligono p) {
+	Vertice v1 = criarVertice(Retangulo_get_x(r), Retangulo_get_y(r), 0, 0);
+	Vertice v2 = criarVertice(Retangulo_get_max_x(r), Retangulo_get_y(r), 0, 0);
+	Vertice v3 = criarVertice(Retangulo_get_x(r), Retangulo_get_max_y(r), 0, 0);
+	Vertice v4 = criarVertice(Retangulo_get_max_x(r), Retangulo_get_max_y(r), 0, 0);
+	Vertice v1_2 = criarVertice(Retangulo_get_x(r), Retangulo_get_y(r), 0, 0);
+	Vertice v2_2 = criarVertice(Retangulo_get_max_x(r), Retangulo_get_y(r), 0, 0);
+	Vertice v3_2 = criarVertice(Retangulo_get_x(r), Retangulo_get_max_y(r), 0, 0);
+	Vertice v4_2 = criarVertice(Retangulo_get_max_x(r), Retangulo_get_max_y(r), 0, 0);
+
+	Segmento s1 = criarSegmento(v1, v2);
+	Segmento s2 = criarSegmento(v1_2, v3);
+	Segmento s3 = criarSegmento(v2_2, v4);
+	Segmento s4 = criarSegmento(v3_2, v4_2);
+
+	if (!_VerticeInternoPoligono(v1, p) || !_VerticeInternoPoligono(v2, p) ||
+		!_VerticeInternoPoligono(v3, p) || !_VerticeInternoPoligono(v4, p)) {
+			destruirSegmento(s1);
+			destruirSegmento(s2);
+			destruirSegmento(s3);
+			destruirSegmento(s4);
+			return false;
+	}
+
+	Node segmentos = Arvore_getRaiz(Poligono_getSegmentos(p));
+	int numIntersec = 0;
+	forEach(segmento, segmentos) {
+		if (Node_getAux(segmento) == 0) {
+            Segmento s = Node_getObjeto(segmento);
+			if (verificarSegmentosInterceptam(s1, s)) {
+				destruirSegmento(s1);
+				destruirSegmento(s2);
+				destruirSegmento(s3);
+				destruirSegmento(s4);
+				return false;
+			}
+			if (verificarSegmentosInterceptam(s2, s)) {
+				destruirSegmento(s1);
+				destruirSegmento(s2);
+				destruirSegmento(s3);
+				destruirSegmento(s4);
+				return false;
+			}
+			if (verificarSegmentosInterceptam(s3, s)) {
+				destruirSegmento(s1);
+				destruirSegmento(s2);
+				destruirSegmento(s3);
+				destruirSegmento(s4);
+				return false;
+			}
+			if (verificarSegmentosInterceptam(s4, s)) {
+				destruirSegmento(s1);
+				destruirSegmento(s2);
+				destruirSegmento(s3);
+				destruirSegmento(s4);
+				return false;
+			}
+        }
+	}
+
+	destruirSegmento(s1);
+	destruirSegmento(s2);
+	destruirSegmento(s3);
+	destruirSegmento(s4);
+	return true;
+}
+
+bool RetanguloParcialmenteInternoPoligono(Retangulo r, Poligono p) {
+	Ponto p1 = criarPonto(Retangulo_get_x(r), Retangulo_get_y(r));
+	Ponto p2 = criarPonto(Retangulo_get_max_x(r), Retangulo_get_y(r));
+	Ponto p3 = criarPonto(Retangulo_get_x(r), Retangulo_get_max_y(r));
+	Ponto p4 = criarPonto(Retangulo_get_max_x(r), Retangulo_get_max_y(r));
+
+	if (PontoInternoPoligono(p1, p)) {
+		destruirPonto(p1);
+		destruirPonto(p2);
+		destruirPonto(p3);
+		destruirPonto(p4);
+		return true;
+	}
+	if (PontoInternoPoligono(p2, p)) {
+		destruirPonto(p1);
+		destruirPonto(p2);
+		destruirPonto(p3);
+		destruirPonto(p4);
+		return true;
+	}
+	if (PontoInternoPoligono(p3, p)) {
+		destruirPonto(p1);
+		destruirPonto(p2);
+		destruirPonto(p3);
+		destruirPonto(p4);
+		return true;
+	}
+	if (PontoInternoPoligono(p4, p)) {
+		destruirPonto(p1);
+		destruirPonto(p2);
+		destruirPonto(p3);
+		destruirPonto(p4);
+		return true;
+	}
+
+	destruirPonto(p1);
+	destruirPonto(p2);
+	destruirPonto(p3);
+	destruirPonto(p4);
+	return false;
+}

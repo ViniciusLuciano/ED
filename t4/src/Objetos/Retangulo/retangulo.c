@@ -69,3 +69,15 @@ void Retangulo_escreverSvg(Retangulo r, FILE *svg) {
             retangulo->cfill,
             retangulo->rw);
 }
+
+Retangulo criarRetangulo_Predio(Predio p) {
+    double x = Predio_get_x(p), y = Predio_get_y(p);
+    double w = Predio_get_x_max(p) - x, h = Predio_get_y_max(p) - y;
+    return criarRetangulo(x, y, w, h, "", "", "");
+}
+
+Retangulo criarRetangulo_Quadra(Quadra q) {
+    double x = Quadra_get_x(q), y = Quadra_get_y(q);
+    double w = Quadra_get_w(q), h = Quadra_get_h(q);
+    return criarRetangulo(x, y, w, h, "", "", "");
+}

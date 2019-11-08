@@ -7,6 +7,7 @@
 #include <string.h>
 #include "../Morador/morador.h"
 #include "../../Utils/Arvore/arvore.h"
+#include "../Predio/predio.h"
 
 typedef void* Quadra;
 
@@ -22,9 +23,12 @@ void Quadra_set_x(Quadra quadra, double x);
 void Quadra_set_y(Quadra quadra, double y);
 void Quadra_escreverSvg(Quadra q, FILE *svg);
 void Quadra_setMorador(Quadra q, Morador m);
-Arvore Quadra_getMoradores(Quadra q);
+Node Quadra_getMoradores(Quadra q);
 bool Quadra_removerMorador(Quadra q, char* cpf);
 char* Quadra_getDados(Quadra q, char* dados);
+void Quadra_setPredio(Quadra q, Predio prd);
+Node Quadra_getPredios(Quadra q);
+bool Quadra_removerPredio(Quadra q, Predio prd);
 
 // Funções relacionadas com a lista
 bool quadraEquals(Quadra quadra, char *cep);

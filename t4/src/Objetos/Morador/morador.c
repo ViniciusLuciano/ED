@@ -16,21 +16,21 @@ Morador criarMorador(char* cpf, char* cep, char face, double num, char* compleme
     return morador;
 }
 
-void destruirMorador(Morador e) {
-    pMorador morador = (pMorador) e;
+void destruirMorador(Morador m) {
+    pMorador morador = (pMorador) m;
     if (morador != NULL) {
-        morador = NULL;
         free(morador);
+        morador = NULL;
     }
 }
 
-char* Morador_get_cpf(Morador e) {
-    pMorador morador = (pMorador) e;
+char* Morador_get_cpf(Morador m) {
+    pMorador morador = (pMorador) m;
     return morador->cpf;
 }
 
-bool moradorEquals(Morador e, char *id) {
-    pMorador morador = (pMorador) e;
+bool moradorEquals(Morador m, char *id) {
+    pMorador morador = (pMorador) m;
     return strcmp(morador->cpf, id) == 0;
 }
 
@@ -38,8 +38,8 @@ int Morador_getSize() {
     return sizeof(struct morador);
 }
 
-char* Morador_getChave(Morador e) {
-    pMorador morador = (pMorador) e;
+char* Morador_getChave(Morador m) {
+    pMorador morador = (pMorador) m;
     return morador->cpf;
 }
 

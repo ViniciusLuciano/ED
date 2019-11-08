@@ -5,6 +5,8 @@ int mult[10000];
 typedef struct node {
 	Objeto objeto;
 	struct node* prox;
+	struct node* ant;
+	bool excluido;
 } *pNode;
 
 typedef struct tabelaHash {
@@ -12,7 +14,7 @@ typedef struct tabelaHash {
 	int tam;
     bool (*equals)(Objeto objeto, char* chave);
     char* (*getChave)(Objeto objeto);
-    void(*destruirObjeto)(Objeto objeto);
+    void (*destruirObjeto)(Objeto objeto);
 } *pTabelaHash;
 
 int encontrarPrimo(int v) {
@@ -35,25 +37,28 @@ int encontrarPrimo(int v) {
 	return numPrimo;
 }
 
-TabelaHash criarTabelaHash(int tam, bool(*equals)(Objeto objeto, char* chave), 
+TabelaHash criarTabelaHash(int tam, bool (*equals)(Objeto objeto, char* chave), 
                                     char* (*getChave)(Objeto objeto),
                                     void (*destruirObjeto)(Objeto objeto)) {
 	pTabelaHash tabelaHash = malloc(sizeof(struct tabelaHash));
-	tabelaHash->hash = malloc(tam*sizeof(struct node));
 	tabelaHash->tam = encontrarPrimo(tam);
+	tabelaHash->hash = malloc(tabelaHash->tam*sizeof(pNode));
     tabelaHash->equals = equals;
     tabelaHash->getChave = getChave;
     tabelaHash->destruirObjeto = destruirObjeto;
-	for(int i = 0; i < tam; i++) tabelaHash->hash[i] = NULL;
+	for(int i = 0; i < tabelaHash->tam; i++) tabelaHash->hash[i] = NULL;
 	return tabelaHash;
 }
 
-void destruir(pNode inicio) {
+
+void destruir(pTabelaHash t, pNode inicio) {
 	pNode aux;
 	aux = inicio;
 
 	while (aux != NULL) {
 		inicio = inicio->prox;
+		if (t->destruirObjeto != NULL)
+			t->destruirObjeto(aux->objeto);
 		free(aux);
 		aux = inicio;
 	}
@@ -64,7 +69,7 @@ void destruirTabelaHash(TabelaHash t) {
 	for(int i = 0; i < tabelaHash->tam; i++) {
 		pNode n = tabelaHash->hash[i];
 		if(n != NULL) {
-			destruir(n);
+			destruir(tabelaHash, n);
 		}
 	}
 	free(tabelaHash->hash);
@@ -76,8 +81,10 @@ void TabelaHash_inserir(TabelaHash t, Objeto objeto) {
 	pNode novo = malloc(sizeof(struct node));
 	novo->objeto = objeto;
 	novo->prox = NULL;
+	novo->ant = NULL;
+	novo->excluido = false;
 
-    int key = TabelaHash_getChaveUnica(t, tabelaHash->getChave(objeto));
+    long long key = TabelaHash_getChaveUnica(t, tabelaHash->getChave(objeto));
 	if(tabelaHash->hash[key] == NULL) {
 		tabelaHash->hash[key] = novo;
 	} else {
@@ -85,6 +92,7 @@ void TabelaHash_inserir(TabelaHash t, Objeto objeto) {
 		while(1) {
 			if(aux->prox == NULL) {
 				aux->prox = novo;
+				novo->ant = aux;
 				break;
 			}
 			aux = aux->prox;
@@ -94,56 +102,49 @@ void TabelaHash_inserir(TabelaHash t, Objeto objeto) {
 
 bool TabelaHash_removerObjeto(TabelaHash t, char* chave) {
 	pTabelaHash tabelaHash = (pTabelaHash) t;
-    int key = TabelaHash_getChaveUnica(t, chave);
+    long long key = TabelaHash_getChaveUnica(t, chave);
 
 	pNode n = tabelaHash->hash[key];
-	if(n->prox == NULL) {
-		//tabelaHash->destruirObjeto(n->objeto);
-		n = NULL;
-		return true;
-	} else {
-		pNode aux = n;
 
-		while(true) {
-			if(tabelaHash->equals(aux->objeto, chave)) {
-				//tabelaHash->destruirObjeto(aux->objeto);
-				aux = NULL;
-				return true;
-			}
-			aux = aux->prox;
-		}
+	while (n != NULL && !tabelaHash->equals(n->objeto, chave)) {
+		n = n->prox;
 	}
 
-	return false;
+	if (n == NULL) return false;
+
+
+	if (n->ant != NULL) { // Nao é o primeiro
+		n->ant->prox = n->prox;
+		if (n->prox != NULL)
+			n->prox->ant = n->ant;
+	} else { // É o primeiro
+		tabelaHash->hash[key] = n->prox;
+	}
+
+	if (tabelaHash->destruirObjeto != NULL) {
+		tabelaHash->destruirObjeto(n->objeto);
+	}
+	free(n);
+
+	return true;
 }
 
 Objeto TabelaHash_getObjeto(TabelaHash t, char* chave) {
     pTabelaHash tabelaHash = (pTabelaHash) t;
-    //char* chave = tabelaHash->getChave(objeto);
-    int key = TabelaHash_getChaveUnica(t, chave);
+    long long key = TabelaHash_getChaveUnica(t, chave);
+    
 	pNode n = tabelaHash->hash[key];
-
-	if (n == NULL) return NULL;
-
-	if(n->prox == NULL && tabelaHash->equals(n->objeto, chave)) {
-		//tabelaHash->destruirObjeto(objeto);
-	 	return n->objeto;
-	} else {
-	 	pNode aux = n;
-		while(aux != NULL) {
-			if(tabelaHash->equals(aux->objeto, chave)) {
-				//tabelaHash->destruirObjeto(objeto);
-				return aux->objeto;
-			}
-	 		aux = aux->prox;
-		}
+	while (n != NULL && n->objeto != NULL && !tabelaHash->equals(n->objeto, chave)) {
+		n = n->prox;
 	}
-	//tabelaHash->destruirObjeto(objeto);
-	return NULL;
+
+	if (n == NULL || n->excluido == true) return NULL;
+
+	return n->objeto;
 }
 
 // Key
-int TabelaHash_getChaveUnica(TabelaHash t, char* chave) {
+long long TabelaHash_getChaveUnica(TabelaHash t, char* chave) {
     pTabelaHash tabelaHash = (pTabelaHash) t;
 	long long total = 0;
 

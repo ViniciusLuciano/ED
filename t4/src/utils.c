@@ -292,6 +292,14 @@ bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 
             sscanf(str, "%*s %s %c %lf %lf %lf %lf", cep, &face, &num, &f, &p, &mrg);
             Predio prd = criarPredio(cep, face, num, f, p, mrg);
+
+            Quadra q = Cidade_getQuadra(*cidade, cep);
+            if (q != NULL) {
+                Predio_setPosicoes(prd, Quadra_get_x(q), Quadra_get_y(q), Quadra_get_w(q), Quadra_get_h(q));
+                //printf("Predio %s %lf %lf inserido na quadra %s\n", Predio_getId(prd), Predio_get_x(prd), Predio_get_y(prd), cep);
+                Quadra_setPredio(q, prd);
+                Predio_setQuadra(prd, q);
+            }
             Cidade_setPredio(*cidade, prd);
 
         } else if(strcmp(instrucao, "mur") == 0) {
@@ -322,7 +330,8 @@ bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 
 
 
-bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, char *dirSaida, char *nomeArquivoConsulta, Cidade *cidade) {
+bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, char *dirSaida, 
+                                            char *nomeArquivoConsulta, char* dirEntrada, Cidade *cidade) {
     
     char nomeArquivoEntradaSemExtensao[64], nomeArquivoConsultaSemExtensao[64];
     strcpy(nomeArquivoEntradaSemExtensao, nomeArquivoEntrada);
@@ -651,6 +660,23 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 
         } else if(strcmp(instrucao, "mplg?") == 0) {
 
+            char arq_polig[50];
+            sscanf(str, "%*s %s", arq_polig);
+
+            // Falta o segmento do primeiro com o ultimo
+            FILE* fpolig = abrirArquivo(dirEntrada, arq_polig, "r");
+            Poligono poligono = criarPoligono(fpolig);
+            fclose(fpolig);
+
+            Cidade_processarMPLG(*cidade, poligono);
+
+            // Ponto ponto = criarPonto(520, 256.601907);
+            // bool interno = PontoInternoPoligono(ponto, poligono);
+            // printf("XD %d\n", interno);
+
+            destruirPoligono(poligono);
+
+
         } else if(strcmp(instrucao, "dm?") == 0) {
 
             char cpf[50];
@@ -717,7 +743,32 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 
         } else if(strcmp(instrucao, "eplg?") == 0) {
 
+            char arq_polig[50], tp[20];
+            sscanf(str, "%*s %s %s", arq_polig, tp);
+
+            FILE* fpolig = abrirArquivo(dirEntrada, arq_polig, "r");
+            Poligono poligono = criarPoligono(fpolig);
+            Poligono_escreverSVG(poligono, arquivoSVG);
+            fclose(fpolig);
+
+            Cidade_processarEPLG(*cidade, poligono, tp);
+
+            destruirPoligono(poligono);
+
         } else if(strcmp(instrucao, "catac") == 0) {
+
+            char arq_polig[50];
+            sscanf(str, "%*s %s", arq_polig);
+
+            // Falta o segmento do primeiro com o ultimo
+            FILE* fpolig = abrirArquivo(dirEntrada, arq_polig, "r");
+            Poligono poligono = criarPoligono(fpolig);
+            Poligono_escreverSVG(poligono, arquivoSVG);
+            fclose(fpolig);
+
+            Cidade_processarCATAC(*cidade, poligono);
+
+            destruirPoligono(poligono);
 
         } else if(strcmp(instrucao, "dmprbt") == 0) {
 
@@ -751,7 +802,7 @@ void executarModoInterativo(Cidade *cidade, char* dirSaida, char* dirEntrada, ch
             FILE* f = abrirArquivo( dirEntrada, arq, "r" );
             if (f == NULL)
                 exit(1);
-            processarArquivoConsulta(f, nomeArquivoEntrada, dirSaida, arq, cidade);
+            processarArquivoConsulta(f, nomeArquivoEntrada, dirSaida, arq, dirEntrada, cidade);
             fclose(f);
 
         } else if (strcmp(instrucao, "dmprbt") == 0) {
@@ -829,6 +880,15 @@ bool processarArquivoPM(FILE *arquivoPM, char *dirSVG, char *nomeArquivoSVG, Cid
             Quadra quadra = Cidade_getQuadra(*cidade, cep);
             if (quadra != NULL) {
                 Quadra_setMorador(quadra, m);
+            } else {
+                //printf("Quadra %s não encontrado.\n", cep);
+            }
+
+            Predio prd = Cidade_getPredio(*cidade, cep, face, num);
+            if (prd != NULL) {
+                Predio_setMorador(prd, m);
+            } else {
+                //printf("Predio %s%c%.0lf não encontrado.\n", cep, face, num);
             }
         }
     }

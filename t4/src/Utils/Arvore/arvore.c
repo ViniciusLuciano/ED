@@ -45,7 +45,8 @@ void desalocarNode(pArvore a, pNode node) {
         return;
     desalocarNode(a, node->esq);
     desalocarNode(a, node->dir);
-    a->destruirObjeto(node->objeto);
+	if (a->destruirObjeto != NULL)
+    	a->destruirObjeto(node->objeto);
     free(node);
 }
 
@@ -168,7 +169,6 @@ void Arvore_inserir(Arvore arvore, Objeto objeto) {
 	novo->cor = VERMELHO;
 	novo->dir = getTNULL();
 	novo->esq = getTNULL();
-	novo->pai = NULL;
 	novo->aux = 0;
 
 	pNode anterior = NULL;
@@ -208,134 +208,160 @@ void Arvore_inserir(Arvore arvore, Objeto objeto) {
 	fixInserir(a->raiz, novo);
 }
 
-void fixDeletar(pNode* raiz, pNode x) {
+void fixRemover(pArvore tree, pNode node) {
+    pNode y;
+    pNode x;
+    pNode w; 
 
-	while (x != (*raiz) && x->cor == PRETO) {
-		if (x == x->pai->esq) {
-			pNode w = x->pai->dir;
+    bool x_esquerda;
 
-			if(w->cor == VERMELHO) {
-				w->cor = PRETO;
-				x->pai->cor = VERMELHO;
-				rotacionarEsquerda(raiz, x->pai);
-				w = x->pai->dir;
-			}
 
-			if (w->esq->cor == PRETO && w->dir->cor == PRETO) {
-				w->cor = VERMELHO;
-				x = x->pai;
+    if (node->esq == getTNULL() && node->dir == getTNULL()) {
 
-			} else {
+        y = getTNULL();
+        x = getTNULL();
+        x->pai = node->pai;
+        if (node->pai != NULL && node->pai->esq == node)
+            x_esquerda = true;
+        else
+            x_esquerda = false;
+        
+    } else if (node->esq == getTNULL() && node->dir != getTNULL()) {
 
-				if (w->dir->cor == PRETO) {
-					w->esq->cor = PRETO;
-					w->cor = VERMELHO;
-					rotacionarDireita(raiz, w);
-					w = x->pai->dir;
-				}
+        y = node->dir;
+        x = node->dir;
+        x->pai = node->pai;
+        x_esquerda = false;
+    } else if (node->esq != getTNULL() && node->dir == getTNULL()) {
+        y = node->esq;
+        x = node->esq;
+        x->pai = node->pai;
+        x_esquerda = true;
+    } else {
+        y = node->dir;
+        while (y->esq != getTNULL())
+            y = y->esq;
+        x = y->dir;
+        if (y != node->dir) {
+            y->esq = node->esq;
+            y->dir = node->dir;
+            y->esq->pai = y;
+            y->dir->pai = y;
+            x->pai = y->pai;
+            x->pai->esq = x;
+            x_esquerda = true;
+        } else {
+            x->pai = y;
+            y->esq = node->esq;
+            node->esq->pai = y;
+            x_esquerda = false;
+        }
+    }
 
-				w->cor = x->pai->cor;
-				x->pai->cor = PRETO;
-				w->dir->cor = PRETO;
+    if (node->pai != NULL) {
+        if (node->pai->esq == node)
+            node->pai->esq = y;
+        else
+            node->pai->dir = y;
+    } else {
+        (*tree->raiz) = y;
+    }
 
-				rotacionarEsquerda(raiz, x->pai);
-				x = (*raiz);
-			}
+    if (y != getTNULL()) {
+        y->pai = node->pai;
+    }
 
-		} else {
-			pNode w = x->pai->esq;
+	
+    if (node->cor == VERMELHO && (y->cor == VERMELHO || y == NULL))
+        return;
+    else if (node->cor == VERMELHO && y->cor == PRETO) {
+        y->cor = VERMELHO;
+    } else if (node->cor == PRETO && y->cor == VERMELHO) {
+        y->cor = PRETO;
+        return;
+    }
 
-			if (w->cor == VERMELHO) {
-				w->cor = PRETO;
-				w->pai->cor = VERMELHO;
-				rotacionarDireita(raiz, x->pai);
-				w = x->pai->esq;
-			}
-
-			if (w->dir->cor == PRETO && w->esq->cor == PRETO) {
-				w->cor = VERMELHO;
-				x = x->pai;
-
-			} else {
-
-				if (w->esq->cor == PRETO) {
-					w->dir->cor = PRETO;
-					w->cor = VERMELHO;
-					rotacionarEsquerda(raiz, w);
-					w = x->pai->esq;
-				}
-
-				w->cor = x->pai->cor;
-				x->pai->cor = PRETO;
-				w->esq->cor = PRETO;
-				rotacionarDireita(raiz, x->pai);
-				x = (*raiz);
-			}
-		}
-	}
-	x->cor = PRETO;
+    while (x != (*tree->raiz)) {
+        if (x_esquerda)
+            w = x->pai->dir;
+        else
+            w = x->pai->esq;
+        
+        if (x->cor == VERMELHO) {
+            x->cor = PRETO;
+            return;
+        } else {
+            if (w->cor == VERMELHO) {
+                w->cor = PRETO;
+                x->pai->cor = VERMELHO;
+                if (x_esquerda) {
+                    rotacionarEsquerda(tree->raiz, x->pai);
+                    w = x->pai->dir;
+                } else {
+                    rotacionarDireita(tree->raiz, x->pai);
+                    w = x->pai->esq;
+                }
+            }
+			
+            if (w->cor == PRETO) {
+                if (w->esq->cor == PRETO && w->dir->cor == PRETO) {
+                    w->cor = VERMELHO;
+                    x = x->pai;
+                    x_esquerda = x->pai == NULL ? false : x == x->pai->esq;
+                    if (x->cor == VERMELHO) {
+                        x->cor = PRETO;
+                        return;
+                    }
+                    continue;
+                } else if (x_esquerda && w->esq->cor == VERMELHO && w->dir->cor == PRETO
+                        || !x_esquerda && w->dir->cor == VERMELHO && w->esq->cor == PRETO) {
+                    w->cor = VERMELHO;
+                    if (x_esquerda) {
+                        w->esq->cor = PRETO;
+                        rotacionarDireita(tree->raiz, w);
+                        w = x->pai->dir;
+                    } else {
+                        w->dir->cor = PRETO;
+                        rotacionarEsquerda(tree->raiz, w);
+                        w = x->pai->esq;
+                    }
+                }
+                w->cor = x->pai->cor;
+                x->pai->cor = PRETO;
+                if (x->pai->esq == x) {
+                    w->dir->cor = PRETO;
+                    rotacionarEsquerda(tree->raiz, x->pai);
+                } else {
+                    w->esq->cor = PRETO;
+                    rotacionarDireita(tree->raiz, x->pai);
+                }
+                return;
+            }
+        }
+    }
 }
-
 
 bool Arvore_removerObjeto(Arvore arvore, Objeto objeto) {
     pArvore a = (pArvore) arvore;
 	// Encontrar o node que contem a mesma chave
 	pNode node = (*a->raiz);
-	pNode z = getTNULL();
-	pNode x, y;
-
 	while (node != getTNULL()) {
-		if (a->compararChave(objeto, node->objeto) == 0) {
-			z = node;
-			break;
-		}
-
-		if(a->compararChave(objeto, node->objeto) >= 0)
-            node = node->dir;
-        else
-            node = node->esq;
-	}
-
-	if (z == getTNULL()) {
-		printf("Elemento não encontrado.\n");
-		return false;
-	}
-
-	a->tamArvore--;
-	if (z->esq == getTNULL() || z->dir == getTNULL()) {
-		y = z;
-	} else {
-		y = z->dir;
-		while (y->esq != getTNULL())
-			y = y->esq;
-	}
-
-	if (y->esq != getTNULL())
-		x = y->esq;
-	else
-		x = y->dir;
-
-	x->pai = y->pai;
-	if (y->pai != NULL) {
-		if (y == y->pai->esq)
-			y->pai->esq = x;
+		int cmpResult = a->compararChave(objeto, node->objeto);
+		if (cmpResult < 0)
+			node = node->esq;
+		else if (cmpResult > 0)
+			node = node->dir;
 		else
-			y->pai->dir = x;
-	} else {
-		(*a->raiz) = x;
-	}
+			break;
+    }
 
-	if (y != z) {
-		memcpy(z->objeto, y->objeto, a->tamObjeto);
-	}
+    if (node == getTNULL())
+        return NULL;
 
-	if (y->cor ==  PRETO) {
-		fixDeletar(a->raiz, x);
-	}
+	fixRemover(a, node);
 
-	a->destruirObjeto(y->objeto);
-	free(y);
-	return true;
+    free(node);
+    return true;
 }
 
 Arvore criarArvore(int(*compararChave)(Objeto obj1, Objeto obj2), int tamObjeto, 
@@ -382,10 +408,10 @@ void Arvore_escreverSvg_util(pNode node, int x, FILE* svg, char*(*Objeto_getDado
 	x+=20;
 	Arvore_escreverSvg_util(node->esq, x, svg, Objeto_getDados);
 
-	fprintf(svg, "<circle cx=\"%d\" cy=\"%d\" r=\"5\" stroke=\"black\" fill=\"%s\" stroke-width=\"2\" />\n", 
+	fprintf(svg, "<circle cx=\"%d\" cy=\"%d\" r=\"5\" stroke=\"PRETO\" fill=\"%s\" stroke-width=\"2\" />\n", 
             Y_PRINT_ARVORE,
             x,
-            node->cor == VERMELHO ? "red" : "black");
+            node->cor == VERMELHO ? "VERMELHO" : "PRETO");
 	// fprintf(svg, "<text x=\"%d\" y=\"%d\" fill=\"white\" font-size=\"5\">%.0lf</text>",
     //     Y_PRINT_ARVORE, 
     //     x, 
@@ -414,6 +440,7 @@ void Arvore_escreverSvg(Arvore arvore, char* nomeArquivo, char*(*Objeto_getDados
 
 Node next(Node node) {
 	pNode p = (pNode) node;
+
 	if (p == getTNULL()) return NULL;
 
 	if (p->aux == 0) {

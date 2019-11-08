@@ -1,4 +1,5 @@
 #include "main.h"
+#include "Utils/Poligono/poligono.h"
 
 int main(int argc, char* argv[]) {
     
@@ -42,7 +43,7 @@ int main(int argc, char* argv[]) {
         FILE *arquivoConsulta = abrirArquivo( dirEntrada, nomeArquivoConsulta, "r" );
         if (arquivoConsulta == NULL)
             return 1;
-        processarArquivoConsulta(arquivoConsulta, nomeArquivoEntrada, dirSaida, nomeArquivoConsulta, &cidade);
+        processarArquivoConsulta(arquivoConsulta, nomeArquivoEntrada, dirSaida, nomeArquivoConsulta, dirEntrada, &cidade);
         fclose(arquivoConsulta);
     }
 

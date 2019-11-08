@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include "../Predio/predio.h"
+#include "../Quadra/quadra.h"
 
 typedef void* Retangulo;
 
@@ -18,5 +20,8 @@ double Retangulo_get_max_x(Retangulo retangulo);
 double Retangulo_get_max_y(Retangulo retangulo);
 char* Retangulo_get_cfill(Retangulo r);
 void Retangulo_escreverSvg(Retangulo r, FILE *svg);
+
+Retangulo criarRetangulo_Predio(Predio p);
+Retangulo criarRetangulo_Quadra(Quadra q);
 
 #endif
