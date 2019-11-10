@@ -58,17 +58,17 @@ Cidade criarCidade(int i, int nq, int nh, int ns, int nr, int np, int nm) {
     cidade->tabelaHashTiposEstabelecimento = criarTabelaHash(1000, tipoEstabelecimentoEquals, TipoEstabelecimento_getChave, destruirTipoEstabelecimento);
     cidade->tabelaHashPessoas = criarTabelaHash(1000, pessoaEquals, Pessoa_getChave, destruirPessoa);
     cidade->tabelaHashMoradores = criarTabelaHash(1000, moradorEquals, Morador_getChave, destruirMorador);
-    cidade->arvoreMoradores = criarArvore(Morador_compararChave, Morador_getSize(), NULL);
-    cidade->arvoreEstabelecimentos = criarArvore(Estabelecimento_compararChave, Estabelecimento_getSize(), NULL);
+    cidade->arvoreMoradores = criarArvore(Morador_compararChave, NULL);
+    cidade->arvoreEstabelecimentos = criarArvore(Estabelecimento_compararChave, NULL);
 
-    cidade->arvoreFormas = criarArvore(Forma_compararChave, Forma_getSize(), NULL);
-    cidade->arvoreQuadras = criarArvore(Quadra_compararChave, Quadra_getSize(), NULL);
-    cidade->arvoreHidrantes = criarArvore(Hidrante_compararChave, Hidrante_getSize(), NULL);
-    cidade->arvoreSemaforos = criarArvore(Semaforo_compararChave, Semaforo_getSize(), NULL);
-    cidade->arvoreRadioBases = criarArvore(RadioBase_compararChave, RadioBase_getSize(), NULL);
-    cidade->arvorePredios = criarArvore(Predio_compararChave, Predio_getSize(), NULL);
-    cidade->arvoreMuros = criarArvore(Muro_compararChave, Muro_getSize(), destruirMuro);
-    cidade->arvoreTextos = criarArvore(Texto_compararChave, Texto_getSize(), destruirTexto);
+    cidade->arvoreFormas = criarArvore(Forma_compararChave, NULL);
+    cidade->arvoreQuadras = criarArvore(Quadra_compararChave, NULL);
+    cidade->arvoreHidrantes = criarArvore(Hidrante_compararChave, NULL);
+    cidade->arvoreSemaforos = criarArvore(Semaforo_compararChave, NULL);
+    cidade->arvoreRadioBases = criarArvore(RadioBase_compararChave, NULL);
+    cidade->arvorePredios = criarArvore(Predio_compararChave, NULL);
+    cidade->arvoreMuros = criarArvore(Muro_compararChave, destruirMuro);
+    cidade->arvoreTextos = criarArvore(Texto_compararChave, destruirTexto);
     return cidade;
 }
 
@@ -375,125 +375,97 @@ Objeto objetoCopy(Objeto objeto, int tamanho) {
 	return o;
 }
 
-
-
-void deslocarEquipamentosInternosRetanguloAux(pCidade c, Retangulo r, double dx, double dy, FILE* txt, Node n, char* tipo) {
-
-    Objeto o = Node_getObjeto(n);
-    Arvore a; 
-    Objeto objCopy;
-
-    if (o == NULL) return;
-
-    double x, y;
-    double rx = Retangulo_get_x(r), ry = Retangulo_get_y(r);
-    double rx_max = Retangulo_get_max_x(r), ry_max = Retangulo_get_max_y(r);
-    char* id;
-
-    if (strcmp(tipo, "quadra") == 0) {
-
-        Retangulo rq = criarRetangulo(Quadra_get_x(o), Quadra_get_y(o), Quadra_get_w(o), Quadra_get_h(o), "", "", "");
-
-        if(retanguloInternoRetangulo(rq, r)) {
-            Quadra qc = objetoCopy(o, Quadra_getSize());
-            fprintf(txt, "CEP -> %s\n", Quadra_get_cep(o));
-            fprintf(txt, "(%.2lf, %.2lf) -> (%.2lf, %.2lf)\n\n",
-                Quadra_get_x(o),
-                Quadra_get_y(o),
-                Quadra_get_x(o) + dx,
-                Quadra_get_y(o) + dy
-            );
-            Quadra_set_x(qc, Quadra_get_x(o) + dx);
-            Quadra_set_y(qc, Quadra_get_y(o) + dy);
-
-            deslocarEquipamentosInternosRetanguloAux(c, r, dx, dy, txt, Node_getDir(n), tipo);
-            deslocarEquipamentosInternosRetanguloAux(c, r, dx, dy, txt, Node_getEsq(n), tipo); 
-
-            Arvore_removerObjeto(c->arvoreQuadras, o);
-            Arvore_inserir(c->arvoreQuadras, qc);
-        } else {
-            deslocarEquipamentosInternosRetanguloAux(c, r, dx, dy, txt, Node_getDir(n), tipo);
-            deslocarEquipamentosInternosRetanguloAux(c, r, dx, dy, txt, Node_getEsq(n), tipo);
-        }
-        destruirRetangulo(rq);
-
-    } else {
-        if (strcmp(tipo, "hidrante") == 0) {
-
-            x = Hidrante_get_x(o);
-            y = Hidrante_get_y(o);
-            id = Hidrante_get_id(o);
-            a = c->arvoreHidrantes;
-
-        } else if (strcmp(tipo, "semaforo") == 0) {
-
-            x = Semaforo_get_x(o);
-            y = Semaforo_get_y(o);
-            id = Semaforo_get_id(o);
-            a = c->arvoreSemaforos;
-
-        } else if (strcmp(tipo, "radioBase") == 0) {
-
-            x = RadioBase_get_x(o);
-            y = RadioBase_get_y(o);
-            id = RadioBase_get_id(o);
-            a = c->arvoreRadioBases;
-        }
-
-        if (x >= rx && x <= rx_max && y >= ry && y <= ry_max) {
-            if (strcmp(tipo, "hidrante") == 0) {
-
-                objCopy = objetoCopy(o, Hidrante_getSize());
-                Hidrante_set_x(objCopy, Hidrante_get_x(o) + dx);
-                Hidrante_set_y(objCopy, Hidrante_get_y(o) + dy);
-
-            } else if (strcmp(tipo, "semaforo") == 0) {
-
-                objCopy = objetoCopy(o, Semaforo_getSize());
-                Semaforo_set_x(objCopy, Semaforo_get_x(o) + dx);
-                Semaforo_set_y(objCopy, Semaforo_get_y(o) + dy);
-
-            } else if (strcmp(tipo, "radioBase") == 0) {
-
-                objCopy = objetoCopy(o, RadioBase_getSize());
-                RadioBase_set_x(objCopy, RadioBase_get_x(o) + dx);
-                RadioBase_set_y(objCopy, RadioBase_get_y(o) + dy);
-            }
-
-            fprintf(txt, "ID -> %s\n", id);
-            fprintf(txt, "(%.2lf, %.2lf) -> (%.2lf, %.2lf)\n\n",
-                x,
-                y,
-                x + dx,
-                y + dy
-            );
-            
-            deslocarEquipamentosInternosRetanguloAux(c, r, dx, dy, txt, Node_getDir(n), tipo);
-            deslocarEquipamentosInternosRetanguloAux(c, r, dx, dy, txt, Node_getEsq(n), tipo);
-
-            Arvore_removerObjeto(a, o);
-            Arvore_inserir(a, objCopy);
-
-        } else if (x > rx_max) {
-            deslocarEquipamentosInternosRetanguloAux(c, r, dx, dy, txt, Node_getEsq(n), tipo);
-        } else if (x < rx) {
-            deslocarEquipamentosInternosRetanguloAux(c, r, dx, dy, txt, Node_getDir(n), tipo);
-        } else {
-            deslocarEquipamentosInternosRetanguloAux(c, r, dx, dy, txt, Node_getDir(n), tipo);
-            deslocarEquipamentosInternosRetanguloAux(c, r, dx, dy, txt, Node_getEsq(n), tipo);  
-        }
-    }
-}
-
 // trns
+// Isso só é possivel pois eu nao do free na arvore ao remover os objetos
 void Cidade_deslocarEquipamentosInternosRetangulo(Cidade c, Retangulo r, double dx, double dy, FILE *txt) {
     pCidade cidade = (pCidade) c;   
-    int i;
+    int index = 0;
     fprintf(txt, "-- EQUIPAMENTOS URBANOS MOVIDOS --\n");
-    deslocarEquipamentosInternosRetanguloAux(cidade, r, dx, dy, txt, Arvore_getRaiz(cidade->arvoreQuadras), "quadra");
-    deslocarEquipamentosInternosRetanguloAux(cidade, r, dx, dy, txt, Arvore_getRaiz(cidade->arvoreHidrantes), "hidrante");
-    deslocarEquipamentosInternosRetanguloAux(cidade, r, dx, dy, txt, Arvore_getRaiz(cidade->arvoreSemaforos), "semaforo");
-    deslocarEquipamentosInternosRetanguloAux(cidade, r, dx, dy, txt, Arvore_getRaiz(cidade->arvoreRadioBases), "radioBase");
+
+    int tam1 = fmax(Arvore_length(cidade->arvoreQuadras), Arvore_length(cidade->arvoreHidrantes));
+    int tam2 = fmax(tam1, Arvore_length(cidade->arvoreSemaforos));
+    int tamLista = fmax(tam2, Arvore_length(cidade->arvoreRadioBases));
+
+    Objeto* lista_objetos = (Objeto*)malloc(tamLista*sizeof(Objeto));
+    Node quadras = Arvore_getRaiz(cidade->arvoreQuadras);
+    forEach(quadra, quadras) {
+        if (Node_getAux(quadra) == 0) {
+            Quadra o = Node_getObjeto(quadra);
+            Retangulo rq = criarRetangulo(Quadra_get_x(o), Quadra_get_y(o), Quadra_get_w(o), Quadra_get_h(o), "", "", "");
+            if(retanguloInternoRetangulo(rq, r)) {
+                lista_objetos[index] = o; index++;
+            }
+            destruirRetangulo(rq);
+        }
+    }
+    for(int i = 0; i < index; i++) {
+        Objeto o = lista_objetos[i];
+        Quadra_set_x(o, Quadra_get_x(o) + dx);
+        Quadra_set_y(o, Quadra_get_y(o) + dy);
+
+        Arvore_removerObjeto(cidade->arvoreQuadras, o);
+        Arvore_inserir(cidade->arvoreQuadras, o);
+    }
+
+
+    index = 0;
+    Node hidrantes = Arvore_getRaiz(cidade->arvoreHidrantes);
+    forEach(hidrante, hidrantes) {
+        if (Node_getAux(hidrante) == 0) {
+            Hidrante o = Node_getObjeto(hidrante);
+            if(pontoInternoRetangulo(Hidrante_get_x(o), Hidrante_get_y(o), r)) {
+                lista_objetos[index] = o; index++;
+            }
+        }
+    }
+    for(int i = 0; i < index; i++) {
+        Objeto o = lista_objetos[i];
+        Hidrante_set_x(o, Hidrante_get_x(o) + dx);
+        Hidrante_set_y(o, Hidrante_get_y(o) + dy);
+
+        Arvore_removerObjeto(cidade->arvoreHidrantes, o);
+        Arvore_inserir(cidade->arvoreHidrantes, o);
+    }
+
+    
+    index = 0;
+    Node semaforos = Arvore_getRaiz(cidade->arvoreSemaforos);
+    forEach(semaforo, semaforos) {
+        if (Node_getAux(semaforo) == 0) {
+            Semaforo o = Node_getObjeto(semaforo);
+            if(pontoInternoRetangulo(Semaforo_get_x(o), Semaforo_get_y(o), r)) {
+                lista_objetos[index] = o; index++;
+            }
+        }
+    }
+    for(int i = 0; i < index; i++) {
+        Objeto o = lista_objetos[i];
+        Semaforo_set_x(o, Semaforo_get_x(o) + dx);
+        Semaforo_set_y(o, Semaforo_get_y(o) + dy);
+
+        Arvore_removerObjeto(cidade->arvoreSemaforos, o);
+        Arvore_inserir(cidade->arvoreSemaforos, o);
+    }
+
+    index = 0;
+    Node radiosBase = Arvore_getRaiz(cidade->arvoreRadioBases);
+    forEach(radioBase, radiosBase) {
+        if (Node_getAux(radioBase) == 0) {
+            RadioBase o = Node_getObjeto(radioBase);
+            if(pontoInternoRetangulo(RadioBase_get_x(o), RadioBase_get_y(o), r)) {
+                lista_objetos[index] = o; index++;
+            }
+        }
+    }
+    for(int i = 0; i < index; i++) {
+        Objeto o = lista_objetos[i];
+        RadioBase_set_x(o, RadioBase_get_x(o) + dx);
+        RadioBase_set_y(o, RadioBase_get_y(o) + dy);
+
+        Arvore_removerObjeto(cidade->arvoreRadioBases, o);
+        Arvore_inserir(cidade->arvoreRadioBases, o);
+    }
+    free(lista_objetos);
     fprintf(txt, "----------------------------------\n");
 }
 
@@ -771,6 +743,7 @@ void Cidade_processarObjetosProximos(Cidade c, char sinal, int k, char cep[], ch
     fprintf(txt, "-------------------------------------------\n");
 }
 
+
 int comparador(const void *x, const void *y) {
     Vertice a = *((Vertice*) x);
     Vertice b = *((Vertice*) y);
@@ -789,81 +762,110 @@ int comparador(const void *x, const void *y) {
     return 0;
 }
 
-void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) {
+int _preProcessamento_brl(Cidade c, Ponto* pontoMin, Ponto* pontoMax, Segmento** lista_segmentos, bool brl) {
+    pCidade cidade = (pCidade) c;
+    double x = Ponto_get_x(*pontoMin);
+    double y = Ponto_get_y(*pontoMin);
+
+    int index = 0;
+    Node muros = Arvore_getRaiz(cidade->arvoreMuros);
+    forEach(muro, muros) {
+        if (Node_getAux(muro) == 0) {
+            Muro m = Node_getObjeto(muro);
+
+            // Eu nao sei onde esta os pontos do muro, portanto tenho que testar os dois ;/
+            Ponto p1 = Muro_get_p1(m);
+            Ponto p2 = Muro_get_p2(m);
+
+            Ponto_setMin(*pontoMin, Ponto_get_x(p1), Ponto_get_y(p1));
+            Ponto_setMin(*pontoMin, Ponto_get_x(p2), Ponto_get_y(p2));
+            Ponto_setMax(*pontoMax, Ponto_get_x(p1), Ponto_get_y(p1));
+            Ponto_setMax(*pontoMax, Ponto_get_x(p2), Ponto_get_y(p2));
+
+            if(Ponto_get_x(p1) == x && Ponto_get_x(p2) == x || Ponto_get_y(p1) == y && Ponto_get_y(p2) == y) 
+                continue;
+
+            Vertice v1 = criarVertice(Ponto_get_x(p1), Ponto_get_y(p1), x, y);
+            Vertice v2 = criarVertice(Ponto_get_x(p2), Ponto_get_y(p2), x, y);
+
+            Segmento s = criarSegmento(v1, v2);
+
+            Segmento_set_inicio_vertices(s);
+
+            Vertice_set_s(v1, s);
+            Vertice_set_s(v2, s);
+            
+            (*lista_segmentos)[index] = s; index++;
+        }
+    }
+
+    // É o brn, portanto nao utiliza predios
+    if (!brl) return index + 4;
+
+
+    Node predios = Arvore_getRaiz(cidade->arvorePredios);
+    forEach(predio, predios) {
+        if (Node_getAux(predio) == 0) {
+            Predio p = Node_getObjeto(predio);
+            Ponto_setMin(*pontoMin, Predio_get_x(p), Predio_get_y(p));
+            Ponto_setMax(*pontoMax, Predio_get_x_max(p), Predio_get_y_max(p));
+
+            Vertice v_x1 = criarVertice(Predio_get_x(p), Predio_get_y(p), x, y);
+            Vertice v_x2 = criarVertice(Predio_get_x(p), Predio_get_y(p), x, y);
+            Vertice v_x_max1 = criarVertice(Predio_get_x_max(p), Predio_get_y(p), x, y);
+            Vertice v_x_max2 = criarVertice(Predio_get_x_max(p), Predio_get_y(p), x, y);
+            Vertice v_y_max1 = criarVertice(Predio_get_x(p), Predio_get_y_max(p), x, y);
+            Vertice v_y_max2 = criarVertice(Predio_get_x(p), Predio_get_y_max(p), x, y);
+            Vertice v_xy_max1 = criarVertice(Predio_get_x_max(p), Predio_get_y_max(p), x, y);
+            Vertice v_xy_max2 = criarVertice(Predio_get_x_max(p), Predio_get_y_max(p), x, y);
+
+            Segmento s1 = criarSegmento(v_x1, v_x_max1);
+            Segmento s2 = criarSegmento(v_x2, v_y_max1);
+            Segmento s3 = criarSegmento(v_x_max2, v_xy_max1);
+            Segmento s4 = criarSegmento(v_y_max2, v_xy_max2);
+            
+            Segmento_set_inicio_vertices(s1);
+            Segmento_set_inicio_vertices(s2);
+            Segmento_set_inicio_vertices(s3);
+            Segmento_set_inicio_vertices(s4);
+
+            Vertice_set_s(v_x1, s1);
+            Vertice_set_s(v_x_max1, s1);
+            Vertice_set_s(v_x2, s2);
+            Vertice_set_s(v_y_max1, s2);
+            Vertice_set_s(v_x_max2, s3);
+            Vertice_set_s(v_xy_max1, s3);
+            Vertice_set_s(v_y_max2, s4);
+            Vertice_set_s(v_xy_max2, s4);
+
+            (*lista_segmentos)[index] = s1; index++;
+            (*lista_segmentos)[index] = s2; index++;
+            (*lista_segmentos)[index] = s3; index++;
+            (*lista_segmentos)[index] = s4; index++;
+        }
+    }
+    
+    // O novo tamanho final da lista de segmentos é index (tanto q percorreu) + 4 (muros)
+    return index + 4;
+}
+
+void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg, bool brl, FILE* txt, FILE* arq) {
     pCidade cidade = (pCidade) c;
     Ponto pontoMin = criarPonto(x, y);
     Ponto pontoMax = criarPonto(x, y);
-    int i, tamListaSegmentos = (lista_length(cidade->listaPredio)*4) + lista_length(cidade->listaMuro) + 4;
+    double areaAfetada = 0;
+    int i, tamListaSegmentos = (Arvore_length(cidade->arvorePredios)*4) + Arvore_length(cidade->arvoreMuros) + 4;
 
     Segmento* lista_segmentos = (Segmento*)malloc(tamListaSegmentos*sizeof(Segmento));
+    tamListaSegmentos = _preProcessamento_brl(c, &pontoMin, &pontoMax, &lista_segmentos, brl);
 
-    // Aqui será definida a lista de segmentos
-    i = lista_getPrimeiro(cidade->listaPredio);
-    int index = 0;
-    for(i; i != -1; i = lista_getProx(cidade->listaPredio, i)) {
-        Predio p = lista_getObjPosic(cidade->listaPredio, i);
-
-        Ponto_setMin(pontoMin, Predio_get_x(p), Predio_get_y(p));
-        Ponto_setMax(pontoMax, Predio_get_x_max(p), Predio_get_y_max(p));
-
-        Vertice v_x1 = criarVertice(Predio_get_x(p), Predio_get_y(p), x, y);
-        Vertice v_x2 = criarVertice(Predio_get_x(p), Predio_get_y(p), x, y);
-        Vertice v_x_max1 = criarVertice(Predio_get_x_max(p), Predio_get_y(p), x, y);
-        Vertice v_x_max2 = criarVertice(Predio_get_x_max(p), Predio_get_y(p), x, y);
-        Vertice v_y_max1 = criarVertice(Predio_get_x(p), Predio_get_y_max(p), x, y);
-        Vertice v_y_max2 = criarVertice(Predio_get_x(p), Predio_get_y_max(p), x, y);
-        Vertice v_xy_max1 = criarVertice(Predio_get_x_max(p), Predio_get_y_max(p), x, y);
-        Vertice v_xy_max2 = criarVertice(Predio_get_x_max(p), Predio_get_y_max(p), x, y);
-
-        Segmento s1 = criarSegmento(v_x1, v_x_max1);
-        Segmento s2 = criarSegmento(v_x2, v_y_max1);
-        Segmento s3 = criarSegmento(v_x_max2, v_xy_max1);
-        Segmento s4 = criarSegmento(v_y_max2, v_xy_max2);
-        
-        Segmento_set_inicio_vertices(s1);
-        Segmento_set_inicio_vertices(s2);
-        Segmento_set_inicio_vertices(s3);
-        Segmento_set_inicio_vertices(s4);
-
-        lista_segmentos[index] = s1; index++;
-        lista_segmentos[index] = s2; index++;
-        lista_segmentos[index] = s3; index++;
-        lista_segmentos[index] = s4; index++;
-    }
-
-    i = lista_getPrimeiro(cidade->listaMuro);
-    for(i; i != -1; i = lista_getProx(cidade->listaMuro, i)) {
-        Muro m = lista_getObjPosic(cidade->listaMuro, i);
-
-        // Eu nao sei onde esta os pontos do muro, portanto tenho que testar os dois ;/
-        Ponto p1 = Muro_get_p1(m);
-        Ponto p2 = Muro_get_p2(m);
-
-        Ponto_setMin(pontoMin, Ponto_get_x(p1), Ponto_get_y(p1));
-        Ponto_setMin(pontoMin, Ponto_get_x(p2), Ponto_get_y(p2));
-        Ponto_setMax(pontoMax, Ponto_get_x(p1), Ponto_get_y(p1));
-        Ponto_setMax(pontoMax, Ponto_get_x(p2), Ponto_get_y(p2));
-
-        if(Ponto_get_x(p1) == x && Ponto_get_x(p2) == x || Ponto_get_y(p1) == y && Ponto_get_y(p2) == y) 
-            continue;
-
-        Vertice v1 = criarVertice(Ponto_get_x(p1), Ponto_get_y(p1), x, y);
-        Vertice v2 = criarVertice(Ponto_get_x(p2), Ponto_get_y(p2), x, y);
-
-        Segmento s = criarSegmento(v1, v2);
-
-        Segmento_set_inicio_vertices(s);
-        
-        lista_segmentos[index] = s; index++;
-    }
-
-    tamListaSegmentos = index + 4;
-
+    int index = tamListaSegmentos - 4;
     // Até aqui foi definida a lista de segmentos,
     // com os vertices marcados de inicio ou fim e seus respectivos angulos em relação à x,y
 
     // Aqui é definido o ponto max+100 do maior ponto e ponto min-100 do menor ponto
     // Alem disso sao adicionados à lista de segmentos os segmentos de borda
+
     Ponto_set_x(pontoMin, Ponto_get_x(pontoMin) - 100);
     Ponto_set_y(pontoMin, Ponto_get_y(pontoMin) - 100);
     Ponto_set_x(pontoMax, Ponto_get_x(pontoMax) + 100);
@@ -887,6 +889,15 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
     Segmento sd = criarSegmento(v_cd1, v_bd);
     Segmento sb = criarSegmento(v_bd1, v_be);
     Segmento se = criarSegmento(v_be1, v_ce);
+
+    // Muro mb1 = criarMuro(x_min, y_min, x_max, y_min);
+    // Muro mb2 = criarMuro(x_max, y_min, x_max, y_max);
+    // Muro mb3 = criarMuro(x_min, y_max, x_min, y_min);
+    // Muro mb4 = criarMuro(x_max, y_max, x_min, y_max);
+    // Muro_escreverSvg(mb1, svg);
+    // Muro_escreverSvg(mb2, svg);
+    // Muro_escreverSvg(mb3, svg);
+    // Muro_escreverSvg(mb4, svg);
 
     Segmento_set_inicio_vertices(sc);
     Segmento_set_inicio_vertices(sd);
@@ -937,8 +948,10 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
             // x onde s_inicial e segmento interceptam
             double x_inter = buscarXInterseccaoSegmento(s, y);
 
-            Vertice v_inicio = Vertice_get_inicio(Segmento_get_v1(s)) ? Segmento_get_v1(s) : Segmento_get_v2(s);
-            Vertice v_final = Vertice_get_inicio(Segmento_get_v1(s)) ? Segmento_get_v2(s) : Segmento_get_v1(s);
+            Vertice v_inicioS = Vertice_get_inicio(Segmento_get_v1(s)) ? Segmento_get_v1(s) : Segmento_get_v2(s);
+            Vertice v_finalS = Vertice_get_inicio(Segmento_get_v1(s)) ? Segmento_get_v2(s) : Segmento_get_v1(s);
+            Vertice v_inicio = criarVertice(Vertice_get_x(v_inicioS), Vertice_get_y(v_inicioS), x, y);
+            Vertice v_final = criarVertice(Vertice_get_x(v_finalS), Vertice_get_y(v_finalS), x, y);
             
             Vertice v_final_meio = criarVertice(x_inter, y, x, y);
             Vertice_set_inicio(v_final_meio, false);
@@ -955,6 +968,9 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
             Vertice_set_s(v_inicial_meio, s2);
             Vertice_set_s(v_final, s2);
 
+            Segmento_set_inicio_vertices(s1);
+            Segmento_set_inicio_vertices(s2);
+
             lista_vertices[index] = v_inicio; index++;
             lista_vertices[index] = v_final_meio; index++;
             lista_vertices[index] = v_inicial_meio; index++;
@@ -966,8 +982,6 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
             Segmento s = lista_segmentos[i];
             Vertice v1 = Segmento_get_v1(s);
             Vertice v2 = Segmento_get_v2(s);    
-            Vertice_set_s(v1, s);
-            Vertice_set_s(v2, s);
 
             lista_vertices[index] = v1; index++;
             lista_vertices[index] = v2; index++;
@@ -978,9 +992,19 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
     // heapsortMaior(lista_vertices, tamListaVertices, tamListaVertices, Vertice_get_angulo);
     
     // A partir daqui será varrido todos os vertices no sentido horario começando pela esquerda
-    Lista segmentos_ativos = criarLista((int)tamListaVertices/2);
+    //Lista segmentos_ativos = criarLista((int)tamListaVertices/2);
+    Arvore segmentos_ativos = criarArvore(Segmento_compararChave, NULL);
     Vertice biombo = criarVertice(Vertice_get_x(lista_vertices[0]), Vertice_get_y(lista_vertices[0]), x, y);
     Vertice_set_s(biombo, Vertice_get_s(lista_vertices[0]));
+    Segmento* lista_segmentos_free = (Segmento*)malloc((tamListaVertices/2)*sizeof(Segmento));
+    int indexSf = 0;
+
+
+    Vertice* lista_pontos;
+    int indexPonto = 0;
+    if (!brl) {
+        lista_pontos = (Ponto*)malloc(tamListaVertices*4*sizeof(Ponto));
+    }
 
     for(int i = 0; i < tamListaVertices; i++) {
 
@@ -989,30 +1013,34 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
         Segmento s_formado_v = buscarSegmentoFormadoComVertice(x, y, v, pontoMin, pontoMax);
         Segmento seg_mais_prox = NULL;
 
-        int j = lista_getPrimeiro(segmentos_ativos);
+        Node segmentos = Arvore_getRaiz(segmentos_ativos);
 
         // Definindo a menor distancia entre centro e o vertice como MAX
         double menor_dist = INT_MAX;
-        for(j; j != -1; j = lista_getProx(segmentos_ativos, j)) {
-            Segmento s = lista_getObjPosic(segmentos_ativos, j);
-            if(s == sv) continue;
+        forEach(segmento, segmentos) {
+            if (Node_getAux(segmento) == 0) {
+                Segmento s = Node_getObjeto(segmento);
+                if(s == sv) continue;
 
-            // Verificar se segmento formado e o da lista interceptam
-            if(verificarSegmentosInterceptam(s_formado_v, s)) {
-                // Buscar ponto de intersecção
-                Ponto intersec = buscarPontoInterseccao(s_formado_v, s);
-                double dist_centro_intersec = distanciaL2(x, y, Ponto_get_x(intersec), Ponto_get_y(intersec));
-                if(dist_centro_intersec < menor_dist) {
-                    menor_dist = dist_centro_intersec;
-                    seg_mais_prox = s;
+                // Verificar se segmento formado e o da lista interceptam
+                if(verificarSegmentosInterceptam(s_formado_v, s)) {
+                    // Buscar ponto de intersecção
+                    Ponto intersec = buscarPontoInterseccao(s_formado_v, s);
+                    double dist_centro_intersec = distanciaL2(x, y, Ponto_get_x(intersec), Ponto_get_y(intersec));
+                    if(dist_centro_intersec < menor_dist) {
+                        menor_dist = dist_centro_intersec;
+                        seg_mais_prox = s;
+                    }
+                    destruirPonto(intersec);
                 }
-                destruirPonto(intersec);
             }
         }
 
         if(Vertice_get_inicio(v)) {
+            lista_segmentos_free[indexSf] = sv; indexSf++;
             // Circulo c1 = criarCirculo(Vertice_get_x(v), Vertice_get_y(v), 2, "green", "green", "2px");
             // Circulo_escreverSvg(c1, svg);
+            
 
             bool segEhOMaisProx;
             if(distanciaL2(x, y, Vertice_get_x(v), Vertice_get_y(v)) < menor_dist)
@@ -1023,21 +1051,33 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
             if(segEhOMaisProx) {
                 Ponto intersec_biombo = buscarPontoInterseccao(s_formado_v, Vertice_get_s(biombo));
                 Vertice v_intersec = criarVertice(Ponto_get_x(intersec_biombo), Ponto_get_y(intersec_biombo), x, y);
-                Segmento s1 = criarSegmento(biombo, v_intersec);
-                Segmento s2 = criarSegmento(v_intersec, v);
 
-                svg_escreverTriangulo(svg, x, y, biombo, v_intersec);
-                //svg_escreverTriangulo(svg, x, y, v_intersec, v);
+                svg_escreverTriangulo(svg, x, y, biombo, v_intersec, brl);
+                svg_escreverTriangulo(svg, x, y, v_intersec, v, brl);
+                if (!brl) {
+                    areaAfetada += calcularAreaTriangulo(x, y, biombo, v_intersec);
+                    areaAfetada += calcularAreaTriangulo(x, y, v_intersec, v);
+                    Ponto p1 = criarPonto(Vertice_get_x(biombo), Vertice_get_y(biombo)); 
+                    Ponto p2 = criarPonto(Vertice_get_x(v_intersec), Vertice_get_y(v_intersec));
+                    Ponto p3 = criarPonto(Vertice_get_x(v_intersec), Vertice_get_y(v_intersec));
+                    Ponto p4 = criarPonto(Vertice_get_x(v), Vertice_get_y(v));
+                    lista_pontos[indexPonto] = p1; indexPonto++;
+                    lista_pontos[indexPonto] = p2; indexPonto++;
+                    lista_pontos[indexPonto] = p3; indexPonto++;
+                    lista_pontos[indexPonto] = p4; indexPonto++;
+                }
 
                 biombo = v;
                 destruirPonto(intersec_biombo);
+                destruirVertice(v_intersec);
             }
 
-            lista_inserirUltimo(segmentos_ativos, sv);
+            Arvore_inserir(segmentos_ativos, sv);
 
         } else {
             // Circulo c1 = criarCirculo(Vertice_get_x(v)-5, Vertice_get_y(v)-5, 2, "red", "red", "2px");
             // Circulo_escreverSvg(c1, svg);
+            
 
             bool segEhOMaisProx;
             if(distanciaL2(x, y, Vertice_get_x(v), Vertice_get_y(v)) <= menor_dist)
@@ -1050,29 +1090,55 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
                     Ponto intersec_biombo = buscarPontoInterseccao(s_formado_v, seg_mais_prox);
                     Vertice v_intersec = criarVertice(Ponto_get_x(intersec_biombo), Ponto_get_y(intersec_biombo), x, y);
 
-                    Segmento s1 = criarSegmento(biombo, v);
-                    Segmento s2 = criarSegmento(v, v_intersec);
-
-                    svg_escreverTriangulo(svg, x, y, v, v_intersec);
-                    svg_escreverTriangulo(svg, x, y, biombo, v);
+    
+                    svg_escreverTriangulo(svg, x, y, biombo, v, brl);
+                    if (!brl) {
+                        areaAfetada += calcularAreaTriangulo(x, y, v, v_intersec);
+                        areaAfetada += calcularAreaTriangulo(x, y, biombo, v);
+                        Ponto p3 = criarPonto(Vertice_get_x(biombo), Vertice_get_y(biombo));
+                        Ponto p4 = criarPonto(Vertice_get_x(v), Vertice_get_y(v));
+                        lista_pontos[indexPonto] = p3; indexPonto++;
+                        lista_pontos[indexPonto] = p4; indexPonto++;
+                    }
 
                     biombo = v_intersec;
                     Vertice_set_s(biombo, seg_mais_prox);
                     destruirPonto(intersec_biombo);
                  } else {
-                     Segmento s = criarSegmento(biombo, v);
-                     svg_escreverTriangulo(svg, x, y, biombo, v);
-                     biombo = v;
+                    svg_escreverTriangulo(svg, x, y, biombo, v, brl);
+                    if (!brl) {
+                        areaAfetada += calcularAreaTriangulo(x, y, biombo, v);
+                        Ponto p1 = criarPonto(Vertice_get_x(biombo), Vertice_get_y(biombo));
+                        Ponto p2 = criarPonto(Vertice_get_x(v), Vertice_get_y(v));
+                        lista_pontos[indexPonto] = p1; indexPonto++;
+                        lista_pontos[indexPonto] = p2; indexPonto++;
+                    }
+                    biombo = v; // O problema eh nesse caso quando eu do free no sv e consequentemente no biombo
                  }
             }
 
-            lista_excluirObjetoMemoria(segmentos_ativos, sv);
+            Arvore_removerObjeto(segmentos_ativos, sv);
         }
 
     }
+
+    if (!brl) {
+        fprintf(txt, "------- BRN pos %lf %lf -------\n", x, y);
+        fprintf(txt, "Área afetada: %lf\n\n", areaAfetada);
+        fprintf(txt, "-----------------------------------------\n");
+
+        for(int i = 0; i < indexPonto; i++) {
+            double xp = Ponto_get_x(lista_pontos[i]);
+            double yp = Ponto_get_y(lista_pontos[i]);
+            fprintf(arq, "%lf %lf\n", xp, yp);
+            free(lista_pontos[i]);
+        }
+        free(lista_pontos);
+    }
     
-    for(int i = 0; i < tamListaVertices; i++) destruirVertice(lista_vertices[i]);
-    // lista_destruir(segmentos_ativos, destruirSegmento);
+    for(int i = 0; i < indexSf; i++) free(lista_segmentos_free[i]);
+    free(lista_segmentos_free);
+    destruirArvore(segmentos_ativos);
     destruirPonto(pontoMin);
     destruirPonto(pontoMax);
     destruirVertice(v_final);
@@ -1081,7 +1147,7 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg) 
     free(lista_vertices);
 }
 
-void Cidade_escreverArvoreSvg(Cidade c, char t, char* arq) {
+void Cidade_escreverArvoreSvg(Cidade c, char t, FILE *arq) {
     pCidade cidade = (pCidade) c;
 
     if (t == 'q')
@@ -1222,43 +1288,11 @@ moradores, hidrantes, semáforos, rádios-bases.
 void Cidade_processarCATAC(Cidade c, Poligono poligono) {
     pCidade cidade = (pCidade) c;
     int index;
-    
-    typedef struct string {
-        char data[100];
-    }*pString;
 
-    pString* quadras_del = (pString*)malloc(Arvore_length(cidade->arvoreQuadras)*sizeof(pString));
+    Objeto* moradores_del = (Objeto*)malloc(Arvore_length(cidade->arvoreMoradores)*sizeof(Objeto));
+    Objeto* predios_del = (Objeto*)malloc(Arvore_length(cidade->arvorePredios)*sizeof(Objeto));
 
     index = 0;
-    Node quadras = Arvore_getRaiz(cidade->arvoreQuadras);
-    forEach(quadra, quadras) {
-        if (Node_getAux(quadra) == 0) {
-            Quadra q = Node_getObjeto(quadra);
-            Retangulo r = criarRetangulo_Quadra(q);
-            if (RetanguloInternoPoligono(r, poligono)) {
-                pString str = malloc(sizeof(struct string));
-                strcpy(str->data, Quadra_get_cep(q));
-                quadras_del[index] = str; index++;
-            }
-            destruirRetangulo(r);
-        }
-    }
-
-    for (int i = 0; i < index; i++) {
-        //printf("REMOVEU %s\n", quadras_del[i]->data);
-        Cidade_removerObjeto(c, quadras_del[i]->data);
-        free(quadras_del[i]);
-    }
-    free(quadras_del);
-
-
-
-    pString* moradores_del = (pString*)malloc(Arvore_length(cidade->arvoreMoradores)*sizeof(pString));
-    pString* predios_del = (pString*)malloc(Arvore_length(cidade->arvorePredios)*sizeof(pString));
-    Objeto* quadrass = (Objeto*)malloc(Arvore_length(cidade->arvoreQuadras)*sizeof(Objeto));
-
-    index = 0;
-    int indexQ = 0;
     int indexM = 0;
     Node predios = Arvore_getRaiz(cidade->arvorePredios);
     forEach(predio, predios) {
@@ -1267,44 +1301,59 @@ void Cidade_processarCATAC(Cidade c, Poligono poligono) {
             Quadra q = Predio_getQuadra(p);
             Retangulo r = criarRetangulo_Predio(p);
             if (RetanguloInternoPoligono(r, poligono)) {
+
                 Node moradores = Predio_getMoradores(p);
                 forEach(morador, moradores) {
                     if (Node_getAux(morador) == 0) {
                         Morador m = Node_getObjeto(morador);
-                        pString str = malloc(sizeof(struct string));
-                        strcpy(str->data, Morador_get_cpf(m));
-                        moradores_del[indexM] = str; indexM++;
+                        moradores_del[indexM] = m; indexM++;
                     }
                 }
+                predios_del[index] = p; index++;
+            }
+            destruirRetangulo(r);
+        }
+    }
 
-                quadrass[indexQ] = q; indexQ++;
-                pString str = malloc(sizeof(struct string));
-                strcpy(str->data, Predio_getId(p));
-                predios_del[index] = str; index++;
+
+    for (int i = 0; i < indexM; i++) {
+        Predio_removerMorador(Morador_getPredio(moradores_del[i]), moradores_del[i]);
+        Quadra_removerMorador(Morador_getQuadra(moradores_del[i]), moradores_del[i]);
+        Cidade_removerObjeto(c, Morador_get_cpf(moradores_del[i]));
+    }
+    free(moradores_del);
+
+    for (int i = 0; i < index; i++) {
+        Quadra_removerPredio(Predio_getQuadra(predios_del[i]), predios_del[i]);
+        _Cidade_removerPredioId(c, Predio_getId(predios_del[i]));
+    }
+    free(predios_del);
+
+
+
+    Objeto* quadras_del = (Objeto*)malloc(Arvore_length(cidade->arvoreQuadras)*sizeof(Objeto));
+
+    index = 0;
+    Node quadras = Arvore_getRaiz(cidade->arvoreQuadras);
+    forEach(quadra, quadras) {
+        if (Node_getAux(quadra) == 0) {
+            Quadra q = Node_getObjeto(quadra);
+            Retangulo r = criarRetangulo_Quadra(q);
+            if (RetanguloInternoPoligono(r, poligono)) {
+                quadras_del[index] = q; index++;
             }
             destruirRetangulo(r);
         }
     }
 
     for (int i = 0; i < index; i++) {
-        if (quadrass[i] != NULL) {
-            Predio prd = _Cidade_getPredioId(c, predios_del[i]->data);
-            Quadra_removerPredio(quadrass[i], prd);
-            //free(quadrass[i]);
-        }
-        _Cidade_removerPredioId(c, predios_del[i]->data);
-        free(predios_del[i]);
+        Cidade_removerObjeto(c, Quadra_get_cep(quadras_del[i]));
     }
-    free(predios_del);
-    free(quadrass);
+    free(quadras_del);
 
-    for (int i = 0; i < indexM; i++) {
-        Cidade_removerObjeto(c, moradores_del[i]->data);
-        free(moradores_del[i]);
-    }
-    free(moradores_del);
 
-    pString* hidrantes_del = (pString*)malloc(Arvore_length(cidade->arvoreHidrantes)*sizeof(pString));
+
+    Objeto* hidrantes_del = (Objeto*)malloc(Arvore_length(cidade->arvoreHidrantes)*sizeof(Objeto));
 
     index = 0;
     Node hidrantes = Arvore_getRaiz(cidade->arvoreHidrantes);
@@ -1313,24 +1362,21 @@ void Cidade_processarCATAC(Cidade c, Poligono poligono) {
             Hidrante h = Node_getObjeto(hidrante);
             Ponto p = criarPonto(Hidrante_get_x(h), Hidrante_get_y(h));
             if (PontoInternoPoligono(p, poligono)) {
-                pString str = malloc(sizeof(struct string));
-                strcpy(str->data, Hidrante_get_id(h));
-                hidrantes_del[index] = str; index++;
+                hidrantes_del[index] = h; index++;
             }
             destruirPonto(p);
         }
     }
     
     for (int i = 0; i < index; i++) {
-        // printf("SKAOSAK %s\n", hidrantes_del[i]->data);
-        Cidade_removerObjeto(c, hidrantes_del[i]->data);
-        free(hidrantes_del[i]);
+        
+        Cidade_removerObjeto(c, Hidrante_get_id(hidrantes_del[i]));
     }
     free(hidrantes_del);
 
 
 
-    pString* semaforos_del = (pString*)malloc(Arvore_length(cidade->arvoreSemaforos)*sizeof(pString));
+    Objeto* semaforos_del = (Objeto*)malloc(Arvore_length(cidade->arvoreSemaforos)*sizeof(Objeto));
 
     index = 0;
     Node semaforos = Arvore_getRaiz(cidade->arvoreSemaforos);
@@ -1339,22 +1385,19 @@ void Cidade_processarCATAC(Cidade c, Poligono poligono) {
             Semaforo s = Node_getObjeto(semaforo);
             Ponto p = criarPonto(Semaforo_get_x(s), Semaforo_get_y(s));
             if (PontoInternoPoligono(p, poligono)) {
-                pString str = malloc(sizeof(struct string));
-                strcpy(str->data, Semaforo_get_id(s));
-                semaforos_del[index] = str; index++;
+                semaforos_del[index] = s; index++;
             }
             destruirPonto(p);
         }
     }
     for (int i = 0; i < index; i++) {
-        Cidade_removerObjeto(c, semaforos_del[i]->data);
-        free(semaforos_del[i]);
+        Cidade_removerObjeto(c, Semaforo_get_id(semaforos_del[i]));
     }
     free(semaforos_del);
 
 
 
-    pString* radios_del = (pString*)malloc(Arvore_length(cidade->arvoreRadioBases)*sizeof(pString));
+    Objeto* radios_del = (Objeto*)malloc(Arvore_length(cidade->arvoreRadioBases)*sizeof(Objeto));
 
     index = 0;
     Node radiosBase = Arvore_getRaiz(cidade->arvoreRadioBases);
@@ -1363,17 +1406,13 @@ void Cidade_processarCATAC(Cidade c, Poligono poligono) {
             RadioBase rb = Node_getObjeto(radioBase);
             Ponto p = criarPonto(RadioBase_get_x(rb), RadioBase_get_y(rb));
             if (PontoInternoPoligono(p, poligono)) {
-                pString str = malloc(sizeof(struct string));
-                strcpy(str->data, RadioBase_get_id(rb));
-                radios_del[index] = str; index++;
+                radios_del[index] = rb; index++;
             }
             destruirPonto(p);
         }
     }
     for (int i = 0; i < index; i++) {
-        //printf("REMOVEU %s\n",radios_del[i]->data);
-        Cidade_removerObjeto(c, radios_del[i]->data);
-        free(radios_del[i]);
+        Cidade_removerObjeto(c, RadioBase_get_id(radios_del[i]));
     }
     free(radios_del);
 }

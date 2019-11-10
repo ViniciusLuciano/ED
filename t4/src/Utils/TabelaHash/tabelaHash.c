@@ -121,10 +121,10 @@ bool TabelaHash_removerObjeto(TabelaHash t, char* chave) {
 		tabelaHash->hash[key] = n->prox;
 	}
 
-	if (tabelaHash->destruirObjeto != NULL) {
-		tabelaHash->destruirObjeto(n->objeto);
-	}
-	free(n);
+	// if (tabelaHash->destruirObjeto != NULL) {
+	// 	tabelaHash->destruirObjeto(n->objeto);
+	// 	free(n);
+	// }
 
 	return true;
 }

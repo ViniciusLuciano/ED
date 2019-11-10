@@ -18,6 +18,5 @@ void destruirMuro(Muro m);
 char* Muro_getDados(Muro h, char* dados);
 
 int Muro_compararChave(Muro a, Muro b);
-int Muro_getSize();
 
 #endif

@@ -3,6 +3,8 @@
 typedef struct morador {
     char cpf[20], cep[30], complemento[30], face;
     double num;
+    Quadra quadra;
+    Predio predio;
 }*pMorador;
 
 Morador criarMorador(char* cpf, char* cep, char face, double num, char* complemento) {
@@ -34,10 +36,6 @@ bool moradorEquals(Morador m, char *id) {
     return strcmp(morador->cpf, id) == 0;
 }
 
-int Morador_getSize() {
-    return sizeof(struct morador);
-}
-
 char* Morador_getChave(Morador m) {
     pMorador morador = (pMorador) m;
     return morador->cpf;
@@ -66,4 +64,24 @@ void Morador_mudarEndereco(Morador morador, char* cep, char face, double num, ch
     strcpy(m->complemento, complemento);
     m->face = face;
     m->num = num;
+}
+
+void Morador_setQuadra(Morador m, Quadra quadra) {
+    pMorador morador = (pMorador) m;
+    morador->quadra = quadra;
+}
+
+Quadra Morador_getQuadra(Morador m) {
+    pMorador morador = (pMorador) m;
+    return morador->quadra;
+}
+
+void Morador_setPredio(Morador m, Predio predio) {
+    pMorador morador = (pMorador) m;
+    morador->predio = predio;
+}
+
+Predio Morador_getPredio(Morador m) {
+    pMorador morador = (pMorador) m;
+    return morador->predio;
 }

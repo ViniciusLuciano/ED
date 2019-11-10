@@ -16,6 +16,5 @@ char* Texto_get_text(Texto texto);
 void Texto_escreverSvg(Texto t, FILE *svg);
 
 int Texto_compararChave(Texto a, Texto b);
-int Texto_getSize();
 
 #endif

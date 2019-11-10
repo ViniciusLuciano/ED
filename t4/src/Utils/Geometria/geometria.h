@@ -37,5 +37,6 @@ Ponto buscarPontoInterseccao(Segmento a, Segmento b);
 bool PontoInternoPoligono(Ponto ponto, Poligono poligono);
 bool RetanguloInternoPoligono(Retangulo r, Poligono p);
 bool RetanguloParcialmenteInternoPoligono(Retangulo r, Poligono p);
+double calcularAreaTriangulo(double x, double y, Vertice b, Vertice c);
 
 #endif

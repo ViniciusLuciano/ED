@@ -27,7 +27,6 @@ void Forma_escreverFormaEnvoltaSvg(Forma forma, FILE *svg, char *cor);
 bool formaEquals(Forma forma, char *id);
 void Forma_imprimir(Forma forma);
 int Forma_compararChave(Forma a, Forma b);
-int Forma_getSize();
 
 char* Forma_getChave(Forma f);
 

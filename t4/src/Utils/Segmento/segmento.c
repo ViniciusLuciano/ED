@@ -41,9 +41,14 @@ Vertice Segmento_get_v2(Segmento s) {
     return segmento->v2;
 }
 
-void Segmento_set_distancia(Segmento s, double distancia) {
+void Segmento_set_distancia(Segmento s, double x, double y) {
     pSegmento segmento = (pSegmento) s;
-    segmento->distancia = distancia;
+    double x1 = Vertice_get_x(segmento->v1);
+    double y1 = Vertice_get_y(segmento->v1);
+    double x2 = Vertice_get_x(segmento->v2);
+    double y2 = Vertice_get_y(segmento->v2);
+
+    segmento->distancia = distanciaL1(x, y, (x1+x2)/2, (y1+y2)/2);
 }
 
 double Segmento_get_distancia(Segmento s) {
@@ -62,8 +67,4 @@ int Segmento_compararChave(Segmento a, Segmento b) {
         else if (Vertice_get_y(segmento_a->v1) < Vertice_get_y(segmento_b->v1)) return -1;
         else return 0;
     }
-}
-
-int Segmento_getSize() {
-    return 2*Vertice_getSize() + sizeof(double);
 }

@@ -138,10 +138,6 @@ int Forma_compararChave(Forma a, Forma b) {
     }
 }
 
-int Forma_getSize() {
-    return sizeof(struct forma);
-}
-
 char* Forma_getChave(Forma f) {
     pForma forma = (pForma) f;
     return forma->id;

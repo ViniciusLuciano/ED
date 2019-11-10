@@ -31,10 +31,6 @@ bool pessoaEquals(Pessoa e, char *id) {
     return strcmp(pessoa->cpf, id) == 0;
 }
 
-int Pessoa_getSize() {
-    return sizeof(struct pessoa);
-}
-
 char* Pessoa_getChave(Pessoa e) {
     pPessoa pessoa = (pPessoa) e;
     return pessoa->cpf;

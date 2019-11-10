@@ -24,7 +24,7 @@ void Quadra_set_y(Quadra quadra, double y);
 void Quadra_escreverSvg(Quadra q, FILE *svg);
 void Quadra_setMorador(Quadra q, Morador m);
 Node Quadra_getMoradores(Quadra q);
-bool Quadra_removerMorador(Quadra q, char* cpf);
+bool Quadra_removerMorador(Quadra q, Morador m);
 char* Quadra_getDados(Quadra q, char* dados);
 void Quadra_setPredio(Quadra q, Predio prd);
 Node Quadra_getPredios(Quadra q);

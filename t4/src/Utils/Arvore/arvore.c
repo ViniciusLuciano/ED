@@ -13,7 +13,6 @@ typedef struct arvore {
 	pNode* raiz;
 	int(*compararChave)(Objeto obj1, Objeto obj2);
 	void(*destruirObjeto)(Objeto objeto);
-	int tamObjeto; // Tamanho da struct do objeto para o memcpy
 	int tamArvore;
 } *pArvore;
 
@@ -360,17 +359,18 @@ bool Arvore_removerObjeto(Arvore arvore, Objeto objeto) {
 
 	fixRemover(a, node);
 
+	a->tamArvore--;
+	if (a->destruirObjeto != NULL)
+		a->destruirObjeto(node->objeto);
     free(node);
     return true;
 }
 
-Arvore criarArvore(int(*compararChave)(Objeto obj1, Objeto obj2), int tamObjeto, 
-													void(*destruirObjeto)(Objeto objeto)) {
+Arvore criarArvore(int(*compararChave)(Objeto obj1, Objeto obj2), void(*destruirObjeto)(Objeto objeto)) {
     pArvore arvore = malloc(sizeof(struct arvore));
     arvore->raiz = (pNode*)malloc(sizeof(pNode));
     (*arvore->raiz) = getTNULL();
     arvore->compararChave = compararChave;
-    arvore->tamObjeto = tamObjeto;
 	arvore->destruirObjeto = destruirObjeto;
 	arvore->tamArvore = 0;
     return arvore;
@@ -427,13 +427,11 @@ void Arvore_escreverSvg_util(pNode node, int x, FILE* svg, char*(*Objeto_getDado
 	Arvore_escreverSvg_util(node->dir, x, svg, Objeto_getDados);
 }
 
-void Arvore_escreverSvg(Arvore arvore, char* nomeArquivo, char*(*Objeto_getDados)(Objeto objeto, char* dados)) {
+void Arvore_escreverSvg(Arvore arvore, FILE* svg, char*(*Objeto_getDados)(Objeto objeto, char* dados)) {
     pArvore a = (pArvore) arvore;
-	FILE* svg = fopen(nomeArquivo, "w");
 	fprintf(svg, "<svg>\n");
 	Arvore_escreverSvg_util((*a->raiz), 0, svg, Objeto_getDados);
 	fprintf(svg, "</svg>\n");
-	fclose(svg);
 }
 
 

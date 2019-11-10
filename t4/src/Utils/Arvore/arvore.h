@@ -13,10 +13,9 @@ typedef void* Node;
 void destruirArvore(Arvore arvore);
 void Arvore_inserir(Arvore arvore, Objeto objeto);
 bool Arvore_removerObjeto(Arvore arvore, Objeto objeto);
-Arvore criarArvore(int(*compararChave)(Objeto obj1, Objeto obj2), int tamObjeto, 
-                                                                void(*destruirObjeto)(Objeto objeto));
+Arvore criarArvore(int(*compararChave)(Objeto obj1, Objeto obj2), void(*destruirObjeto)(Objeto objeto));
 Objeto Arvore_getObjeto(Arvore arvore, Objeto objeto);
-void Arvore_escreverSvg(Arvore arvore, char* nomeArquivo, char*(*Objeto_getDados)(Objeto objeto, char* dados));
+void Arvore_escreverSvg(Arvore arvore, FILE* svg, char*(*Objeto_getDados)(Objeto objeto, char* dados));
 void destruirTNULL();
 Node Arvore_getTNULL();
 char* Node_getCor(Node n);

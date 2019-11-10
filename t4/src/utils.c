@@ -92,8 +92,10 @@ FILE* abrirArquivo(char *diretorio, char *nomeArquivo, char *modoAbertura) {
     char dirFinal[128];
     tratarDiretorio(diretorio, nomeArquivo, dirFinal);
     FILE* arq = fopen(dirFinal, modoAbertura);
-    if(arq == NULL)
+    if(arq == NULL) {
         printf("Falha na inicialização do arquivo %s\n", dirFinal);
+        exit(1);
+    }
     return arq;
 }
 
@@ -124,7 +126,7 @@ void obterNomeArquivo(char *dirArquivo) {
     }
 
     if(index >= 0)
-        strcpy(dirArquivo, dirArquivo + index + 1);
+        memmove(dirArquivo, dirArquivo + index + 1, strlen(dirArquivo));
 }
 
 void concatenarNomes(char *nome1, char *nome2, char *nomeSaida) {
@@ -313,7 +315,7 @@ bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 	}
     
     
-    char nomeArqSVG[64];
+    char nomeArqSVG[256];
     strcpy(nomeArqSVG, nomeArquivoSVG);
     obterNomeArquivo(nomeArqSVG);
     adicionarExtensao(nomeArqSVG, "svg");
@@ -333,14 +335,14 @@ bool processarArquivoEntrada(FILE *entrada, char *dirSVG, char *nomeArquivoSVG, 
 bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, char *dirSaida, 
                                             char *nomeArquivoConsulta, char* dirEntrada, Cidade *cidade) {
     
-    char nomeArquivoEntradaSemExtensao[64], nomeArquivoConsultaSemExtensao[64];
+    char nomeArquivoEntradaSemExtensao[256], nomeArquivoConsultaSemExtensao[256];
     strcpy(nomeArquivoEntradaSemExtensao, nomeArquivoEntrada);
     strcpy(nomeArquivoConsultaSemExtensao, nomeArquivoConsulta);
 
     obterNomeArquivo(nomeArquivoEntradaSemExtensao);
     obterNomeArquivo(nomeArquivoConsultaSemExtensao);
 
-    char nomeEntradaConsultaSemExtensao[128];
+    char nomeEntradaConsultaSemExtensao[512];
     concatenarNomes(nomeArquivoEntradaSemExtensao, nomeArquivoConsultaSemExtensao, nomeEntradaConsultaSemExtensao);
 
     adicionarExtensao(nomeEntradaConsultaSemExtensao, "txt");
@@ -603,7 +605,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             // ver dps
             double x, y;
             sscanf(str, "%*s %lf %lf", &x, &y);
-            Cidade_processarBombaRaioLuminoso(*cidade, x, y, arquivoSVG);
+            Cidade_processarBombaRaioLuminoso(*cidade, x, y, arquivoSVG, true, NULL, NULL);
 
         } else if(strcmp(instrucao, "fi") == 0) {
 
@@ -634,7 +636,9 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             char arq_pol[50];
             double x, y;
             sscanf(str, "%*s %lf %lf %s", &x, &y, arq_pol);
-            Cidade_processarBombaRaioLuminoso(*cidade, x, y, arquivoSVG);
+            FILE* arq = abrirArquivo(dirEntrada, arq_pol, "w");
+            Cidade_processarBombaRaioLuminoso(*cidade, x, y, arquivoSVG, false, arquivoTXT, arq);
+            fclose(arq);
 
         } else if(strcmp(instrucao, "m?") == 0) {
 
@@ -665,6 +669,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 
             // Falta o segmento do primeiro com o ultimo
             FILE* fpolig = abrirArquivo(dirEntrada, arq_polig, "r");
+            if (fpolig == NULL) return false;
             Poligono poligono = criarPoligono(fpolig);
             fclose(fpolig);
 
@@ -720,12 +725,15 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
                 continue;
             }
 
-            Quadra quadraAntiga = Cidade_getQuadra(*cidade, Morador_getCep(morador));
-            if (quadraAntiga == NULL) {
-                printf("Quadra com cep %s não encontrada.", Morador_getCep(morador));
-                continue;
+            Quadra quadraAntiga = Morador_getQuadra(morador);
+            if (quadraAntiga != NULL) {
+                Quadra_removerMorador(quadraAntiga, cpf);
             }
-            Quadra_removerMorador(quadraAntiga, cpf);
+            Predio predioAntigo = Morador_getPredio(morador);
+            if (predioAntigo != NULL) {
+                Predio_removerMorador(predioAntigo, morador);
+            }
+
 
             char dados[150];
             fprintf(arquivoTXT, "-> Morador mudou-se: \n");
@@ -734,11 +742,13 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 
             Morador_mudarEndereco(morador, cep, face, num, complemento);
             Quadra quadraNova = Cidade_getQuadra(*cidade, cep);
-            if (quadraAntiga == NULL) {
-                printf("Quadra com cep %s não encontrada.", cep);
-                continue;
+            if (quadraNova != NULL) {
+                Quadra_setMorador(quadraNova, morador);
             }
-            Quadra_setMorador(quadraNova, morador);
+            Predio predioNovo = Cidade_getPredio(*cidade, cep, face, num);
+            if (predioNovo != NULL) {
+                Predio_setMorador(predioNovo, morador);
+            }
 
 
         } else if(strcmp(instrucao, "eplg?") == 0) {
@@ -747,6 +757,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             sscanf(str, "%*s %s %s", arq_polig, tp);
 
             FILE* fpolig = abrirArquivo(dirEntrada, arq_polig, "r");
+            if (fpolig == NULL) return false;
             Poligono poligono = criarPoligono(fpolig);
             Poligono_escreverSVG(poligono, arquivoSVG);
             fclose(fpolig);
@@ -762,6 +773,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 
             // Falta o segmento do primeiro com o ultimo
             FILE* fpolig = abrirArquivo(dirEntrada, arq_polig, "r");
+            if (fpolig == NULL) return false;
             Poligono poligono = criarPoligono(fpolig);
             Poligono_escreverSVG(poligono, arquivoSVG);
             fclose(fpolig);
@@ -774,7 +786,10 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 
             char t, arq[30];
             sscanf(str, "%*s %c %s", &t, arq);
-            Cidade_escreverArvoreSvg(*cidade, t, arq);
+            FILE* arquivo = abrirArquivo(dirSaida, arq, "w");
+            if (arquivo == NULL) return false;
+            Cidade_escreverArvoreSvg(*cidade, t, arquivo);
+            fclose(arquivo);
             
         }
     }
@@ -809,7 +824,10 @@ void executarModoInterativo(Cidade *cidade, char* dirSaida, char* dirEntrada, ch
 
             char t, arq[30];
             sscanf(str, "%*s %c %s", &t, arq);
-            Cidade_escreverArvoreSvg(*cidade, t, arq);
+            FILE* arquivo = abrirArquivo(dirSaida, arq, "w");
+            if (arquivo == NULL) continue;
+            Cidade_escreverArvoreSvg(*cidade, t, arquivo);
+            fclose(arquivo);
             
         } else if (strcmp(instrucao, "nav") == 0) {
 
@@ -880,6 +898,7 @@ bool processarArquivoPM(FILE *arquivoPM, char *dirSVG, char *nomeArquivoSVG, Cid
             Quadra quadra = Cidade_getQuadra(*cidade, cep);
             if (quadra != NULL) {
                 Quadra_setMorador(quadra, m);
+                Morador_setQuadra(m, quadra);
             } else {
                 //printf("Quadra %s não encontrado.\n", cep);
             }
@@ -887,6 +906,7 @@ bool processarArquivoPM(FILE *arquivoPM, char *dirSVG, char *nomeArquivoSVG, Cid
             Predio prd = Cidade_getPredio(*cidade, cep, face, num);
             if (prd != NULL) {
                 Predio_setMorador(prd, m);
+                Morador_setPredio(m, prd);
             } else {
                 //printf("Predio %s%c%.0lf não encontrado.\n", cep, face, num);
             }

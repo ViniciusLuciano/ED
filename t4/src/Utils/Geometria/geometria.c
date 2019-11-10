@@ -179,7 +179,11 @@ Segmento buscarSegmentoFormadoComVertice(double xc, double yc, Vertice v, Ponto 
 	Vertice vc = criarVertice(xc, yc, xc, yc);
 	Vertice vq = criarVertice(xq, yq, xc, yc);
 
-	return criarSegmento(vc, vq);
+	Segmento seg = criarSegmento(vc, vq);
+	Vertice_set_s(vc, seg);
+	Vertice_set_s(vq, seg);
+
+	return seg;
 }
 
 Ponto buscarPontoInterseccao(Segmento a, Segmento b) {
@@ -221,9 +225,45 @@ Ponto buscarPontoInterseccao(Segmento a, Segmento b) {
 	return criarPonto(x_intersec, y_intersec);
 }
 
+bool _verificarPontoMesmaAlturaVerticePoligono(Ponto p, Segmento s) {
+	Vertice v1 = Segmento_get_v1(s);
+	Vertice v2 = Segmento_get_v2(s);
+	
+	// Se for verticie tiver a mesma altura e for de inicio, nao verifica se intercepta
+	if (Ponto_get_y(p) == Vertice_get_y(v1) && Vertice_get_inicio(v1)) {
+		return true;
+	} else if (Ponto_get_y(p) == Vertice_get_y(v2) && Vertice_get_inicio(v2)) {
+		return true;
+	}
+
+	return false;
+
+}
+
+bool _verificarPontoEstaNoSegmento(Ponto p, Segmento s) {
+	Vertice v1 = Segmento_get_v1(s);
+	Vertice v2 = Segmento_get_v2(s);
+	// y = ax + b
+
+	double x1 = Vertice_get_x(v1);
+	double y1 = Vertice_get_y(v1);
+
+	double x2 = Vertice_get_x(v2);
+	double y2 = Vertice_get_y(v2);
+
+	double x = Ponto_get_x(p);
+	double y = Ponto_get_y(p);
+	if (x > x1 && x > x2 || x < x1 && x < x2 || y > y1 && y > y2 || y < y1 && y < y2) return false;
+
+	double a = (Vertice_get_y(v1)-Vertice_get_y(v2))/(Vertice_get_x(v1)-Vertice_get_x(v2));
+	double b = Vertice_get_y(v1) - a*Vertice_get_x(v1);
+	double yint = a*x + b;
+	return yint == y;
+}
+
 bool PontoInternoPoligono(Ponto ponto, Poligono poligono) {
 	Vertice v1 = criarVertice(Ponto_get_x(ponto), Ponto_get_y(ponto), 0, 0);
-	Vertice v2 = criarVertice(Poligono_get_max_x(poligono) + 1, Ponto_get_y(ponto), 0, 0);
+	Vertice v2 = criarVertice(Poligono_get_max_x(poligono) + 5, Ponto_get_y(ponto), 0, 0);
 	Segmento s_ponto = criarSegmento(v1, v2);
 
 	Node segmentos = Arvore_getRaiz(Poligono_getSegmentos(poligono));
@@ -231,13 +271,16 @@ bool PontoInternoPoligono(Ponto ponto, Poligono poligono) {
 	forEach(segmento, segmentos) {
 		if (Node_getAux(segmento) == 0) {
             Segmento s = Node_getObjeto(segmento);
+
+			if (_verificarPontoMesmaAlturaVerticePoligono(ponto, s)) continue;
+			if(_verificarPontoEstaNoSegmento(ponto, s)) return true;
+
 			if (verificarSegmentosInterceptam(s_ponto, s)) {
 				numIntersec++;
 			}
         }
 	}
 	destruirSegmento(s_ponto);
-	//printf("KSAOPASDKOSDAKDSAOPKASD %d\n", numIntersec);
 	if (numIntersec%2 == 0) return false;
 	return true;
 }
@@ -252,6 +295,10 @@ bool _VerticeInternoPoligono(Vertice vertice, Poligono poligono) {
 	forEach(segmento, segmentos) {
 		if (Node_getAux(segmento) == 0) {
             Segmento s = Node_getObjeto(segmento);
+
+			if (_verificarPontoMesmaAlturaVerticePoligono(Vertice_get_p(vertice), s)) continue;
+			if(_verificarPontoEstaNoSegmento(Vertice_get_p(vertice), s)) return true;
+
 			if (verificarSegmentosInterceptam(s_ponto, s)) {
 				numIntersec++;
 			}
@@ -292,28 +339,8 @@ bool RetanguloInternoPoligono(Retangulo r, Poligono p) {
 	forEach(segmento, segmentos) {
 		if (Node_getAux(segmento) == 0) {
             Segmento s = Node_getObjeto(segmento);
-			if (verificarSegmentosInterceptam(s1, s)) {
-				destruirSegmento(s1);
-				destruirSegmento(s2);
-				destruirSegmento(s3);
-				destruirSegmento(s4);
-				return false;
-			}
-			if (verificarSegmentosInterceptam(s2, s)) {
-				destruirSegmento(s1);
-				destruirSegmento(s2);
-				destruirSegmento(s3);
-				destruirSegmento(s4);
-				return false;
-			}
-			if (verificarSegmentosInterceptam(s3, s)) {
-				destruirSegmento(s1);
-				destruirSegmento(s2);
-				destruirSegmento(s3);
-				destruirSegmento(s4);
-				return false;
-			}
-			if (verificarSegmentosInterceptam(s4, s)) {
+			if (verificarSegmentosInterceptam(s1, s) || verificarSegmentosInterceptam(s2, s) ||
+				verificarSegmentosInterceptam(s3, s) || verificarSegmentosInterceptam(s4, s)) {
 				destruirSegmento(s1);
 				destruirSegmento(s2);
 				destruirSegmento(s3);
@@ -336,28 +363,8 @@ bool RetanguloParcialmenteInternoPoligono(Retangulo r, Poligono p) {
 	Ponto p3 = criarPonto(Retangulo_get_x(r), Retangulo_get_max_y(r));
 	Ponto p4 = criarPonto(Retangulo_get_max_x(r), Retangulo_get_max_y(r));
 
-	if (PontoInternoPoligono(p1, p)) {
-		destruirPonto(p1);
-		destruirPonto(p2);
-		destruirPonto(p3);
-		destruirPonto(p4);
-		return true;
-	}
-	if (PontoInternoPoligono(p2, p)) {
-		destruirPonto(p1);
-		destruirPonto(p2);
-		destruirPonto(p3);
-		destruirPonto(p4);
-		return true;
-	}
-	if (PontoInternoPoligono(p3, p)) {
-		destruirPonto(p1);
-		destruirPonto(p2);
-		destruirPonto(p3);
-		destruirPonto(p4);
-		return true;
-	}
-	if (PontoInternoPoligono(p4, p)) {
+	if (PontoInternoPoligono(p1, p) || PontoInternoPoligono(p2, p) ||
+		PontoInternoPoligono(p3, p) || PontoInternoPoligono(p4, p)) {
 		destruirPonto(p1);
 		destruirPonto(p2);
 		destruirPonto(p3);
@@ -370,4 +377,11 @@ bool RetanguloParcialmenteInternoPoligono(Retangulo r, Poligono p) {
 	destruirPonto(p3);
 	destruirPonto(p4);
 	return false;
+}
+
+double calcularAreaTriangulo(double x, double y, Vertice b, Vertice c) {
+	double s = fabs(Vertice_get_y(b)*x + Vertice_get_y(c)*Vertice_get_x(b) +
+				Vertice_get_x(c)*y - Vertice_get_y(b)*Vertice_get_x(c) -
+				Vertice_get_y(c)*x - y*Vertice_get_x(b))/2;
+	return s;
 }

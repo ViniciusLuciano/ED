@@ -18,8 +18,8 @@ Quadra criarQuadra(char *cep, double x, double y, double w, double h, char *cfil
     strcpy(quadra->cfill, cfill);
     strcpy(quadra->cstrok, cstrok);
     strcpy(quadra->sw, sw);
-    quadra->arvoreMoradores = criarArvore(Morador_compararChave, Morador_getSize(), NULL);
-    quadra->arvorePredios = criarArvore(Predio_compararChave, Predio_getSize(), NULL);
+    quadra->arvoreMoradores = criarArvore(Morador_compararChave, NULL);
+    quadra->arvorePredios = criarArvore(Predio_compararChave, NULL);
     return quadra;
 }
 
@@ -123,6 +123,7 @@ char* Quadra_getChave(Quadra q) {
 
 void Quadra_setMorador(Quadra q, Morador m) {
     pQuadra quadra = (pQuadra) q;
+    if (quadra == NULL) return;
     Arvore_inserir(quadra->arvoreMoradores, m);
 }
 
@@ -131,9 +132,9 @@ Node Quadra_getMoradores(Quadra q) {
     return Arvore_getRaiz(quadra->arvoreMoradores);
 }
 
-bool Quadra_removerMorador(Quadra q, char* cpf) {
+bool Quadra_removerMorador(Quadra q, Morador m) {
     pQuadra quadra = (pQuadra) q;
-    Morador m = criarMorador(cpf, "", 'N', 1, "");
+    if (quadra == NULL) return false;
     return Arvore_removerObjeto(quadra->arvoreMoradores, m);
 }
 
@@ -145,6 +146,7 @@ char* Quadra_getDados(Quadra q, char* dados) {
 
 void Quadra_setPredio(Quadra q, Predio prd) {
     pQuadra quadra = (pQuadra) q;
+    if (quadra == NULL) return;
     Arvore_inserir(quadra->arvorePredios, prd);
 }
 
@@ -155,5 +157,6 @@ Node Quadra_getPredios(Quadra q) {
 
 bool Quadra_removerPredio(Quadra q, Predio prd) {
     pQuadra quadra = (pQuadra) q;
+    if (quadra == NULL) return false;
     return Arvore_removerObjeto(quadra->arvorePredios, prd);
 }

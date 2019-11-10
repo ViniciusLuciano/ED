@@ -24,13 +24,12 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
 void destruirPredio(Predio prd);
 void Predio_setMorador(Predio q, Morador m);
 Node Predio_getMoradores(Predio q);
-bool Predio_removerMorador(Predio q, char* cpf);
+bool Predio_removerMorador(Predio q, Morador m);
 void Predio_setQuadra(Predio prd, Objeto quadra);
 Objeto Predio_getQuadra(Predio prd);
 
 bool predioEquals(Predio p, char *id);
 int Predio_compararChave(Predio a, Predio b);
-int Predio_getSize();
 char* Predio_getDados(Predio p, char* dados);
 
 char* Predio_getChave(Predio p);

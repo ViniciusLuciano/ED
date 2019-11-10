@@ -27,11 +27,6 @@ bool tipoEstabelecimentoEquals(TipoEstabelecimento e, char *id) {
     return strcmp(tipoEstabelecimento->codt, id) == 0;
 }
 
-
-int TipoEstabelecimento_getSize() {
-    return sizeof(struct tipoEstabelecimento);
-}
-
 char* TipoEstabelecimento_getChave(TipoEstabelecimento e) {
     pTipoEstabelecimento tipoEstabelecimento = (pTipoEstabelecimento) e;
     return tipoEstabelecimento->codt;

@@ -28,7 +28,6 @@ void Vertice_set_s(Vertice v, Segmento s);
 Segmento Vertice_get_s(Vertice v);
 void Vertice_set_angulo(Vertice v, double angulo);
 double Vertice_get_distancia(Vertice v);
-int Vertice_getSize();
 bool Vertice_equals(Vertice v1, Vertice v2);
 
 #endif

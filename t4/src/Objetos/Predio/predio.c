@@ -17,7 +17,7 @@ Predio criarPredio(char *cep, char face, double num, double f, double p, double 
     predio->f = f;
     predio->p = p;
     predio->mrg = mrg;
-    predio->arvoreMoradores = criarArvore(Predio_compararChave, Predio_getSize(), NULL);
+    predio->arvoreMoradores = criarArvore(Morador_compararChave, NULL);
     sprintf(predio->id, "%s%c%.0lf", cep, face, num);
     return predio;
 }
@@ -104,8 +104,8 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
         texto_y = quadra_y + quadra_h - predio->mrg - 3;
 
         fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"blue\" stroke-width=\"2\" />\n",
-            predio_x,
-            predio_y, 
+            predio->x,
+            predio->y, 
             predio->f, 
             predio->p);
 
@@ -116,8 +116,8 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
         texto_y = quadra_y + predio->mrg + 8;
 
         fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"blue\" stroke-width=\"2\" />\n",
-            predio_x,
-            predio_y, 
+            predio->x,
+            predio->y, 
             predio->f,
             predio->p);
 
@@ -128,8 +128,8 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
         texto_y = quadra_y + predio->num;
 
         fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"blue\" stroke-width=\"2\" />\n",
-            predio_x,
-            predio_y, 
+            predio->x,
+            predio->y, 
             predio->p, 
             predio->f);
 
@@ -140,8 +140,8 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
         texto_y = quadra_y + predio->num;
 
         fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"blue\" stroke-width=\"2\" />\n",
-            predio_x,
-            predio_y, 
+            predio->x,
+            predio->y, 
             predio->p, 
             predio->f);
 
@@ -152,15 +152,15 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
             texto_y,
             predio->num);
     
-    predio->x = predio_x;
-    predio->y = predio_y;
-    if(predio->face == 'N' || predio->face == 'S') {
-        predio->x_max = predio_x + predio->f;
-        predio->y_max = predio_y + predio->p;
-    } else {
-        predio->x_max = predio_x + predio->p;
-        predio->y_max = predio_y + predio->f;
-    }
+    // predio->x = predio_x;
+    // predio->y = predio_y;
+    // if(predio->face == 'N' || predio->face == 'S') {
+    //     predio->x_max = predio_x + predio->f;
+    //     predio->y_max = predio_y + predio->p;
+    // } else {
+    //     predio->x_max = predio_x + predio->p;
+    //     predio->y_max = predio_y + predio->f;
+    // }
 }
 
 int Predio_compararChave(Predio a, Predio b) {
@@ -175,10 +175,6 @@ int Predio_compararChave(Predio a, Predio b) {
             return 0;
         }
     }
-}
-
-int Predio_getSize() {
-    return sizeof(struct predio) - 1;
 }
 
 char* Predio_getChave(Predio p) {
@@ -197,8 +193,9 @@ char* Predio_getDados(Predio p, char* dados) {
     return dados;
 }
 
-void Predio_setMorador(Predio q, Morador m) {
-    pPredio predio = (pPredio) q;
+void Predio_setMorador(Predio p, Morador m) {
+    pPredio predio = (pPredio) p;
+    if (predio == NULL) return;
     Arvore_inserir(predio->arvoreMoradores, m);
 }
 
@@ -207,9 +204,9 @@ Node Predio_getMoradores(Predio q) {
     return Arvore_getRaiz(predio->arvoreMoradores);
 }
 
-bool Predio_removerMorador(Predio q, char* cpf) {
-    pPredio predio = (pPredio) q;
-    Morador m = criarMorador(cpf, "", 'N', 1, "");
+bool Predio_removerMorador(Predio p, Morador m) {
+    pPredio predio = (pPredio) p;
+    if (predio == NULL) return false;
     return Arvore_removerObjeto(predio->arvoreMoradores, m);
 }
 

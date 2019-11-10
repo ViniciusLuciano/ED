@@ -99,11 +99,11 @@ void svg_escreverDistanciaCentrosMassa(FILE *SVG, Forma a, Forma b, double dista
 	free(centro2);
 }
 
-void svg_escreverTriangulo(FILE *SVG, double x1, double y1, Vertice v2, Vertice v3) {
+void svg_escreverTriangulo(FILE *SVG, double x1, double y1, Vertice v2, Vertice v3, bool brl) {
 	//double x1 = Vertice_get_x(v1), y1 = Vertice_get_y(v1);
 	double x2 = Vertice_get_x(v2), y2 = Vertice_get_y(v2);
 	double x3 = Vertice_get_x(v3), y3 = Vertice_get_y(v3);
-	fprintf(SVG, "<polygon points=\"%lf,%lf %lf,%lf %lf,%lf\" style=\"fill: orange; opacity: 0.5\"/>\n", x1, y1, x2, y2, x3, y3);
+	fprintf(SVG, "<polygon points=\"%lf,%lf %lf,%lf %lf,%lf\" style=\"fill: %s; opacity: 0.5\"/>\n", x1, y1, x2, y2, x3, y3, brl ? "orange" : "green");
 }
 
 void svg_escreverBomba(FILE *SVG, double x, double y) {

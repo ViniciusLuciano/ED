@@ -49,6 +49,21 @@ void Ponto_setMax(Ponto p, double x, double y) {
     if(y > ponto->y) ponto->y = y;
 }
 
-int Ponto_getSize() {
-    return sizeof(struct ponto);
+bool pontoEquals(Ponto p1, Ponto p2) {
+    pPonto ponto1 = (pPonto) p1;
+    pPonto ponto2 = (pPonto) p2;
+    return ponto1->x == ponto2->x && ponto1->y == ponto2->y;
+}
+
+int Ponto_compararChave(Ponto a, Ponto b) {
+    pPonto ponto_a = (pPonto) a;
+    pPonto ponto_b = (pPonto) b;
+
+    if (ponto_a->x > ponto_b->x) return 1;
+    else if (ponto_a->x < ponto_b->x) return -1;
+    else {
+        if (ponto_a->y > ponto_b->y) return 1;
+        else if (ponto_a->y < ponto_b->y) return -1;
+        else return 0;
+    }
 }

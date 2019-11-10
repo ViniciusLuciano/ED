@@ -18,7 +18,6 @@ char Estabelecimento_getFace(Estabelecimento estabelecimento);
 double Estabelecimento_getNum(Estabelecimento estabelecimento);
 
 bool estabelecimentoEquals(Estabelecimento estabelecimento, char *id);
-int Estabelecimento_getSize();
 int Estabelecimento_compararChave(Estabelecimento a, Estabelecimento b);
 
 char* Estabelecimento_getChave(Estabelecimento estabelecimento);

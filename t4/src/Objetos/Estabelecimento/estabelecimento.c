@@ -33,11 +33,6 @@ bool estabelecimentoEquals(Estabelecimento e, char *id) {
     return strcmp(estabelecimento->cnpj, id) == 0;
 }
 
-
-int Estabelecimento_getSize() {
-    return sizeof(struct estabelecimento);
-}
-
 char* Estabelecimento_getChave(Estabelecimento e) {
     pEstabelecimento estabelecimento = (pEstabelecimento) e;
     return estabelecimento->cnpj;

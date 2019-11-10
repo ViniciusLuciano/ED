@@ -54,7 +54,3 @@ int Texto_compararChave(Texto a, Texto b) {
         else return 0;
     }
 }
-
-int Texto_getSize() {
-    return sizeof(struct texto);
-}

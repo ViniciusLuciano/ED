@@ -17,9 +17,8 @@ void destruirSegmento(Segmento s);
 void Segmento_set_inicio_vertices(Segmento s);
 Vertice Segmento_get_v1(Segmento s);
 Vertice Segmento_get_v2(Segmento s);
-void Segmento_set_distancia(Segmento s, double distancia);
+void Segmento_set_distancia(Segmento s, double x, double y);
 double Segmento_get_distancia(Segmento s);
 int Segmento_compararChave(Segmento a, Segmento b);
-int Segmento_getSize();
 
 #endif

@@ -51,10 +51,6 @@ int Muro_compararChave(Muro a, Muro b) {
     }
 }
 
-int Muro_getSize() {
-    return 2*Ponto_getSize();
-}
-
 char* Muro_getDados(Muro m, char* dados) {
     pMuro muro = (pMuro) m;
     sprintf(dados, "%0.1lf %0.1lf\n", Ponto_get_x(muro->p1), Ponto_get_y(muro->p1));

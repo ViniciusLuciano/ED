@@ -15,7 +15,6 @@ void Pessoa_escreverSvg(Pessoa pessoa, FILE *SVG);
 
 
 bool pessoaEquals(Pessoa pessoa, char *id);
-int Pessoa_getSize();
 
 char* Pessoa_getChave(Pessoa pessoa);
 

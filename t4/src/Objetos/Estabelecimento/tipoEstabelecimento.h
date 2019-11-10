@@ -15,7 +15,6 @@ void destruirTipoEstabelecimento(TipoEstabelecimento tipoEstabelecimento);
 char* TipoEstabelecimento_get_cnpj(TipoEstabelecimento tipoEstabelecimento);
 
 bool tipoEstabelecimentoEquals(TipoEstabelecimento tipoEstabelecimento, char *id);
-int TipoEstabelecimento_getSize();
 
 char* TipoEstabelecimento_getChave(TipoEstabelecimento tipoEstabelecimento);
 

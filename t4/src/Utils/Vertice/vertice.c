@@ -14,13 +14,11 @@ Vertice criarVertice(double x, double y, double x_centro, double y_centro) {
     vertice->p = p;
     vertice->angulo = calcularAngulo(p, x_centro, y_centro);
     vertice->distancia = distanciaL2(x, y, x_centro, y_centro);
-    vertice->inicio = false;
     return vertice;
 }
 
 void destruirVertice(Vertice v) {
     pVertice vertice = (pVertice) v;
-    if(vertice->inicio) free(vertice->s);
     destruirPonto(vertice->p);
     free(vertice);
 }
@@ -73,10 +71,6 @@ void Vertice_set_angulo(Vertice v, double angulo) {
 double Vertice_get_distancia(Vertice v) {
     pVertice vertice = (pVertice) v;
     return vertice->distancia;
-}
-
-int Vertice_getSize() {
-    return Ponto_getSize() + 4 + 2*sizeof(bool) + 2*sizeof(double);
 }
 
 bool Vertice_equals(Vertice v1, Vertice v2) {
