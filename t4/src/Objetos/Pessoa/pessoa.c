@@ -35,3 +35,8 @@ char* Pessoa_getChave(Pessoa e) {
     pPessoa pessoa = (pPessoa) e;
     return pessoa->cpf;
 }
+
+char* Pessoa_getNome(Pessoa p) {
+    pPessoa pessoa = (pPessoa) p;
+    return pessoa->nome;
+}

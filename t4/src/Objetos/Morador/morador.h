@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include "../Pessoa/pessoa.h"
 
 typedef void* Predio;
 typedef void* Quadra;
@@ -21,6 +22,7 @@ void Morador_setQuadra(Morador m, Quadra quadra);
 Quadra Morador_getQuadra(Morador m);
 void Morador_setPredio(Morador m, Predio predio);
 Predio Morador_getPredio(Morador m);
+void Morador_setPessoa(Morador m, Pessoa pessoa);
 
 bool moradorEquals(Morador morador, char *id);
 

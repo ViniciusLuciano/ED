@@ -81,3 +81,13 @@ Retangulo criarRetangulo_Quadra(Quadra q) {
     double w = Quadra_get_w(q), h = Quadra_get_h(q);
     return criarRetangulo(x, y, w, h, "", "", "");
 }
+
+void Retangulo_set_cstrk(Retangulo r, char* cor) {
+    pRetangulo retangulo = (pRetangulo) r;
+    strcpy(retangulo->cstrk, cor);
+} 
+
+void Retangulo_set_rw(Retangulo r, char* rw) {
+    pRetangulo retangulo = (pRetangulo) r;
+    strcpy(retangulo->rw, rw);
+}

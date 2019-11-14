@@ -1125,7 +1125,7 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg, 
     if (!brl) {
         fprintf(txt, "------- BRN pos %lf %lf -------\n", x, y);
         fprintf(txt, "Área afetada: %lf\n\n", areaAfetada);
-        fprintf(txt, "-----------------------------------------\n");
+        fprintf(txt, "-----------------------------------------\n\n");
 
         for(int i = 0; i < indexPonto; i++) {
             double xp = Ponto_get_x(lista_pontos[i]);
@@ -1236,9 +1236,11 @@ região delimitada pelo polígono e as quadras que
 estão ao menos parcialmente dentro da delimitada
 pelo polígono.    
 */  
-void Cidade_processarMPLG(Cidade c, Poligono poligono) { // TERMINAR DPS DE PRINTAR E ESCREVER NO ARQUIVO E SVG
+void Cidade_processarMPLG(Cidade c, Poligono poligono, FILE* svg, FILE* txt) { // TERMINAR DPS DE PRINTAR E ESCREVER NO ARQUIVO E SVG
     pCidade cidade = (pCidade) c;
     char dados[150];
+    fprintf(txt, "--- Moradores dos predios e quadras contidos no poligono ---\n");
+    fprintf(txt, "->Predios:\n");
 
     Node predios = Arvore_getRaiz(cidade->arvorePredios);
     forEach(predio, predios) {
@@ -1246,38 +1248,55 @@ void Cidade_processarMPLG(Cidade c, Poligono poligono) { // TERMINAR DPS DE PRIN
             Predio p = Node_getObjeto(predio);
             Retangulo r = criarRetangulo_Predio(p);
             if (RetanguloInternoPoligono(r, poligono)) {
+                fprintf(txt, " ->Predio: %s\n", Predio_getId(p));
                 Node moradores = Predio_getMoradores(p);
                 forEach(morador, moradores) {
                     if (Node_getAux(morador) == 0) {
                         Morador m = Node_getObjeto(morador);
-                        printf("%s\n", Morador_getDados(m, dados));
+                        fprintf(txt, "  ->Morador:\n%s\n\n", Morador_getDados(m, dados));
                     }
+                }
+
+                if (Predio_getNumMoradores(p) > 0) {
+                    Predio_setCor(p, "purple");
                 }
             }
             destruirRetangulo(r);
         }
     }
 
+    fprintf(txt, "->Quadras:\n");
     Node quadras = Arvore_getRaiz(cidade->arvoreQuadras);
     forEach(quadra, quadras) {
         if (Node_getAux(quadra) == 0) {
             Quadra q = Node_getObjeto(quadra);
             Retangulo r = criarRetangulo_Quadra(q);
             if (RetanguloParcialmenteInternoPoligono(r, poligono)) {
+                fprintf(txt, " ->Quadra: %s\n", Quadra_get_cep(q));
                 Node moradores = Quadra_getMoradores(q);
                 forEach(morador, moradores) {
                     if (Node_getAux(morador) == 0) {
                         Morador m = Node_getObjeto(morador);
-                        printf("%s\n", Morador_getDados(m, dados));
+                        fprintf(txt, "  ->Morador:\n%s\n\n", Morador_getDados(m, dados));
                     }
                 }
+
+                char numMoradores[25];
+                sprintf(numMoradores, "%d moradores", Quadra_getNumMoradores(q));
+                Texto texto = criarTexto(Quadra_get_x(q)+4, Quadra_get_y(q)-2.5, numMoradores);
+                Texto_setTamanho(texto, 20);
+                Texto_setCor(texto, "purple");
+                Texto_escreverSvg(texto, svg);
+                destruirTexto(texto);
+                Quadra_set_sw(q, "5px");
             }
             destruirRetangulo(r);
         }
     }
+
+    fprintf(txt, "------------------------------------------------------------");
 }
 
-// Fazer txt e svg
 /*
 Considere a região delimitada pelo polígono.
 Remover as quadras que estejam inteiramente
@@ -1285,9 +1304,10 @@ contidas no poligono. Remover prédios
 (inteiramente contidos no poligono) e respectivos
 moradores, hidrantes, semáforos, rádios-bases.
 */
-void Cidade_processarCATAC(Cidade c, Poligono poligono) {
+void Cidade_processarCATAC(Cidade c, Poligono poligono, FILE* svg, FILE* txt) {
     pCidade cidade = (pCidade) c;
     int index;
+    fprintf(txt, "--- Equipamentos removidos no poligono ---\n");
 
     Objeto* moradores_del = (Objeto*)malloc(Arvore_length(cidade->arvoreMoradores)*sizeof(Objeto));
     Objeto* predios_del = (Objeto*)malloc(Arvore_length(cidade->arvorePredios)*sizeof(Objeto));
@@ -1317,13 +1337,16 @@ void Cidade_processarCATAC(Cidade c, Poligono poligono) {
 
 
     for (int i = 0; i < indexM; i++) {
-        Predio_removerMorador(Morador_getPredio(moradores_del[i]), moradores_del[i]);
+        fprintf(txt, " (Morador) -> CPF: %s\n", Morador_get_cpf(moradores_del[i]));
+        Predio_removerMoradorE(Morador_getPredio(moradores_del[i]), moradores_del[i]);
         Quadra_removerMorador(Morador_getQuadra(moradores_del[i]), moradores_del[i]);
         Cidade_removerObjeto(c, Morador_get_cpf(moradores_del[i]));
     }
     free(moradores_del);
 
     for (int i = 0; i < index; i++) {
+        fprintf(txt, " (Predio) -> ID: %s\n", Predio_getId(predios_del[i]));
+        svg_escreverX(svg, predios_del[i]);
         Quadra_removerPredio(Predio_getQuadra(predios_del[i]), predios_del[i]);
         _Cidade_removerPredioId(c, Predio_getId(predios_del[i]));
     }
@@ -1347,6 +1370,7 @@ void Cidade_processarCATAC(Cidade c, Poligono poligono) {
     }
 
     for (int i = 0; i < index; i++) {
+        fprintf(txt, " (Quadra) -> CEP: %s\n", Quadra_get_cep(quadras_del[i]));
         Cidade_removerObjeto(c, Quadra_get_cep(quadras_del[i]));
     }
     free(quadras_del);
@@ -1369,7 +1393,7 @@ void Cidade_processarCATAC(Cidade c, Poligono poligono) {
     }
     
     for (int i = 0; i < index; i++) {
-        
+        fprintf(txt, " (Hidrante) -> ID: %s\n", Hidrante_get_id(hidrantes_del[i]));
         Cidade_removerObjeto(c, Hidrante_get_id(hidrantes_del[i]));
     }
     free(hidrantes_del);
@@ -1391,6 +1415,7 @@ void Cidade_processarCATAC(Cidade c, Poligono poligono) {
         }
     }
     for (int i = 0; i < index; i++) {
+        fprintf(txt, " (Semaforo) -> ID: %s\n", Semaforo_get_id(semaforos_del[i]));
         Cidade_removerObjeto(c, Semaforo_get_id(semaforos_del[i]));
     }
     free(semaforos_del);
@@ -1412,20 +1437,23 @@ void Cidade_processarCATAC(Cidade c, Poligono poligono) {
         }
     }
     for (int i = 0; i < index; i++) {
+        fprintf(txt, " (RadioBase) -> ID: %s\n", RadioBase_get_id(radios_del[i]));
         Cidade_removerObjeto(c, RadioBase_get_id(radios_del[i]));
     }
     free(radios_del);
+    fprintf(txt, "------------------------------------------\n\n");
 }
 
 
-// Terminar txt e svg
+
 /*
 Estabelecimentos comerciais do tipo tp (ou de
 qualquer tipo, caso *) que estão inteiramente
 dentro da região delimitada pelo polígono.
 */
-void Cidade_processarEPLG(Cidade c, Poligono poligono, char* tipo) {
+void Cidade_processarEPLG(Cidade c, Poligono poligono, char* tipo, FILE* svg, FILE* txt) {
     pCidade cidade = (pCidade) c;
+    fprintf(txt, "---- Estabelecimentos do tipo '%s' ----\n", tipo);
 
     int index = 0;
     Node estabelecimentos = Arvore_getRaiz(cidade->arvoreEstabelecimentos);
@@ -1437,7 +1465,31 @@ void Cidade_processarEPLG(Cidade c, Poligono poligono, char* tipo) {
                 if (prd != NULL) {
                     Retangulo r = criarRetangulo_Predio(prd);
                     if (RetanguloInternoPoligono(r, poligono)) {
-                        printf("ESTABELECIMENTO %s\n", Estabelecimento_getCep(e));
+                        fprintf(txt, "->Estabelecimento:\n ->CNPJ: %s\n ->Endereço: %s %c %.0lf\n",
+                                 Estabelecimento_get_cnpj(e),
+                                 Estabelecimento_getCep(e),
+                                 Estabelecimento_getFace(e),
+                                 Estabelecimento_getNum(e));
+                    
+                        Pessoa prop = Estabelecimento_getProprietario(e);
+                        if (prop != NULL) {
+                            fprintf(txt, " ->Proprietario:\n  ->Nome: %s\n  ->CPF: %s\n",
+                                Pessoa_getNome(prop),
+                                Pessoa_get_cpf(prop));
+                        } else {
+                            fprintf(txt, " ->Proprietário não identificado.\n");
+                        }
+                        fprintf(txt, "\n");
+
+                        Quadra quadra = Predio_getQuadra(prd);
+                        if (quadra != NULL) {
+                            Quadra_set_cfill(quadra, strcmp(Quadra_get_cfill(quadra), "red") == 0 ? "blue" : "red");
+                        }
+                        Retangulo retangulo = criarRetangulo_Predio(prd);
+                        Retangulo_set_cstrk(retangulo, "yellow");
+                        Retangulo_set_rw(retangulo, "5px");
+                        Retangulo_escreverSvg(retangulo, svg);
+                        destruirRetangulo(retangulo);
                     }
                     destruirRetangulo(r);
                 }
@@ -1445,4 +1497,5 @@ void Cidade_processarEPLG(Cidade c, Poligono poligono, char* tipo) {
         }
     }
 
+    fprintf(txt, "---------------------------------------\n\n");
 }

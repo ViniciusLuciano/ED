@@ -5,6 +5,7 @@
 #include "./Objetos/Circulo/circulo.h"
 #include "./Objetos/Retangulo/retangulo.h"
 #include "./Objetos/Forma/forma.h"
+#include "./Objetos/Texto/texto.h"
 #include "./Utils/Vertice/vertice.h"
 
 void svg_iniciar(FILE *SVG);
@@ -15,5 +16,6 @@ void svg_escreverRetaCentrosMassa(FILE *SVG, Forma a, Forma b);
 void svg_escreverDistanciaCentrosMassa(FILE *SVG, Forma a, Forma b, double distancia);
 void svg_escreverTriangulo(FILE *SVG, double x1, double y1, Vertice v2, Vertice v3, bool brl);
 void svg_escreverBomba(FILE *SVG, double x, double y);
+void svg_escreverX(FILE* svg, Predio p);
 
 #endif

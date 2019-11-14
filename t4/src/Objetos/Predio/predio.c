@@ -1,9 +1,10 @@
 #include "predio.h"
 
 typedef struct predio {
-    char cep[50], face, id[100];
+    char cep[50], face, id[100], cor[100];
     double num, f, p, mrg;
     double x, x_max, y, y_max;
+    int numMoradores;
     Arvore arvoreMoradores;
     Objeto quadra; // Endereço de memoria da quadra associada
 }*pPredio;
@@ -19,6 +20,8 @@ Predio criarPredio(char *cep, char face, double num, double f, double p, double 
     predio->mrg = mrg;
     predio->arvoreMoradores = criarArvore(Morador_compararChave, NULL);
     sprintf(predio->id, "%s%c%.0lf", cep, face, num);
+    sprintf(predio->cor, "blue");
+    predio->numMoradores = 0;
     return predio;
 }
 
@@ -103,11 +106,12 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
         texto_x = quadra_x + predio->num - 3;
         texto_y = quadra_y + quadra_h - predio->mrg - 3;
 
-        fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"blue\" stroke-width=\"2\" />\n",
+        fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"%s\" stroke-width=\"2\" />\n",
             predio->x,
             predio->y, 
             predio->f, 
-            predio->p);
+            predio->p,
+            predio->cor);
 
     } else if (predio->face == 'S') {
         predio_x = quadra_x + predio->num - (predio->f/2);
@@ -115,11 +119,12 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
         texto_x = quadra_x + predio->num - 3;
         texto_y = quadra_y + predio->mrg + 8;
 
-        fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"blue\" stroke-width=\"2\" />\n",
+        fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"%s\" stroke-width=\"2\" />\n",
             predio->x,
             predio->y, 
             predio->f,
-            predio->p);
+            predio->p,
+            predio->cor);
 
     } else if(predio->face == 'L') {
         predio_x = quadra_x + predio->mrg;
@@ -127,11 +132,12 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
         texto_x = quadra_x + predio->mrg + 1;
         texto_y = quadra_y + predio->num;
 
-        fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"blue\" stroke-width=\"2\" />\n",
+        fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"%s\" stroke-width=\"2\" />\n",
             predio->x,
             predio->y, 
             predio->p, 
-            predio->f);
+            predio->f,
+            predio->cor);
 
     } else if(predio->face == 'O') {
         predio_x = quadra_x + quadra_w - predio->mrg - predio->p;
@@ -139,11 +145,12 @@ void Predio_escreverSvg(Predio prd, double quadra_x, double quadra_y, double qua
         texto_x = quadra_x + quadra_w - predio->mrg - 8;
         texto_y = quadra_y + predio->num;
 
-        fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"blue\" stroke-width=\"2\" />\n",
+        fprintf(svg, "<rect x=\"%lf\" y=\"%lf\" width=\"%lf\" height=\"%lf\" stroke=\"black\" fill=\"%s\" stroke-width=\"2\" />\n",
             predio->x,
             predio->y, 
             predio->p, 
-            predio->f);
+            predio->f,
+            predio->cor);
 
     }
     
@@ -196,6 +203,7 @@ char* Predio_getDados(Predio p, char* dados) {
 void Predio_setMorador(Predio p, Morador m) {
     pPredio predio = (pPredio) p;
     if (predio == NULL) return;
+    predio->numMoradores++;
     Arvore_inserir(predio->arvoreMoradores, m);
 }
 
@@ -205,6 +213,13 @@ Node Predio_getMoradores(Predio q) {
 }
 
 bool Predio_removerMorador(Predio p, Morador m) {
+    pPredio predio = (pPredio) p;
+    if (predio == NULL) return false;
+    predio->numMoradores--;
+    return Arvore_removerObjeto(predio->arvoreMoradores, m);
+}
+
+bool Predio_removerMoradorE(Predio p, Morador m) {
     pPredio predio = (pPredio) p;
     if (predio == NULL) return false;
     return Arvore_removerObjeto(predio->arvoreMoradores, m);
@@ -218,4 +233,14 @@ void Predio_setQuadra(Predio prd, Objeto quadra) {
 Objeto Predio_getQuadra(Predio prd) {
     pPredio predio = (pPredio) prd;
     return predio->quadra;
+}
+
+int Predio_getNumMoradores(Predio prd) {
+    pPredio predio = (pPredio) prd;
+    return predio->numMoradores;
+}
+
+void Predio_setCor(Predio prd, char* cor) {
+    pPredio predio = (pPredio) prd;
+    strcpy(predio->cor, cor);
 }

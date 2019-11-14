@@ -5,6 +5,7 @@ typedef struct morador {
     double num;
     Quadra quadra;
     Predio predio;
+    Pessoa pessoa;
 }*pMorador;
 
 Morador criarMorador(char* cpf, char* cep, char face, double num, char* complemento) {
@@ -49,7 +50,9 @@ int Morador_compararChave(Morador m1, Morador m2) {
 
 char* Morador_getDados(Morador morador, char* dados) {   
     pMorador m = (pMorador) morador;
-    sprintf(dados, "CPF: %s\nCEP: %s\nComplemento: %s\nNumero: %.0lf\n\n", m->cpf, m->cep, m->complemento, m->num);
+    sprintf(dados, "Nome: %s\nCPF: %s\nEndereço: %s %c %.0lf %s", 
+            m->pessoa != NULL ? Pessoa_getNome(m->pessoa) : "nome",
+            m->cpf, m->cep, m->face, m->num, m->complemento);
     return dados;
 }
 
@@ -84,4 +87,9 @@ void Morador_setPredio(Morador m, Predio predio) {
 Predio Morador_getPredio(Morador m) {
     pMorador morador = (pMorador) m;
     return morador->predio;
+}
+
+void Morador_setPessoa(Morador m, Pessoa pessoa) {
+    pMorador morador = (pMorador) m;
+    morador->pessoa = pessoa;
 }

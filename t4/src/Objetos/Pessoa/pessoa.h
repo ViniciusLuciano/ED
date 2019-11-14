@@ -11,6 +11,7 @@ typedef void* Pessoa;
 Pessoa criarPessoa(char* cpf, char* nome, char* sobrenome, char sexo, char* nasc);
 void destruirPessoa(Pessoa pessoa);
 char* Pessoa_get_cpf(Pessoa pessoa);
+char* Pessoa_getNome(Pessoa pessoa);
 void Pessoa_escreverSvg(Pessoa pessoa, FILE *SVG);
 
 

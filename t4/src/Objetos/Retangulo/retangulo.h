@@ -20,6 +20,8 @@ double Retangulo_get_max_x(Retangulo retangulo);
 double Retangulo_get_max_y(Retangulo retangulo);
 char* Retangulo_get_cfill(Retangulo r);
 void Retangulo_escreverSvg(Retangulo r, FILE *svg);
+void Retangulo_set_cstrk(Retangulo r, char* cor);
+void Retangulo_set_rw(Retangulo r, char* rw);
 
 Retangulo criarRetangulo_Predio(Predio p);
 Retangulo criarRetangulo_Quadra(Quadra q);

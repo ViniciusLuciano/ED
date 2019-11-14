@@ -372,6 +372,40 @@ bool RetanguloParcialmenteInternoPoligono(Retangulo r, Poligono p) {
 		return true;
 	}
 
+	Vertice v1 = criarVertice(Retangulo_get_x(r), Retangulo_get_y(r), 0, 0);
+	Vertice v2 = criarVertice(Retangulo_get_max_x(r), Retangulo_get_y(r), 0, 0);
+	Vertice v3 = criarVertice(Retangulo_get_x(r), Retangulo_get_max_y(r), 0, 0);
+	Vertice v4 = criarVertice(Retangulo_get_max_x(r), Retangulo_get_max_y(r), 0, 0);
+	Vertice v1_2 = criarVertice(Retangulo_get_x(r), Retangulo_get_y(r), 0, 0);
+	Vertice v2_2 = criarVertice(Retangulo_get_max_x(r), Retangulo_get_y(r), 0, 0);
+	Vertice v3_2 = criarVertice(Retangulo_get_x(r), Retangulo_get_max_y(r), 0, 0);
+	Vertice v4_2 = criarVertice(Retangulo_get_max_x(r), Retangulo_get_max_y(r), 0, 0);
+
+	Segmento s1 = criarSegmento(v1, v2);
+	Segmento s2 = criarSegmento(v1_2, v3);
+	Segmento s3 = criarSegmento(v2_2, v4);
+	Segmento s4 = criarSegmento(v3_2, v4_2);
+
+	Node segmentos = Arvore_getRaiz(Poligono_getSegmentos(p));
+	int numIntersec = 0;
+	forEach(segmento, segmentos) {
+		if (Node_getAux(segmento) == 0) {
+            Segmento s = Node_getObjeto(segmento);
+			if (verificarSegmentosInterceptam(s1, s) || verificarSegmentosInterceptam(s2, s) ||
+				verificarSegmentosInterceptam(s3, s) || verificarSegmentosInterceptam(s4, s)) {
+				destruirSegmento(s1);
+				destruirSegmento(s2);
+				destruirSegmento(s3);
+				destruirSegmento(s4);
+				return true;
+			}
+        }
+	}
+
+	destruirSegmento(s1);
+	destruirSegmento(s2);
+	destruirSegmento(s3);
+	destruirSegmento(s4);
 	destruirPonto(p1);
 	destruirPonto(p2);
 	destruirPonto(p3);

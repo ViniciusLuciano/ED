@@ -3,6 +3,8 @@
 typedef struct estabelecimento {
     char cnpj[50], cpf[50], codt[50], cep[50], nome[50], face;
     double num;
+    Pessoa proprietario;
+    Predio predio;
 }*pEstabelecimento;
 
 Estabelecimento criarEstabelecimento(char* cnpj, char* cpf, char* codt, char* cep, char face, double num, char* nome) {
@@ -40,8 +42,8 @@ char* Estabelecimento_getChave(Estabelecimento e) {
 
 char* Estabelecimento_getDados(Estabelecimento estabelecimento, char* dados) {   
     pEstabelecimento e = (pEstabelecimento) estabelecimento;
-    sprintf(dados, "CNPJ: %s\nCodt: %s\nCEP: %s\nNome: %s\n\n",
-                 e->cnpj, e->codt, e->cep, e->nome);
+    sprintf(dados, "Nome: %s\nCNPJ: %s\nCodt: %s\nEndereço: %s %c %.0lf\n",
+                 e->nome, e->cnpj, e->codt, e->cep, e->face, e->num);
     return dados;
 }
 
@@ -70,3 +72,24 @@ double Estabelecimento_getNum(Estabelecimento e) {
     pEstabelecimento estabelecimento = (pEstabelecimento) e;
     return estabelecimento->num;
 }
+
+void Estabelecimento_setProprietario(Estabelecimento e, Pessoa proprietario) {
+    pEstabelecimento estabelecimento = (pEstabelecimento) e;
+    estabelecimento->proprietario = proprietario;
+}
+
+Pessoa Estabelecimento_getProprietario(Estabelecimento e) {
+    pEstabelecimento estabelecimento = (pEstabelecimento) e;
+    return estabelecimento->proprietario;
+}
+
+void Estabelecimento_setPredio(Estabelecimento e, Predio predio) {
+    pEstabelecimento estabelecimento = (pEstabelecimento) e;
+    estabelecimento->predio = predio;
+}
+
+Predio Estabelecimento_getPredio(Estabelecimento e) {
+    pEstabelecimento estabelecimento = (pEstabelecimento) e;
+    return estabelecimento->predio;
+}
+ 

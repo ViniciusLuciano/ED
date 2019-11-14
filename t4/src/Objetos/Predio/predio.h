@@ -25,8 +25,12 @@ void destruirPredio(Predio prd);
 void Predio_setMorador(Predio q, Morador m);
 Node Predio_getMoradores(Predio q);
 bool Predio_removerMorador(Predio q, Morador m);
+//*
+bool Predio_removerMoradorE(Predio p, Morador m);
 void Predio_setQuadra(Predio prd, Objeto quadra);
 Objeto Predio_getQuadra(Predio prd);
+int Predio_getNumMoradores(Predio prd);
+void Predio_setCor(Predio prd, char* cor);
 
 bool predioEquals(Predio p, char *id);
 int Predio_compararChave(Predio a, Predio b);

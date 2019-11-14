@@ -657,7 +657,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             forEach(morador, moradores) {
                 if (Node_getAux(morador) == 0) {
                     Morador m = Node_getObjeto(morador);
-                    fprintf(arquivoTXT, "%s", Morador_getDados(m, dados));
+                    fprintf(arquivoTXT, "->Morador:\n%s\n\n", Morador_getDados(m, dados));
                 }
             }
             fprintf(arquivoTXT, "-------------------------------------------------\n\n");
@@ -673,7 +673,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             Poligono poligono = criarPoligono(fpolig);
             fclose(fpolig);
 
-            Cidade_processarMPLG(*cidade, poligono);
+            Cidade_processarMPLG(*cidade, poligono, arquivoSVG, arquivoTXT);
 
             // Ponto ponto = criarPonto(520, 256.601907);
             // bool interno = PontoInternoPoligono(ponto, poligono);
@@ -694,9 +694,9 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 
             char dados[150];
             fprintf(arquivoTXT, "----------- Dados do morador com CPF: %s -----------\n", cpf);
-            fprintf(arquivoTXT, "%s", Morador_getDados(morador, dados));
+            fprintf(arquivoTXT, "Morador: \n%s\n\n", Morador_getDados(morador, dados));
             fprintf(arquivoTXT, "----------------------------------------------------\n\n");
-            printf("%s", Morador_getDados(morador, dados));
+        
 
         } else if(strcmp(instrucao, "de?") == 0) {
 
@@ -710,9 +710,9 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
 
             char dados[150];
             fprintf(arquivoTXT, "----------- Dados do estabelecimento com CNPJ: %s -----------\n", cnpj);
-            fprintf(arquivoTXT, "%s", Estabelecimento_getDados(estabelecimento, dados));
+            fprintf(arquivoTXT, "Estabelecimento:\n%s\n\n", Estabelecimento_getDados(estabelecimento, dados));
             fprintf(arquivoTXT, "----------------------------------------------------\n\n");
-            printf("%s", Estabelecimento_getDados(estabelecimento, dados));
+
 
         } else if(strcmp(instrucao, "mud") == 0) {
 
@@ -762,7 +762,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             Poligono_escreverSVG(poligono, arquivoSVG);
             fclose(fpolig);
 
-            Cidade_processarEPLG(*cidade, poligono, tp);
+            Cidade_processarEPLG(*cidade, poligono, tp, arquivoSVG, arquivoTXT);
 
             destruirPoligono(poligono);
 
@@ -778,7 +778,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             Poligono_escreverSVG(poligono, arquivoSVG);
             fclose(fpolig);
 
-            Cidade_processarCATAC(*cidade, poligono);
+            Cidade_processarCATAC(*cidade, poligono, arquivoSVG, arquivoTXT);
 
             destruirPoligono(poligono);
 
@@ -864,6 +864,16 @@ bool processarArquivoEC(FILE *arquivoEC, char *dirSVG, char *nomeArquivoSVG, Cid
 			sscanf(str, "%*s %s %s %s %s %c %lf %s", cnpj, cpf, codt, cep, &face, &num, nome);
             Estabelecimento e = criarEstabelecimento(cnpj, cpf, codt, cep, face, num, nome);
             Cidade_setEstabelecimento(*cidade, e);
+
+            Pessoa proprietario = Cidade_getPessoa(*cidade, cpf);
+            if (proprietario != NULL) {
+                Estabelecimento_setProprietario(e, proprietario);
+            }
+
+            Predio predio = Cidade_getPredio(*cidade, cep, face, num);
+            if (predio != NULL) {
+                Estabelecimento_setPredio(e, predio);
+            }
         }
     }
 }
@@ -909,6 +919,11 @@ bool processarArquivoPM(FILE *arquivoPM, char *dirSVG, char *nomeArquivoSVG, Cid
                 Morador_setPredio(m, prd);
             } else {
                 //printf("Predio %s%c%.0lf não encontrado.\n", cep, face, num);
+            }
+
+            Pessoa pessoa = Cidade_getPessoa(*cidade, cpf);
+            if (pessoa != NULL) {
+                Morador_setPessoa(m, pessoa);
             }
         }
     }

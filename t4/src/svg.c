@@ -117,3 +117,25 @@ void svg_escreverBomba(FILE *SVG, double x, double y) {
         "272c0-35.3 28.7-64 64-64 8.8 0 16-7.2 16-16s-7.2-16-16-16c-52.9 0-96 43.1-96 96 0 8.8 7.2 16 16 16s16-7.2 16-16z\"/>",
         x - 6.5, y - 8.5);
 }
+
+void svg_escreverX(FILE* svg, Predio p) {
+	fprintf(svg, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" style=\"stroke:rgb(255,0,0);stroke-width:2\" />\n", 
+           Predio_get_x(p),
+            Predio_get_y(p),
+            Predio_get_x_max(p),
+            Predio_get_y_max(p));
+	
+	fprintf(svg, "<line x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" style=\"stroke:rgb(255,0,0);stroke-width:2\" />\n", 
+           Predio_get_x_max(p),
+            Predio_get_y(p),
+            Predio_get_x(p),
+            Predio_get_y_max(p));
+	
+	char text[50];
+	sprintf(text, "%d", Predio_getNumMoradores(p));
+	Texto texto = criarTexto(Predio_get_x_max(p), (Predio_get_y(p) + Predio_get_y_max(p))/2, text);
+	Texto_setTamanho(texto, 20);
+	Texto_setCor(texto, Predio_getNumMoradores(p) > 0 ? "green" : "red");
+	Texto_escreverSvg(texto, svg);
+	destruirTexto(texto);
+}

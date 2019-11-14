@@ -73,9 +73,9 @@ void Cidade_processarObjetosProximos(Cidade c, char sinal, int k, char cep[], ch
 void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg, bool brl, FILE* txt, FILE* arq);
 void Cidade_escreverArvoreSvg(Cidade c, char t, FILE *arq);
 void Cidade_navegarArvore(Cidade c, char t);
-void Cidade_processarMPLG(Cidade c, Poligono poligono);
-void Cidade_processarCATAC(Cidade c, Poligono poligono);
-void Cidade_processarEPLG(Cidade c, Poligono poligono, char* tipo);
+void Cidade_processarMPLG(Cidade c, Poligono poligono, FILE* svg, FILE* txt);
+void Cidade_processarCATAC(Cidade c, Poligono poligono, FILE* svg, FILE* txt);
+void Cidade_processarEPLG(Cidade c, Poligono poligono, char* tipo, FILE* svg, FILE* txt);
 
 void imprimirCidade(Cidade c);
 

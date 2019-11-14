@@ -29,6 +29,10 @@ char* Quadra_getDados(Quadra q, char* dados);
 void Quadra_setPredio(Quadra q, Predio prd);
 Node Quadra_getPredios(Quadra q);
 bool Quadra_removerPredio(Quadra q, Predio prd);
+void Quadra_set_cfill(Quadra q, char* cor);
+char* Quadra_get_cfill(Quadra q);
+void Quadra_set_sw(Quadra q, char* sw);
+int Quadra_getNumMoradores(Quadra q);
 
 // Funções relacionadas com a lista
 bool quadraEquals(Quadra quadra, char *cep);
