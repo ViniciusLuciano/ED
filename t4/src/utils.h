@@ -18,7 +18,6 @@
 #include "./Objetos/Estabelecimento/estabelecimento.h"
 #include "./Objetos/Pessoa/pessoa.h"
 #include "./Objetos/Morador/morador.h"
-#include "./Utils/Lista/lista.h"
 #include "./Utils/Geometria/geometria.h"
 #include "./Utils/Colisao/colisao.h"
 #include "./Utils/Poligono/poligono.h"

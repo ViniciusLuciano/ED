@@ -1,6 +1,5 @@
 #include "arvore.h"
 
-// Aux utilizado para forEach
 typedef struct node {
 	Objeto objeto;
 	struct node* esq;
@@ -400,37 +399,54 @@ Objeto Arvore_getObjeto(Arvore arvore, Objeto objeto) {
     }
 }
 
-int Y_PRINT_ARVORE = 15;
-void Arvore_escreverSvg_util(pNode node, int x, FILE* svg, char*(*Objeto_getDados)(Objeto objeto, char* dados)) {
+void putSVGNode(FILE *file, double x, int y, bool red, char *description) {
+    fprintf(file, "<circle cx=\"%lf\" cy=\"%d\" r=\"%d\" fill=\"%s\" />\n", 
+            x, y, 5, red ? "red" : "black");
+    fprintf(file, "<text x=\"%lf\" y=\"%d\" fill=\"white\" font-size=\"3\" dominant-baseline=\"middle\" "
+                  "text-anchor=\"middle\">%s</text>\n", x, y, description);
+}
 
-	if(node == getTNULL()) return;
+double _generateTreeSVG(pArvore tree, FILE *file, Node node, int height, double xMin, double *x, char* (*Objeto_getDados)(Objeto, char* dados)) {
+    if (node == getTNULL()) {
+        *x = xMin;
+        putSVGNode(file, *x, 10 + height * 20, false, "nil");
+        return xMin + 6 * 2;
+    }
 
-	x+=20;
-	Arvore_escreverSvg_util(node->esq, x, svg, Objeto_getDados);
+	pNode n = (pNode) node;
+    double xLeft;
+    double xMaxLeft = _generateTreeSVG(tree, file, n->esq, height + 1, xMin, &xLeft, Objeto_getDados);
 
-	fprintf(svg, "<circle cx=\"%d\" cy=\"%d\" r=\"5\" stroke=\"PRETO\" fill=\"%s\" stroke-width=\"2\" />\n", 
-            Y_PRINT_ARVORE,
-            x,
-            node->cor == VERMELHO ? "VERMELHO" : "PRETO");
-	// fprintf(svg, "<text x=\"%d\" y=\"%d\" fill=\"white\" font-size=\"5\">%.0lf</text>",
-    //     Y_PRINT_ARVORE, 
-    //     x, 
-    //     Hidrante_get_x(node->objeto));
+    double xRight;	
+    double xMaxRight = _generateTreeSVG(tree, file, n->dir, height + 1, xMaxLeft, &xRight, Objeto_getDados);
+
+	*x = (xLeft + xRight) / 2;
+	int y = 10 + height * 20;
+	int yChild = y + 20;
+
+	fprintf(file, "<line x1=\"%lf\" y1=\"%d\" x2=\"%lf\" y2=\"%d\" style=\"stroke:rgb(0,0,0);stroke-width:2\" />\n", 
+           *x,
+            y,
+            xLeft,
+            yChild - 5);
+
+	fprintf(file, "<line x1=\"%lf\" y1=\"%d\" x2=\"%lf\" y2=\"%d\" style=\"stroke:rgb(0,0,0);stroke-width:2\" />\n", 
+           *x,
+            y,
+            xRight,
+            yChild - 5);
 
 	char dados[150];
-	fprintf(svg, "<text x=\"%d\" y=\"%d\" fill=\"blue\" font-size=\"5\">%s</text>",
-        Y_PRINT_ARVORE, 
-        x, 
-        Objeto_getDados(node->objeto, dados));
-	Y_PRINT_ARVORE+=13;
+	putSVGNode(file, *x, y, n->cor == VERMELHO, Objeto_getDados(n->objeto, dados));
 
-	Arvore_escreverSvg_util(node->dir, x, svg, Objeto_getDados);
+    return xMaxRight + 6;
 }
 
 void Arvore_escreverSvg(Arvore arvore, FILE* svg, char*(*Objeto_getDados)(Objeto objeto, char* dados)) {
     pArvore a = (pArvore) arvore;
 	fprintf(svg, "<svg>\n");
-	Arvore_escreverSvg_util((*a->raiz), 0, svg, Objeto_getDados);
+	double x;
+	_generateTreeSVG(a, svg, (*a->raiz), 0, 6, &x, Objeto_getDados);
 	fprintf(svg, "</svg>\n");
 }
 

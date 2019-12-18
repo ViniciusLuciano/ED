@@ -1,0 +1,6 @@
+brn 95.000000 95.000000 pb-bairro0.pol
+brn 95.000000 -30.000000 pb-bempty.pol
+brn 95.000000 1140.000000 pb-bempty.pol
+brn -30.000000 95.000000 pb-bempty.pol
+brn 1540.000000 95.000000 pb-bempty.pol
+p? pb-p-brns- R8 R9 blue magenta

@@ -2,7 +2,6 @@
 #define CIDADE_H
 
 #include "../../headers.h"
-#include "../../Utils/Lista/lista.h"
 #include "../../Utils/Geometria/geometria.h"
 #include "../../Utils/Sort/sort.h"
 #include "../../Utils/Ponto/ponto.h"

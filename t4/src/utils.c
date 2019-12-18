@@ -636,7 +636,7 @@ bool processarArquivoConsulta(FILE* arquivoConsulta, char *nomeArquivoEntrada, c
             char arq_pol[50];
             double x, y;
             sscanf(str, "%*s %lf %lf %s", &x, &y, arq_pol);
-            FILE* arq = abrirArquivo(dirEntrada, arq_pol, "w");
+            FILE* arq = abrirArquivo(dirEntrada, arq_pol, "w+");
             Cidade_processarBombaRaioLuminoso(*cidade, x, y, arquivoSVG, false, arquivoTXT, arq);
             fclose(arq);
 

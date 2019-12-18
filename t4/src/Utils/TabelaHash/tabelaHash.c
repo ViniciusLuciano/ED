@@ -6,7 +6,6 @@ typedef struct node {
 	Objeto objeto;
 	struct node* prox;
 	struct node* ant;
-	bool excluido;
 } *pNode;
 
 typedef struct tabelaHash {
@@ -82,7 +81,6 @@ void TabelaHash_inserir(TabelaHash t, Objeto objeto) {
 	novo->objeto = objeto;
 	novo->prox = NULL;
 	novo->ant = NULL;
-	novo->excluido = false;
 
     long long key = TabelaHash_getChaveUnica(t, tabelaHash->getChave(objeto));
 	if(tabelaHash->hash[key] == NULL) {
@@ -138,7 +136,7 @@ Objeto TabelaHash_getObjeto(TabelaHash t, char* chave) {
 		n = n->prox;
 	}
 
-	if (n == NULL || n->excluido == true) return NULL;
+	if (n == NULL) return NULL;
 
 	return n->objeto;
 }

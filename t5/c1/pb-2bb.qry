@@ -1,0 +1,13 @@
+@xy R8 95.000000 95.000000
+@xy R9 1445.000000 1045.000000
+brn 432.500000 332.500000 pb-bairro0.pol
+brn 1107.500000 807.500000 pb-bairro0.pol
+brn 432.500000 -25.000000 pb-bempty.pol
+brn 1107.500000 -15.000000 pb-bempty.pol
+brn 432.500000 1145.000000 pb-bempty.pol
+brn 1107.500000 1155.000000 pb-bempty.pol
+brn -25.000000 332.500000 pb-bempty.pol
+brn -15.000000 807.500000 pb-bempty.pol
+brn 1545.000000 332.500000 pb-bempty.pol
+brn 1555.000000 807.500000 pb-bempty.pol
+p? pb-p-brns- R8 R9 blue magenta

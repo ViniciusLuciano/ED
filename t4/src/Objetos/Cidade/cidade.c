@@ -1,15 +1,6 @@
 #include "cidade.h"
 
 typedef struct cidade {
-    Lista listaForma;
-    Lista listaQuadra;
-    Lista listaHidrante;
-    Lista listaSemaforo;
-    Lista listaRadioBase;
-    Lista listaTexto;
-    Lista listaPredio;
-    Lista listaMuro;
-
     TabelaHash tabelaHashFormas;
     TabelaHash tabelaHashQuadras;
     TabelaHash tabelaHashHidrantes;
@@ -38,14 +29,6 @@ typedef struct cidade {
 Cidade criarCidade(int i, int nq, int nh, int ns, int nr, int np, int nm) {
     Cidade c = malloc(sizeof(struct cidade));
     pCidade cidade = (pCidade) c;
-    // cidade->listaForma = criarLista(i);
-    // cidade->listaQuadra = criarLista(nq);
-    // cidade->listaHidrante = criarLista(nh);
-    // cidade->listaSemaforo = criarLista(ns);
-    // cidade->listaRadioBase = criarLista(nr);
-    // cidade->listaPredio = criarLista(np);
-    // cidade->listaMuro = criarLista(nm);
-    // cidade->listaTexto = criarLista(1000);
 
     cidade->tabelaHashFormas = criarTabelaHash(i, formaEquals, Forma_getChave, destruirForma);
     cidade->tabelaHashQuadras = criarTabelaHash(nq, quadraEquals, Quadra_getChave, destruirQuadra);
@@ -74,14 +57,6 @@ Cidade criarCidade(int i, int nq, int nh, int ns, int nr, int np, int nm) {
 
 void destruirCidade(Cidade c) {
     pCidade cidade = (pCidade) c;
-    // lista_destruir(cidade->listaForma, destruirForma);
-    // lista_destruir(cidade->listaQuadra, destruirQuadra);
-    // lista_destruir(cidade->listaHidrante, destruirHidrante);
-    // lista_destruir(cidade->listaSemaforo, destruirSemaforo);
-    // lista_destruir(cidade->listaRadioBase, destruirRadioBase);
-    // lista_destruir(cidade->listaTexto, destruirTexto);
-    // lista_destruir(cidade->listaPredio, destruirPredio);
-    // lista_destruir(cidade->listaMuro, destruirMuro);
 
     destruirTabelaHash(cidade->tabelaHashPredios);
     destruirTabelaHash(cidade->tabelaHashFormas);
@@ -376,7 +351,6 @@ Objeto objetoCopy(Objeto objeto, int tamanho) {
 }
 
 // trns
-// Isso só é possivel pois eu nao do free na arvore ao remover os objetos
 void Cidade_deslocarEquipamentosInternosRetangulo(Cidade c, Retangulo r, double dx, double dy, FILE *txt) {
     pCidade cidade = (pCidade) c;   
     int index = 0;
@@ -496,7 +470,6 @@ void Cidade_escreverSvg(Cidade c, FILE *svg) {
             Quadra_escreverSvg(q, svg);
         }
     }
-    //Arvore_resetarAux(cidade->arvoreQuadras);
 
     Node hidrantes = Arvore_getRaiz(cidade->arvoreHidrantes);
     forEach(hidrante, hidrantes) {
@@ -553,14 +526,6 @@ void Cidade_escreverFormasEnvoltas(Cidade c, FILE *svg, char *cor) {
     }
 }
 
-// void imprimirCidade(Cidade c) {
-//     pCidade cidade = (pCidade) c;
-//     int i = lista_getPrimeiro(cidade->listaForma);
-//     for(i; i!= -1; i = lista_getProx(cidade->listaForma, i)) {
-//         Forma f = lista_getObjPosic(cidade->listaForma, i);
-//         Forma_imprimir(f);
-//     }
-// }
 
 
 // Struct e função utilizadas para qsort
@@ -653,7 +618,6 @@ void Cidade_processarObjetosProximos(Cidade c, char sinal, int k, char cep[], ch
     pCidade cidade = (pCidade) c;
     int i;
     double x, y;
-    // Lista lista;
     Arvore arvore;
 
     if(strcmp(tipo, "hidrante") == 0) {
@@ -662,7 +626,6 @@ void Cidade_processarObjetosProximos(Cidade c, char sinal, int k, char cep[], ch
         arvore = cidade->arvoreSemaforos;
     }
 
-    // int tamanhoLista = lista_length(lista);
     int tamanhoArvore = Arvore_length(arvore);
 
     Quadra q = Cidade_getQuadra(c, cep);
@@ -992,7 +955,6 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg, 
     // heapsortMaior(lista_vertices, tamListaVertices, tamListaVertices, Vertice_get_angulo);
     
     // A partir daqui será varrido todos os vertices no sentido horario começando pela esquerda
-    //Lista segmentos_ativos = criarLista((int)tamListaVertices/2);
     Arvore segmentos_ativos = criarArvore(Segmento_compararChave, NULL);
     Vertice biombo = criarVertice(Vertice_get_x(lista_vertices[0]), Vertice_get_y(lista_vertices[0]), x, y);
     Vertice_set_s(biombo, Vertice_get_s(lista_vertices[0]));
@@ -1113,7 +1075,7 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg, 
                         lista_pontos[indexPonto] = p1; indexPonto++;
                         lista_pontos[indexPonto] = p2; indexPonto++;
                     }
-                    biombo = v; // O problema eh nesse caso quando eu do free no sv e consequentemente no biombo
+                    biombo = v;
                  }
             }
 
@@ -1124,8 +1086,8 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg, 
 
     if (!brl) {
         fprintf(txt, "------- BRN pos %lf %lf -------\n", x, y);
-        fprintf(txt, "Área afetada: %lf\n\n", areaAfetada);
-        fprintf(txt, "-----------------------------------------\n\n");
+        fprintf(txt, "Área afetada: %lf\n", areaAfetada);
+        fprintf(txt, "Moradores afetados:\n");
 
         for(int i = 0; i < indexPonto; i++) {
             double xp = Ponto_get_x(lista_pontos[i]);
@@ -1134,6 +1096,31 @@ void Cidade_processarBombaRaioLuminoso(Cidade c, double x, double y, FILE *svg, 
             free(lista_pontos[i]);
         }
         free(lista_pontos);
+
+        fseek(arq, 0, SEEK_SET);
+        Poligono polig = criarPoligono(arq);
+
+        char dados[150];
+        Node quadras = Arvore_getRaiz(cidade->arvoreQuadras);
+        forEach(quadra, quadras) {
+            if (Node_getAux(quadra) == 0) {
+                Quadra q = Node_getObjeto(quadra);
+                Retangulo r = criarRetangulo_Quadra(q);
+                if (RetanguloParcialmenteInternoPoligono(r, polig)) {
+                    fprintf(txt, " ->Quadra: %s\n", Quadra_get_cep(q));
+                    Node moradores = Quadra_getMoradores(q);
+                    forEach(morador, moradores) {
+                        if (Node_getAux(morador) == 0) {
+                            Morador m = Node_getObjeto(morador);
+                            fprintf(txt, "  ->Morador:\n%s\n\n", Morador_getDados(m, dados));
+                        }
+                    }
+                }
+                destruirRetangulo(r);
+            }
+        }
+
+        fprintf(txt, "-----------------------------------------\n\n");
     }
     
     for(int i = 0; i < indexSf; i++) free(lista_segmentos_free[i]);
